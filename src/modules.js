@@ -13,13 +13,12 @@ var Language = 'ru';
 
 new LoaderHTML5(HTMLlist);
 document.getElementById(onClickList[0]).addEventListener("click", onClickCreateObject, false);
+document.getElementById(onClickList[1]).addEventListener("click", onClickSaveObject, false);
+document.getElementById(onClickList[2]).addEventListener("click", onClickLoadObject, false);
+
 document.getElementById(ButtonList[0]).addEventListener("click", onClickButtonCreateObject, false);
 document.getElementById(ButtonList[1]).addEventListener("click", onClickButtonCancelDialog, false);
-/*
-$(`#${onClickList[0]}`).bind("click", onClickCreateObject);
-$(`#${onClickList[1]}`).bind("click", onClickSaveObject);
-$(`#${onClickList[2]}`).bind("click", onClickLoadObject);
-*/
+
 
 function onClickCreateObject() {
 
