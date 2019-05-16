@@ -38,7 +38,8 @@ function onClickButtonCreateObject() {
 }
 
 function onClickButtonCancelDialog() {
-	console.log(2);
+
+	document.getElementById(DialogList[0]).close();
 }
 
 var Frame = document.getElementById('Window');
