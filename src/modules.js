@@ -22,8 +22,7 @@ document.getElementById(ButtonList[1]).addEventListener("click", onClickButtonCa
 
 function onClickCreateObject() {
 
-	var modal = document.getElementById(DialogList[0]);
-	modal.showModal();
+	document.getElementById(DialogList[0]).showModal();
 }
 
 function onClickSaveObject() {
