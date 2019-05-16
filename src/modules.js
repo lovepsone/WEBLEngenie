@@ -9,9 +9,9 @@ import {HTMLlist, onClickList, DialogList, ButtonList} 	from './ui/HTMLlist.js';
 import {lang} 					from './lang/lang.js';
 
 var Language = 'ru';
-//var TEXT = lang[Language].CreateObject;
 
 new LoaderHTML5(HTMLlist);
+
 document.getElementById(onClickList[0]).addEventListener("click", onClickCreateObject, false);
 document.getElementById(onClickList[1]).addEventListener("click", onClickSaveObject, false);
 document.getElementById(onClickList[2]).addEventListener("click", onClickLoadObject, false);

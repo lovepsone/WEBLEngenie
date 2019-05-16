@@ -79,8 +79,6 @@ class LoaderHTML5 {
 		var preElement = this.setElement(pre_id);
 		preElement.appendChild(element);
 
-		console.log(element);
-
 		if (typeof elems.children !== "undefined" && elems.children.length > 0) {
 			for (var i = 0; i < elems.children.length; i++) {
 
