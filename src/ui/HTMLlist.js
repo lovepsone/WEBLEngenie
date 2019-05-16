@@ -11,6 +11,7 @@ import {lang} 			from './../lang/lang.js';
 var txt = lang['ru'];
 var onClickList = ['CreateObject', 'SaveObject', 'LoadObject'];
 var DialogList = ['DialogCreateObject'];
+var ButtonList = ['bDialogCreate', 'bDialogCancel'];
 
 var HTMLlist = [
 	// widjet
@@ -23,7 +24,10 @@ var HTMLlist = [
 				{'tag': 'label', 'for': 'WidthObject', 'text': txt.CreateObject[3]},
 				{'tag': 'input', 'id': 'LengthObject', 'class':'Number', 'type': 'number', 'value': 10},
 			]},
-			{'tag': 'footer', 'class': 'd_footer', 'text': 'Footer Text'},
+			{'tag': 'div', 'class': 'd_footer', 'align': 'center', 'children': [
+				{'tag': 'input', 'id': 'bDialogCreate', 'class': 'dButton', 'type': 'button', 'value': txt.CreateObject[4]},
+				{'tag': 'input', 'id': 'bDialogCancel', 'class': 'dButton',  'type': 'button', 'value': txt.CreateObject[5]},
+			]},
 		]},
 	]},
 	//
@@ -52,4 +56,4 @@ var HTMLlist = [
 ];
 
 
-export {HTMLlist, onClickList, DialogList};
+export {HTMLlist, onClickList, DialogList, ButtonList};

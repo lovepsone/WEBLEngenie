@@ -29,6 +29,9 @@ label {
 	//padding: 5px;
 	margin: 0px;
 }
+.dButton {
+	width: 200px;
+}
 
 #Window {
 	position: absolute;

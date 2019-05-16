@@ -16,6 +16,8 @@ var lang = {
 			'Введите широту и долготу: ',
 			'</br>Широта: ',
 			'</br>Долгота: ',
+			'Создать',
+			'Отмена',
 		]
 	},
 
@@ -28,7 +30,11 @@ var lang = {
 			],
 		'CreateObject': [
 			'Create Terrain',
-			'Enter latitude and longitude: '
+			'Enter width and length: ',
+			'</br>Width: ',
+			'</br>Length: ',
+			'Create',
+			'Cancel',
 		]
 	}
 }
