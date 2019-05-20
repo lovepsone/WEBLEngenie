@@ -5,19 +5,19 @@
 
 import {MainEngenie} 				from './Main.js';
 import {LoaderHTML5} 				from './ui/LoaderHTML.js';
-import {HTMLlist, onClickList, DialogList, ButtonList, ParamList} 	from './ui/HTMLlist.js';
+import {HTMLlist, elemsList}			from './ui/HTMLlist.js';
 import {lang} 					from './lang/lang.js';
 
 var Language = 'ru';
 
 new LoaderHTML5(HTMLlist);
 
-document.getElementById(onClickList[0]).addEventListener("click", onClickCreateObject, false);
-document.getElementById(onClickList[1]).addEventListener("click", onClickSaveObject, false);
-document.getElementById(onClickList[2]).addEventListener("click", onClickLoadObject, false);
+document.getElementById(elemsList.onClickList[0]).addEventListener("click", onClickCreateTerrain, false);
+document.getElementById(elemsList.onClickList[1]).addEventListener("click", onClickSaveTerrain, false);
+document.getElementById(elemsList.onClickList[2]).addEventListener("click", onClickLoadTerrain, false);
 
-document.getElementById(ButtonList[0]).addEventListener("click", onClickButtonCreateObject, false);
-document.getElementById(ButtonList[1]).addEventListener("click", onClickButtonCancelDialog, false);
+document.getElementById(elemsList.ButtonList[0]).addEventListener("click", onClickButtonCreateTerrain, false);
+document.getElementById(elemsList.ButtonList[1]).addEventListener("click", onClickButtonCancelDialog, false);
 
 var Frame = document.getElementById('Window');
 var Engenie = new MainEngenie(60, window.innerWidth, window.innerHeight);
@@ -31,27 +31,27 @@ var AnimationFrame = function() {
 
 AnimationFrame();
 
-function onClickCreateObject() {
+function onClickCreateTerrain() {
 
-	document.getElementById(DialogList[0]).showModal();
+	document.getElementById(elemsList.DialogList[0]).showModal();
 }
 
-function onClickSaveObject() {
-
-}
-
-function onClickLoadObject() {
+function onClickSaveTerrain() {
 
 }
 
-function onClickButtonCreateObject() {
+function onClickLoadTerrain() {
 
-	Engenie.CreateObject(document.getElementById(ParamList[0]).value, document.getElementById(ParamList[1]).value);
-	document.getElementById(DialogList[0]).close();
+}
+
+function onClickButtonCreateTerrain() {
+
+	Engenie.CreateObject(document.getElementById(elemsList.ParamList[0]).value, document.getElementById(elemsList.ParamList[1]).value);
+	document.getElementById(elemsList.DialogList[0]).close();
 	
 }
 
 function onClickButtonCancelDialog() {
 
-	document.getElementById(DialogList[0]).close();
+	document.getElementById(elemsList.DialogList[0]).close();
 }

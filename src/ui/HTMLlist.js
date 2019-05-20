@@ -9,25 +9,28 @@
 import {lang} 			from './../lang/lang.js';
 
 var txt = lang['ru'];
-var onClickList = ['CreateObject', 'SaveObject', 'LoadObject'];
-var DialogList = ['DialogCreateObject'];
-var ButtonList = ['bDialogCreate', 'bDialogCancel'];
-var ParamList = ['WidthObject', 'LengthObject'];
+
+var elemsList = {
+	'onClickList': ['CreateObject', 'SaveObject', 'LoadObject'],
+	'DialogList': ['DialogCreateObject'],
+	'ButtonList': ['bDialogCreate', 'bDialogCancel'],
+	'ParamList': ['WidthObject', 'LengthObject'],
+};
 
 var HTMLlist = [
 	// widjet
-	{'tag': 'dialog', 'id': 'DialogCreateObject', 'children': [
+	{'tag': 'dialog', 'id': elemsList.DialogList[0], 'children': [
 		{'tag': 'form', 'id': 'f_createObject', 'method': 'dialog', 'children': [
 			{'tag': 'h3', 'class': 'd_header', 'text': txt.CreateObject[0]},
 			{'tag': 'div', 'class': 'd_body', 'text': txt.CreateObject[1], 'children': [
 				{'tag': 'label', 'for': 'WidthObject', 'text': txt.CreateObject[2]},
-				{'tag': 'input', 'id': 'WidthObject', 'class': 'Number', 'type': 'number', 'value': 10},
+				{'tag': 'input', 'id': elemsList.ParamList[0], 'class': 'Number', 'type': 'number', 'value': 10},
 				{'tag': 'label', 'for': 'LengthObject', 'text': txt.CreateObject[3]},
-				{'tag': 'input', 'id': 'LengthObject', 'class':'Number', 'type': 'number', 'value': 10},
+				{'tag': 'input', 'id': elemsList.ParamList[1], 'class':'Number', 'type': 'number', 'value': 10},
 			]},
 			{'tag': 'div', 'class': 'd_footer', 'align': 'center', 'children': [
-				{'tag': 'input', 'id': 'bDialogCreate', 'class': 'dButton', 'type': 'button', 'value': txt.CreateObject[4]},
-				{'tag': 'input', 'id': 'bDialogCancel', 'class': 'dButton',  'type': 'button', 'value': txt.CreateObject[5]},
+				{'tag': 'input', 'id': elemsList.ButtonList[0], 'class': 'dButton', 'type': 'button', 'value': txt.CreateObject[4]},
+				{'tag': 'input', 'id': elemsList.ButtonList[1], 'class': 'dButton',  'type': 'button', 'value': txt.CreateObject[5]},
 			]},
 		]},
 	]},
@@ -38,9 +41,9 @@ var HTMLlist = [
 		{'tag': 'div', 'class': 'menu', 'children': [
 			{'tag': 'div', 'class': 'title', 'text': txt.MenuBar[0]},
 			{'tag': 'div', 'class': 'options', 'children': [
-				{'tag': 'div', 'id': onClickList[0], 'class': 'option', 'text': txt.MenuBar[1]},
-				{'tag': 'div', 'id': onClickList[1], 'class': 'option', 'text': txt.MenuBar[2]},
-				{'tag': 'div', 'id': onClickList[2], 'class': 'option', 'text': txt.MenuBar[3]},
+				{'tag': 'div', 'id': elemsList.onClickList[0], 'class': 'option', 'text': txt.MenuBar[1]},
+				{'tag': 'div', 'id': elemsList.onClickList[1], 'class': 'option', 'text': txt.MenuBar[2]},
+				{'tag': 'div', 'id': elemsList.onClickList[2], 'class': 'option', 'text': txt.MenuBar[3]},
 			]},
 		]},
 	
@@ -57,4 +60,4 @@ var HTMLlist = [
 ];
 
 
-export {HTMLlist, onClickList, DialogList, ButtonList, ParamList};
+export {HTMLlist, elemsList};
