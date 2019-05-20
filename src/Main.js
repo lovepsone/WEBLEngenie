@@ -18,21 +18,24 @@ class MainEngenie {
 		this.camera.position.set(0, -6, 9);
 		
 		this.t = new MoseRaycaster(this.camera, this.scene.children);
-		
-		
-		
-		
+
+	}
+
+	CreateObject(_width, _height) {
+
+		this.scene.remove(this.scene.children[0]);
 		//PlaneGeometry(width : Float, height : Float, widthSegments : Integer, heightSegments : Integer)
-		var geometry = new THREE.PlaneBufferGeometry(5, 5, 10, 10);
+		var geometry = new THREE.PlaneBufferGeometry(_width, _height, _width, _height);
 		var material = new THREE.MeshBasicMaterial( {color: 0x0000ff, /*wireframe: true,*/ side: THREE.DoubleSide, morphTargets: true} );
 		var wireframeMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, opacity: 0.3, wireframe: true, transparent: true } );
 
-		this.mesh = new THREE.Mesh(geometry, material );
+		var mesh = new THREE.Mesh(geometry, material);
+		mesh.name = 'Terrain';
 		var wireframe = new THREE.Mesh(geometry, wireframeMaterial);
-		this.mesh.add( wireframe );
-		this.scene.add(this.mesh);
+		mesh.add(wireframe);
+		this.scene.add(mesh);
 
-		this.camera.lookAt(this.mesh.position);
+		this.camera.lookAt(mesh.position);
 	}
 
 	Render() {
