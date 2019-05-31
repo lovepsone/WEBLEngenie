@@ -11,7 +11,7 @@ var lang = {
 			'Сохранить',
 			'Загрузить',
 			],
-		'CreateObject': [
+		'CreateTerrain': [
 			'Создание Террейна',
 			'Введите широту и долготу: ',
 			'</br>Широта: ',
@@ -28,7 +28,7 @@ var lang = {
 			'Save',
 			'Loading',
 			],
-		'CreateObject': [
+		'CreateTerrain': [
 			'Create Terrain',
 			'Enter width and length: ',
 			'</br>Width: ',

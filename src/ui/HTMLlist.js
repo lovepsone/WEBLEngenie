@@ -21,16 +21,16 @@ var HTMLlist = [
 	// widjet
 	{'tag': 'dialog', 'id': elemsList.DialogList[0], 'children': [
 		{'tag': 'form', 'id': 'f_createObject', 'method': 'dialog', 'children': [
-			{'tag': 'h3', 'class': 'd_header', 'text': txt.CreateObject[0]},
-			{'tag': 'div', 'class': 'd_body', 'text': txt.CreateObject[1], 'children': [
-				{'tag': 'label', 'for': 'WidthObject', 'text': txt.CreateObject[2]},
+			{'tag': 'h3', 'class': 'd_header', 'text': txt.CreateTerrain[0]},
+			{'tag': 'div', 'class': 'd_body', 'text': txt.CreateTerrain[1], 'children': [
+				{'tag': 'label', 'for': 'WidthObject', 'text': txt.CreateTerrain[2]},
 				{'tag': 'input', 'id': elemsList.ParamList[0], 'class': 'Number', 'type': 'number', 'value': 10},
-				{'tag': 'label', 'for': 'LengthObject', 'text': txt.CreateObject[3]},
+				{'tag': 'label', 'for': 'LengthObject', 'text': txt.CreateTerrain[3]},
 				{'tag': 'input', 'id': elemsList.ParamList[1], 'class':'Number', 'type': 'number', 'value': 10},
 			]},
 			{'tag': 'div', 'class': 'd_footer', 'align': 'center', 'children': [
-				{'tag': 'input', 'id': elemsList.ButtonList[0], 'class': 'dButton', 'type': 'button', 'value': txt.CreateObject[4]},
-				{'tag': 'input', 'id': elemsList.ButtonList[1], 'class': 'dButton',  'type': 'button', 'value': txt.CreateObject[5]},
+				{'tag': 'input', 'id': elemsList.ButtonList[0], 'class': 'dButton', 'type': 'button', 'value': txt.CreateTerrain[4]},
+				{'tag': 'input', 'id': elemsList.ButtonList[1], 'class': 'dButton',  'type': 'button', 'value': txt.CreateTerrain[5]},
 			]},
 		]},
 	]},
