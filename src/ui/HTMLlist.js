@@ -11,7 +11,7 @@ import {lang} 			from './../lang/lang.js';
 var txt = lang['ru'];
 
 var elemsList = {
-	'onClickList': ['CreateObject', 'SaveObject', 'LoadObject'],
+	'onClickList': ['CreateTerrain', 'SaveTerrain', 'LoadTerrain'],
 	'DialogList': ['DialogCreateObject'],
 	'ButtonList': ['bDialogCreate', 'bDialogCancel'],
 	'ParamList': ['WidthObject', 'LengthObject'],
