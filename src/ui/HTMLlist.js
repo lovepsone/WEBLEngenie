@@ -53,13 +53,13 @@ var HTMLlist = [
 	//side bar 
 	{'tag': 'div', 'id': 'sidebar', 'children': [
 		{'tag': 'div', 'id': 'tab', 'children': [
-			{'tag': 'button', 'id': 'TabButton1', 'text': 'test 1'},
-			{'tag': 'button', 'id': 'TabButton2', 'text': 'test 2'},
-			{'tag': 'button', 'id': 'TabButton3', 'text': 'test 3'},
+			{'tag': 'button', 'id': elemsList.bTabsList[0], 'text': 'test 1'},
+			{'tag': 'button', 'id': elemsList.bTabsList[1], 'text': 'test 2'},
+			{'tag': 'button', 'id': elemsList.bTabsList[2], 'text': 'test 3'},
 		]},
-		{'tag': 'div', 'id': 'tabcontent1', 'style': 'display: block;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 1'},
-		{'tag': 'div', 'id': 'tabcontent2', 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 2'},
-		{'tag': 'div', 'id': 'tabcontent3', 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 3'},
+		{'tag': 'div', 'id': elemsList.nTabsList[0], 'style': 'display: block;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 1'},
+		{'tag': 'div', 'id': elemsList.nTabsList[1], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 2'},
+		{'tag': 'div', 'id': elemsList.nTabsList[2], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 3'},
 	]},
 	
 ];
