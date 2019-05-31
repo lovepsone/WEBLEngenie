@@ -111,6 +111,32 @@ dialog {
 	border-top: 1px solid #ccc;
 }
 
+#tab {
+    overflow: hidden;
+    border: 1px solid #888;
+    background-color: #ccc;
+}
+
+#tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+
+#tab button:hover {
+    background-color: #08f;
+}
+
+#tab button.active {
+    background-color: #888;
+    color: #fff;
+}
+
 .Panel {
 	-moz-user-select: none;
 	-webkit-user-select: none;

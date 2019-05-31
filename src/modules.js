@@ -19,6 +19,11 @@ document.getElementById(elemsList.onClickList[2]).addEventListener("click", onCl
 document.getElementById(elemsList.ButtonList[0]).addEventListener("click", onClickButtonCreateTerrain, false);
 document.getElementById(elemsList.ButtonList[1]).addEventListener("click", onClickButtonCancelDialog, false);
 
+for (var i = 0; i < elemsList.bTabsList.length; i++) {
+
+	document.getElementById(elemsList.bTabsList[i]).addEventListener("click", {handleEvent: onClickButtonTabs, NameTab: elemsList.nTabsList[i], button: elemsList.bTabsList[i]}, false);
+}
+
 var Frame = document.getElementById('Window');
 var Engenie = new MainEngenie(60, window.innerWidth, window.innerHeight);
 
@@ -54,4 +59,18 @@ function onClickButtonCreateTerrain() {
 function onClickButtonCancelDialog() {
 
 	document.getElementById(elemsList.DialogList[0]).close();
+}
+
+function onClickButtonTabs(event) {
+
+	console.log(this.NameTab);
+
+	for (var i = 0; i < elemsList.nTabsList.length; i++) {
+
+		document.getElementById(elemsList.nTabsList[i]).style.display = "none";
+		document.getElementById(elemsList.bTabsList[i]).className = document.getElementById(elemsList.bTabsList[i]).className.replace(" active", "");
+	}
+
+	document.getElementById(this.NameTab).style.display = "block";
+	document.getElementById(this.button).className += " active";
 }

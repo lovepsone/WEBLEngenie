@@ -15,6 +15,8 @@ var elemsList = {
 	'DialogList': ['DialogCreateObject'],
 	'ButtonList': ['bDialogCreate', 'bDialogCancel'],
 	'ParamList': ['WidthObject', 'LengthObject'],
+	'bTabsList': ['TabButton1', 'TabButton2', 'TabButton3'],
+	'nTabsList': ['tabcontent1', 'tabcontent2', 'tabcontent3'],
 };
 
 var HTMLlist = [
@@ -50,11 +52,14 @@ var HTMLlist = [
 	]},
 	//side bar 
 	{'tag': 'div', 'id': 'sidebar', 'children': [
-		{'tag': 'div', 'class': 'Panel', 'text': 'test'},
-
-		{'tag': 'form', 'name': 'test', 'method': 'post', 'action': 'input1.php', 'children': [
-			{'tag': 'input', 'type': 'text', 'size': 20},
+		{'tag': 'div', 'id': 'tab', 'children': [
+			{'tag': 'button', 'id': 'TabButton1', 'text': 'test 1'},
+			{'tag': 'button', 'id': 'TabButton2', 'text': 'test 2'},
+			{'tag': 'button', 'id': 'TabButton3', 'text': 'test 3'},
 		]},
+		{'tag': 'div', 'id': 'tabcontent1', 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 1'},
+		{'tag': 'div', 'id': 'tabcontent2', 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 2'},
+		{'tag': 'div', 'id': 'tabcontent3', 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 3'},
 	]},
 	
 ];
