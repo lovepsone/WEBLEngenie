@@ -57,7 +57,7 @@ var HTMLlist = [
 			{'tag': 'button', 'id': 'TabButton2', 'text': 'test 2'},
 			{'tag': 'button', 'id': 'TabButton3', 'text': 'test 3'},
 		]},
-		{'tag': 'div', 'id': 'tabcontent1', 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 1'},
+		{'tag': 'div', 'id': 'tabcontent1', 'style': 'display: block;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 1'},
 		{'tag': 'div', 'id': 'tabcontent2', 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 2'},
 		{'tag': 'div', 'id': 'tabcontent3', 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 3'},
 	]},
