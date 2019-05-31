@@ -17,22 +17,6 @@ dialog {
 	background-color:#eee;//transparent;
 }
 
-dialog .d_header {
-	border-bottom: 1px solid white;
-}
-
-dialog .d_footer {
-	border-bottom: 1px solid white;
-}
-
-label {
-	//padding: 5px;
-	margin: 0px;
-}
-.dButton {
-	width: 200px;
-}
-
 #Window {
 	position: absolute;
 	top: 32px;
@@ -125,15 +109,6 @@ label {
 	color: #888;
 	padding: 10px;
 	border-top: 1px solid #ccc;
-}
-
-.Number {
-	//color: #08f!important;
-	font-size: 12px;
-	border: 0px;
-	//padding: 2px;
-	margin: 5px;
-	width: 60px;
 }
 
 .Panel {

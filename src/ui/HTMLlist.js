@@ -21,16 +21,16 @@ var HTMLlist = [
 	// widjet
 	{'tag': 'dialog', 'id': elemsList.DialogList[0], 'children': [
 		{'tag': 'form', 'id': 'f_createObject', 'method': 'dialog', 'children': [
-			{'tag': 'h3', 'class': 'd_header', 'text': txt.CreateTerrain[0]},
+			{'tag': 'h3', 'style': 'border-bottom: 1px solid white;', 'text': txt.CreateTerrain[0]},
 			{'tag': 'div', 'class': 'd_body', 'text': txt.CreateTerrain[1], 'children': [
 				{'tag': 'label', 'for': 'WidthObject', 'text': txt.CreateTerrain[2]},
-				{'tag': 'input', 'id': elemsList.ParamList[0], 'class': 'Number', 'type': 'number', 'value': 10},
+				{'tag': 'input', 'id': elemsList.ParamList[0], 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 10},
 				{'tag': 'label', 'for': 'LengthObject', 'text': txt.CreateTerrain[3]},
-				{'tag': 'input', 'id': elemsList.ParamList[1], 'class':'Number', 'type': 'number', 'value': 10},
+				{'tag': 'input', 'id': elemsList.ParamList[1], 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 10},
 			]},
-			{'tag': 'div', 'class': 'd_footer', 'align': 'center', 'children': [
-				{'tag': 'input', 'id': elemsList.ButtonList[0], 'class': 'dButton', 'type': 'button', 'value': txt.CreateTerrain[4]},
-				{'tag': 'input', 'id': elemsList.ButtonList[1], 'class': 'dButton',  'type': 'button', 'value': txt.CreateTerrain[5]},
+			{'tag': 'div', 'style': 'border-bottom: 1px solid white;', 'align': 'center', 'children': [
+				{'tag': 'input', 'id': elemsList.ButtonList[0], 'style': 'width: 200px;', 'type': 'button', 'value': txt.CreateTerrain[4]},
+				{'tag': 'input', 'id': elemsList.ButtonList[1], 'style': 'width: 200px;',  'type': 'button', 'value': txt.CreateTerrain[5]},
 			]},
 		]},
 	]},
