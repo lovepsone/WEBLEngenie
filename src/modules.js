@@ -63,8 +63,6 @@ function onClickButtonCancelDialog() {
 
 function onClickButtonTabs(event) {
 
-	console.log(this.NameTab);
-
 	for (var i = 0; i < elemsList.nTabsList.length; i++) {
 
 		document.getElementById(elemsList.nTabsList[i]).style.display = "none";
