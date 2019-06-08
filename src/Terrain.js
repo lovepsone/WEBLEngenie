@@ -12,7 +12,7 @@ class Terrain {
 		this.pressure = null; 
 	}
 
-	CreateTerrain(_width, _height, _scene, _camera) {
+	Create(_width, _height, _scene, _camera) {
 
 		if (this.mesh != null) {
 
@@ -35,6 +35,23 @@ class Terrain {
 		this.pressure = new PressureTerrain(_camera, this.mesh, 'Window');
 		_camera.lookAt(this.mesh.position);
 
+	}
+
+	setPressureRadius(r) {
+
+		if (typeof(this.pressure) === 'object') {
+
+			this.pressure.UpdateRadius(r);
+		}
+	}
+
+
+	setPressureStrength(s) {
+
+		if (typeof(this.pressure) === 'object') {
+
+			this.pressure.UpdateStrength(s);
+		}
 	}
 }
 

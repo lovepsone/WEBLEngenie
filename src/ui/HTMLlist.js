@@ -3,7 +3,7 @@
 */
 
 /*	style html :
-*	{'tag': '', 'id': '', 'class': '', 'style': '', 'parent': '', 'text': ''}
+*	{'tag': '', 'id': '', 'class': '', 'style': '', 'parent': '', 'text': '', .........}
 */
 
 import {lang} 			from './../lang/lang.js';
@@ -15,8 +15,9 @@ var elemsList = {
 	'DialogList': ['DialogCreateObject'],
 	'ButtonList': ['bDialogCreate', 'bDialogCancel'],
 	'ParamList': ['WidthObject', 'LengthObject'],
-	'bTabsList': ['TabButton1', 'TabButton2', 'TabButton3'],
-	'nTabsList': ['tabcontent1', 'tabcontent2', 'tabcontent3'],
+	'bTabsList': ['ButtonEditTerrain', 'TabButton2', 'TabButton3'],
+	'nTabsList': ['EditTerrainContent', 'tabcontent2', 'tabcontent3'],
+	'EditTabList': ['EditPressure', 'EditExtrusion', 'EditRadius', 'EditStrength'],
 };
 
 var HTMLlist = [
@@ -25,9 +26,9 @@ var HTMLlist = [
 		{'tag': 'form', 'id': 'f_createObject', 'method': 'dialog', 'children': [
 			{'tag': 'h3', 'style': 'border-bottom: 1px solid white;', 'text': txt.CreateTerrain[0]},
 			{'tag': 'div', 'class': 'd_body', 'text': txt.CreateTerrain[1], 'children': [
-				{'tag': 'label', 'for': 'WidthObject', 'text': txt.CreateTerrain[2]},
+				{'tag': 'label', 'for': elemsList.ParamList[0], 'text': txt.CreateTerrain[2]},
 				{'tag': 'input', 'id': elemsList.ParamList[0], 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 10},
-				{'tag': 'label', 'for': 'LengthObject', 'text': txt.CreateTerrain[3]},
+				{'tag': 'label', 'for': elemsList.ParamList[1], 'text': txt.CreateTerrain[3]},
 				{'tag': 'input', 'id': elemsList.ParamList[1], 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 10},
 			]},
 			{'tag': 'div', 'style': 'border-bottom: 1px solid white;', 'align': 'center', 'children': [
@@ -53,11 +54,24 @@ var HTMLlist = [
 	//side bar 
 	{'tag': 'div', 'id': 'sidebar', 'children': [
 		{'tag': 'div', 'id': 'tab', 'children': [
-			{'tag': 'button', 'id': elemsList.bTabsList[0], 'text': 'test 1'},
+			{'tag': 'button', 'id': elemsList.bTabsList[0], 'class': ' active', 'text': txt.TabEditTerrain[0]},
 			{'tag': 'button', 'id': elemsList.bTabsList[1], 'text': 'test 2'},
 			{'tag': 'button', 'id': elemsList.bTabsList[2], 'text': 'test 3'},
 		]},
-		{'tag': 'div', 'id': elemsList.nTabsList[0], 'style': 'display: block;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 1'},
+		{'tag': 'div', 'id': elemsList.nTabsList[0], 'style': 'display: block;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'children': [
+			{'tag': 'br'},
+			{'tag': 'input', 'id': elemsList.EditTabList[0], 'type': 'radio', 'name': 'TypeEditTerr', 'value': '1', 'checked': 'checked'},
+			{'tag': 'label', 'for': elemsList.EditTabList[0], 'text': txt.TabEditTerrain[1]},
+			{'tag': 'br'},
+			{'tag': 'input', 'id': elemsList.EditTabList[1], 'type': 'radio', 'name': 'TypeEditTerr', 'value': '2'},
+			{'tag': 'label', 'for':elemsList.EditTabList[1], 'text': txt.TabEditTerrain[2]},
+			{'tag': 'br'},
+			{'tag': 'label', 'for': elemsList.EditTabList[2], 'text': txt.TabEditTerrain[3]},
+			{'tag': 'input', 'id': elemsList.EditTabList[2], 'type': 'radio', 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 5, 'max': 100},
+			{'tag': 'br'},
+			{'tag': 'label', 'for': elemsList.EditTabList[3], 'text': txt.TabEditTerrain[4]},
+			{'tag': 'input', 'id': elemsList.EditTabList[3], 'type': 'radio', 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 5, 'max': 100},
+		]},
 		{'tag': 'div', 'id': elemsList.nTabsList[1], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 2'},
 		{'tag': 'div', 'id': elemsList.nTabsList[2], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 3'},
 	]},

@@ -22,7 +22,7 @@ class MainEngenie {
 
 	CreateObject(_width, _height) {
 
-		this.terrain.CreateTerrain(_width, _height, this.scene, this.camera);
+		this.terrain.Create(_width, _height, this.scene, this.camera);
 	}
 
 	Render() {
@@ -31,7 +31,13 @@ class MainEngenie {
 	}
 	
 	getRender() {
+
 		return this.renderer;
+	}
+
+	getTerrain() {
+
+		return this.terrain;
 	}
 }
 

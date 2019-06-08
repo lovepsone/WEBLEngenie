@@ -18,7 +18,14 @@ var lang = {
 			'</br>Долгота: ',
 			'Создать',
 			'Отмена',
-		]
+		],
+		'TabEditTerrain' : [
+			'Редактор Террейна',
+			' - Вдавливание',
+			' - Выдавливание ',
+			'Радиус: ',
+			'Сила: ',
+		],
 	},
 
 	'en': {
@@ -35,7 +42,14 @@ var lang = {
 			'</br>Length: ',
 			'Create',
 			'Cancel',
-		]
+		],
+		'TabEditTerrain' : [
+			'Editor Terrain',
+			' - Pressure<br>',
+			' - Extrusion',
+			'Radius: ',
+			'Strength: ',
+		],
 	}
 }
 

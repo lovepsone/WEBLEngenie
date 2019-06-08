@@ -19,6 +19,9 @@ document.getElementById(elemsList.onClickList[2]).addEventListener("click", onCl
 document.getElementById(elemsList.ButtonList[0]).addEventListener("click", onClickButtonCreateTerrain, false);
 document.getElementById(elemsList.ButtonList[1]).addEventListener("click", onClickButtonCancelDialog, false);
 
+document.getElementById(elemsList.EditTabList[2]).addEventListener("change", onChangetEditRadius, false);
+document.getElementById(elemsList.EditTabList[3]).addEventListener("change", onChangetEditStrength, false);
+
 for (var i = 0; i < elemsList.bTabsList.length; i++) {
 
 	document.getElementById(elemsList.bTabsList[i]).addEventListener("click", {handleEvent: onClickButtonTabs, NameTab: elemsList.nTabsList[i], button: elemsList.bTabsList[i]}, false);
@@ -35,6 +38,7 @@ var AnimationFrame = function() {
 };
 
 AnimationFrame();
+
 
 function onClickCreateTerrain() {
 
@@ -71,4 +75,17 @@ function onClickButtonTabs(event) {
 
 	document.getElementById(this.NameTab).style.display = "block";
 	document.getElementById(this.button).className += " active";
+}
+
+function onChangetEditRadius(event) {
+
+	console.log(event.srcElement.value);
+	var terrain = Engenie.getTerrain();
+	terrain.setPressureRadius(event.srcElement.value);
+}
+
+function onChangetEditStrength(event) {
+
+	var terrain = Engenie.getTerrain();
+	terrain.setPressureStrength(event.srcElement.value);	
 }

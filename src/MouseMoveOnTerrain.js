@@ -57,6 +57,11 @@ class MouseMoveOnTerrain {
 		this.element.removeEventListener("mouseup", this.onDocumentMouseUp, false);
 		this.element.removeEventListener("mousemove", this.onDocumentMouseMove.bind(this), false);
 	}
+
+	set AddNewTerrain(mesh) {
+
+		this.mesh = mesh;
+	}
 }
 
 export {MouseMoveOnTerrain};
