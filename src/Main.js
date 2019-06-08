@@ -2,7 +2,7 @@
 * author lovepsone
 */
 
-import {MoseRaycaster} from './MRaycaster.js';
+import {PressureTerrain} from './PressureTerrain.js';
 
 class MainEngenie {
 
@@ -16,8 +16,6 @@ class MainEngenie {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		
 		this.camera.position.set(0, -6, 9);
-		
-		this.t = new MoseRaycaster(this.camera, this.scene.children);
 
 	}
 
@@ -36,6 +34,7 @@ class MainEngenie {
 		this.scene.add(mesh);
 
 		this.camera.lookAt(mesh.position);
+		this.t = new PressureTerrain(this.camera, mesh, 'Window');
 	}
 
 	Render() {
