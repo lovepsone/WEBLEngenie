@@ -10,7 +10,7 @@ class MouseMoveOnTerrain {
 		this.raycaster = new THREE.Raycaster();
 		this.mouseVector = new THREE.Vector3();
 		this.camera = _camera;
-		this.geometry = _terrain;
+		this.mesh = _terrain;
 		this.element = document.getElementById(_viewport);
 		this.MouseDown = false;
 
@@ -34,8 +34,12 @@ class MouseMoveOnTerrain {
 	onDocumentMouseMove(event) {
 
 		event.preventDefault();
+
 		if (this.MouseDown) {
 
+			var x = (event.layerX / window.innerWidth ) * 2 - 1;
+			var y = - (event.layerY / window.innerHeight ) * 2 + 1;
+			this.mouseVector.set(x, y, 0.5);
 		}
 		
 	}
