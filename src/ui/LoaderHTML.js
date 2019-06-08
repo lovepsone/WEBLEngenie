@@ -70,7 +70,8 @@ class LoaderHTML5 {
 		//form Связывает поле с формой по её идентификатору.
 		//autofocus Устанавливает фокус в поле формы.
 		//formaction Определяет адрес обработчика формы.
-		//name Имя поля, предназначено для того, чтобы обработчик формы мог его идентифицировать.
+		if (this.getAttr(elems['max']))			element.setAttribute('max', elems['max']);
+		if (this.getAttr(elems['min']))			element.setAttribute('min', elems['min']);
 		if (this.getAttr(elems['type']))		element.setAttribute('type', elems['type']);
 		if (this.getAttr(elems['size']))		element.setAttribute('size', elems['size']);
 		if (this.getAttr(elems['value']))		element.setAttribute('value', elems['value']);
