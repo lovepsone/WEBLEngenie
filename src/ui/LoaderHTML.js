@@ -65,6 +65,7 @@ class LoaderHTML5 {
 		if (this.getAttr(elems['action']))		element.setAttribute('action', elems['action']);
 		// input
 		//checked Предварительно активированный переключатель или флажок.
+		if (this.getAttr(elems['checked']))		element.setAttribute('checked', elems['checked']);
 		//disabled Блокирует доступ и изменение элемента.
 		//form Связывает поле с формой по её идентификатору.
 		//autofocus Устанавливает фокус в поле формы.
