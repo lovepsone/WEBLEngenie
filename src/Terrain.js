@@ -39,7 +39,7 @@ class Terrain {
 
 	setPressureRadius(r) {
 
-		if (typeof(this.pressure) === 'object') {
+		if (typeof(this.pressure) === 'object' && this.pressure !== null) {
 
 			this.pressure.UpdateRadius(r);
 		}
@@ -48,7 +48,7 @@ class Terrain {
 
 	setPressureStrength(s) {
 
-		if (typeof(this.pressure) === 'object') {
+		if (typeof(this.pressure) === 'object' && this.pressure !== null) {
 
 			this.pressure.UpdateStrength(s);
 		}

@@ -19,8 +19,8 @@ document.getElementById(elemsList.onClickList[2]).addEventListener("click", onCl
 document.getElementById(elemsList.ButtonList[0]).addEventListener("click", onClickButtonCreateTerrain, false);
 document.getElementById(elemsList.ButtonList[1]).addEventListener("click", onClickButtonCancelDialog, false);
 
-document.getElementById(elemsList.EditTabList[2]).addEventListener("change", onChangetEditRadius, false);
-document.getElementById(elemsList.EditTabList[3]).addEventListener("change", onChangetEditStrength, false);
+document.getElementById(elemsList.EditTabList[0]).addEventListener("change", onChangetEditRadius, false);
+document.getElementById(elemsList.EditTabList[1]).addEventListener("change", onChangetEditStrength, false);
 
 for (var i = 0; i < elemsList.bTabsList.length; i++) {
 
@@ -79,7 +79,6 @@ function onClickButtonTabs(event) {
 
 function onChangetEditRadius(event) {
 
-	console.log(event.srcElement.value);
 	var terrain = Engenie.getTerrain();
 	terrain.setPressureRadius(event.srcElement.value);
 }

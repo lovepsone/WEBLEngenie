@@ -21,8 +21,7 @@ var lang = {
 		],
 		'TabEditTerrain' : [
 			'Редактор Террейна',
-			' - Вдавливание',
-			' - Выдавливание ',
+			'Вдавливание и выдавливание террейна',
 			'Радиус: ',
 			'Сила: ',
 		],
@@ -45,8 +44,7 @@ var lang = {
 		],
 		'TabEditTerrain' : [
 			'Editor Terrain',
-			' - Pressure<br>',
-			' - Extrusion',
+			'Pressure and Extrusion terrain',
 			'Radius: ',
 			'Strength: ',
 		],
