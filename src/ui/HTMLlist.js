@@ -17,7 +17,7 @@ var elemsList = {
 	'ParamList': ['WidthObject', 'LengthObject'],
 	'bTabsList': ['ButtonEditTerrain', 'TabButton2', 'TabButton3'],
 	'nTabsList': ['EditTerrainContent', 'tabcontent2', 'tabcontent3'],
-	'EditTabList': ['EditRadius', 'EditStrength'],
+	'EditTabList': ['EditRadius', 'EditStrength', 'EditRadiusVal', 'EditStrengthVal'],
 };
 
 var HTMLlist = [
@@ -63,10 +63,12 @@ var HTMLlist = [
 			{'tag': 'div', 'text': txt.TabEditTerrain[1]},
 			{'tag': 'br'},
 			{'tag': 'label', 'for': elemsList.EditTabList[0], 'text': txt.TabEditTerrain[2]},
-			{'tag': 'input', 'id': elemsList.EditTabList[0], 'type': 'radio', 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 5, 'max': 100},
+			{'tag': 'input', 'id': elemsList.EditTabList[0], 'style':"font-size: 12px; border: 0px; margin: 5px;width: 120px;", 'type': 'range', 'value': 1, 'max': 100, 'min': 1},
+			{'tag': 'div', 'id': elemsList.EditTabList[2], 'text': 5, 'align': 'center'},
 			{'tag': 'br'},
 			{'tag': 'label', 'for': elemsList.EditTabList[1], 'text': txt.TabEditTerrain[3]},
-			{'tag': 'input', 'id': elemsList.EditTabList[1], 'type': 'radio', 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 5, 'max': 100},
+			{'tag': 'input', 'id': elemsList.EditTabList[1],  'style':"font-size: 12px; border: 0px; margin: 5px;width: 120px;", 'type': 'range', 'value': 1, 'max': 100, 'min': -100},
+			{'tag': 'div', 'id': elemsList.EditTabList[3], 'text': 5, 'align': 'center'},
 		]},
 		{'tag': 'div', 'id': elemsList.nTabsList[1], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 2'},
 		{'tag': 'div', 'id': elemsList.nTabsList[2], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 3'},

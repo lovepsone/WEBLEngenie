@@ -81,10 +81,12 @@ function onChangetEditRadius(event) {
 
 	var terrain = Engenie.getTerrain();
 	terrain.setPressureRadius(event.srcElement.value);
+	document.getElementById(elemsList.EditTabList[2]).innerHTML = event.srcElement.value;
 }
 
 function onChangetEditStrength(event) {
 
 	var terrain = Engenie.getTerrain();
-	terrain.setPressureStrength(event.srcElement.value);	
+	terrain.setPressureStrength(event.srcElement.value);
+	document.getElementById(elemsList.EditTabList[3]).innerHTML = event.srcElement.value;	
 }
