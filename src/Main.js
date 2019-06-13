@@ -3,6 +3,7 @@
 */
 
 import {Terrain} from './Terrain.js';
+import {CameraControls} from './CameraControls.js';
 
 class MainEngenie {
 
@@ -15,7 +16,8 @@ class MainEngenie {
 		this.renderer.setClearColor(0x808080);
 		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
-		
+
+		this.controls = new CameraControls(this.camera, 'Window');
 		this.camera.position.set(0, -6, 9);
 		this.terrain = new Terrain();
 	}
