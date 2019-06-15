@@ -19,12 +19,12 @@ class MainEngenie {
 
 		this.controls = new CameraControls(this.camera, 'Window');
 		this.camera.position.set(0, -6, 9);
-		this.terrain = new Terrain();
+		this.terrain = new Terrain(this);
 	}
 
 	CreateObject(_width, _height) {
 
-		this.terrain.Create(_width, _height, this.scene, this.camera);
+		this.terrain.Create(_width, _height);
 	}
 
 	Render() {

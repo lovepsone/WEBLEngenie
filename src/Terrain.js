@@ -2,55 +2,53 @@
 * author lovepsone
 */
 
+var mesh = null, pressure = null;
+
 import {PressureTerrain} from './PressureTerrain.js';
 
 class Terrain {
 
-	constructor() {
+	ScopeMain = null;
 
-		this.mesh = null;
-		this.pressure = null; 
+	constructor(scope) {
+
+		this.ScopeMain = scope;
 	}
 
-	Create(_width, _height, _scene, _camera) {
+	Create(_width, _height) {
 
-		if (this.mesh != null) {
+		if (mesh != null) {
 
-			_scene.remove(this.mesh);
+			this.ScopeMain.scene.remove(mesh);
 		}
 
-		var geometry = new THREE.PlaneBufferGeometry(_width, _height, _width, _height);
-		var material = new THREE.MeshBasicMaterial({color: 0x0000ff, /*wireframe: true,*/ side: THREE.DoubleSide, morphTargets: true});
+		let geometry = new THREE.PlaneBufferGeometry(_width, _height, _width, _height);
 
-		var WireframeMaterial = new THREE.MeshBasicMaterial({color: 0x000000, opacity: 0.3, wireframe: true, transparent: true });
+		mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0x0000ff, /*wireframe: true,*/ side: THREE.DoubleSide, morphTargets: true}));
+		mesh.name = 'Terrain';
+		mesh.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0x000000, opacity: 0.3, wireframe: true, transparent: true })));
 
-		this.mesh = new THREE.Mesh(geometry, material);
-		this.mesh.name = 'Terrain';
+		this.ScopeMain.scene.add(mesh);
 
-		var WireframeMesh = new THREE.Mesh(geometry, WireframeMaterial);
-		this.mesh.add(WireframeMesh);
-
-		_scene.add(this.mesh);
-
-		this.pressure = new PressureTerrain(_camera, this.mesh, 'Window');
-		_camera.lookAt(this.mesh.position);
+		pressure = new PressureTerrain(this.ScopeMain.camera, mesh, 'Window');
+		this.ScopeMain.camera.lookAt(mesh.position);
 
 	}
 
 	setPressureRadius(r) {
 
-		if (typeof(this.pressure) === 'object' && this.pressure !== null) {
+		if (typeof(pressure) === 'object' && pressure !== null) {
 
-			this.pressure.UpdateRadius(r);
+			pressure.UpdateRadius(r);
 		}
 	}
 
 
 	setPressureStrength(s) {
 
-		if (typeof(this.pressure) === 'object' && this.pressure !== null) {
+		if (typeof(pressure) === 'object' && pressure !== null) {
 
-			this.pressure.UpdateStrength(s);
+			pressure.UpdateStrength(s);
 		}
 	}
 }
