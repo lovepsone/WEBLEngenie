@@ -2,38 +2,39 @@
 * author lovepsone
 */
 
+let _radius = 0.5;
+let _strength = 0.005;
+let _mesh = null;
+let _camera = null;
+
 import {MouseMoveOnTerrain} from './MouseMoveOnTerrain.js';
 
 class PressureTerrain extends MouseMoveOnTerrain {
 
-	constructor(_camera, _terrain, _viewport) {
+	constructor(_viewObject, _terrain, _viewport) {
 
-		super(_camera, _terrain, _viewport);
+		super(_viewport);
 
-		this.radius = 0.5;
-		this.strength = 0.005;
-	}
-
-	getIntersects(x, y) {
-
-		x = (x / window.innerWidth ) * 2 - 1;
-		y = - (y / window.innerHeight ) * 2 + 1;
-		this.mouseVector.set(x, y, 0.5);
-		this.raycaster.setFromCamera(this.mouseVector, this.camera);
-		return this.raycaster.intersectObject(this.mesh, true);
+		_mesh = _terrain;
+		_camera = _viewObject;
 	}
 
 	onDocumentMouseMove(event) {
 
 		event.preventDefault();
 
-		if (this.MouseDown) {
+		if (this.getMoseDown()) {
 
-			var intersects = this.getIntersects(event.layerX, event.layerY);
+			let x = (event.layerX / window.innerWidth ) * 2 - 1;
+			let y = - (event.layerY / window.innerHeight ) * 2 + 1;
+
+			this.getVector().set(x, y, 0.5);
+			this.getRayCaster().setFromCamera(this.getVector(), _camera);
+			let intersects = this.getRayCaster().intersectObject(_mesh, true);
 
 			if (intersects.length > 0) {
-				this.getPositionsGeometry(this.mesh.geometry.attributes.position.array, intersects[0].point);
-				this.mesh.geometry.attributes.position.needsUpdate = true;
+				this.getPositionsGeometry(_mesh.geometry.attributes.position.array, intersects[0].point);
+				_mesh.geometry.attributes.position.needsUpdate = true;
 			}
 		}
 		
@@ -44,10 +45,10 @@ class PressureTerrain extends MouseMoveOnTerrain {
 		var buf = [], r = 0;
 
 		for (var i = 0; i < _position.length; i += 3) {
-			//(x — x_0)^2 + (y — y_0)^2 <= R^2
-			if (this.radius > (r = Math.pow((_point.x - _position[i]), 2) + Math.pow((_point.y - _position[i+1]),2))) {
+			//(x ï¿½ x_0)^2 + (y ï¿½ y_0)^2 <= R^2
+			if (_radius  > (r = Math.pow((_point.x - _position[i]), 2) + Math.pow((_point.y - _position[i+1]),2))) {
 
-				_position[i+2] += this.strength;
+				_position[i+2] += _strength;
 			}
 		}
 
@@ -56,12 +57,12 @@ class PressureTerrain extends MouseMoveOnTerrain {
 
 	UpdateRadius(r) {
 
-		this.radius = r / 10;
+		_radius  = r / 10;
 	}
 
 	UpdateStrength(s) {
 
-		this.strength = s / 1000;
+		_strength = s / 1000;
 	}
 }
 
