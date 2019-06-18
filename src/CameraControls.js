@@ -3,33 +3,30 @@
 */
 
 const STATE = { NONE: - 1, ROTATE: 0, ZOOM: 1, PAN: 2 };
+let _state = STATE.NONE;
+let _object = null;
+let _enabled = true;
+let _center = new THREE.Vector3();
+let _panSpeed, _zoomSpeed, _rotationSpeed;
+let _vector = new THREE.Vector3();
+let _spherical = new THREE.Spherical();
+let _pointerOld = new THREE.Vector2();
+let _normalMatrix = new THREE.Matrix3();
 
-class CameraControls {
+class CameraControls extends THREE.EventDispatcher {
 
 	constructor(_camera, _viewport) {
 
+		super();
 		this.element = document.getElementById(_viewport);
 
-		this.enabled = true;
-		this.center = new THREE.Vector3();
-		this.panSpeed = 0.002;
-		this.zoomSpeed = 0.1;
-		this.rotationSpeed = 0.005;
+		_panSpeed = 0.002;
+		_zoomSpeed = 0.1;
+		_rotationSpeed = 0.005;
 
-		this.object = _camera;
+		_object = _camera;
 
-		this.vector = new THREE.Vector3();
 		this.delta = new THREE.Vector3();
-		//var box = new THREE.Box3();
-
-		this.state = STATE.NONE;
-
-		this.normalMatrix = new THREE.Matrix3();
-		this.pointerOld = new THREE.Vector2();
-		this.spherical = new THREE.Spherical();
-		//var sphere = new THREE.Sphere();
-		
-		this.changeEvent = { type: 'change' };
 
 		this.element.addEventListener("mousedown", this.onDocumentMouseDown.bind(this), false);
 		this.element.addEventListener("contextmenu", this.onDocumentContextMenu, false );
@@ -38,98 +35,75 @@ class CameraControls {
 
 	focus(target) {
 
-		var distance;
-
-		/*box.setFromObject( target );
-
-		if ( box.isEmpty() === false ) {
-
-			box.getCenter( center );
-			distance = box.getBoundingSphere( sphere ).radius;
-
-		} else {
-
-			// Focusing on an Group, AmbientLight, etc
-
-			center.setFromMatrixPosition( target.matrixWorld );
-			distance = 0.1;
-
-		}
-
-		delta.set( 0, 0, 1 );
-		delta.applyQuaternion( object.quaternion );
-		delta.multiplyScalar( distance * 4 );
-
-		object.position.copy( center ).add( delta );
-
-		scope.dispatchEvent( changeEvent );*/
-
-	}
+	this.dispatchEvent({type: 'change'});
+}
 
 	pan(delta) {
 
-		var distance = this.object.position.distanceTo(this.center);
+		let distance = _object.position.distanceTo(_center);
 
-		delta.multiplyScalar(distance * this.panSpeed);
-		delta.applyMatrix3(this.normalMatrix.getNormalMatrix(this.object.matrix));
+		delta.multiplyScalar(distance * _panSpeed);
+		delta.applyMatrix3(_normalMatrix .getNormalMatrix(_object.matrix));
 
-		this.object.position.add( delta );
-		this.center.add(delta);
+		_object.position.add( delta );
+		_center.add(delta);
 
+		this.dispatchEvent({type: 'change'});
 	}
 
 	zoom(delta) {
 
-		var distance = this.object.position.distanceTo(this.center);
+		let distance = _object.position.distanceTo(_center);
 
-		delta.multiplyScalar(distance * this.zoomSpeed );
+		delta.multiplyScalar(distance * _zoomSpeed);
 
 		if (delta.length() > distance) return;
 
-		delta.applyMatrix3(this.normalMatrix.getNormalMatrix(this.object.matrix ));
+		delta.applyMatrix3(_normalMatrix .getNormalMatrix(_object.matrix ));
 
-		this.object.position.add(delta);
+		_object.position.add(delta);
+
+		this.dispatchEvent({type: 'change'});
 
 	};
 
 	rotate(delta) {
 
-		this.vector.copy(this.object.position).sub(this.center);
+		_vector.copy(_object.position).sub(_center);
 
-		this.spherical.setFromVector3(this.vector);
+		_spherical.setFromVector3(_vector);
+		_spherical.theta += delta.x * _rotationSpeed;
+		_spherical.phi += delta.y * _rotationSpeed;
+		_spherical.makeSafe();
 
-		this.spherical.theta += delta.x * this.rotationSpeed;
-		this.spherical.phi += delta.y * this.rotationSpeed;
+		_vector.setFromSpherical(_spherical);
 
-		this.spherical.makeSafe();
+		_object.position.copy(_center).add(_vector);
 
-		this.vector.setFromSpherical(this.spherical);
+		_object.lookAt(_center);
 
-		this.object.position.copy(this.center).add(this.vector);
-
-		this.object.lookAt(this.center);
-
+		this.dispatchEvent({type: 'change'});
 	}
 
 	onDocumentMouseDown(event) {
 
-		if (this.enabled === false) return;
+		if (_enabled === false) return;
 
 		if (event.button === 0) {
 
-			this.state = STATE.ROTATE;
+			_state = STATE.ROTATE;
 
 		} else if ( event.button === 1 ) {
 
-			this.state = STATE.ZOOM;
+			_state = STATE.ZOOM;
 
 		} else if ( event.button === 2 ) {
 
-			this.state = STATE.PAN;
+			_state = STATE.PAN;
 
 		}
 
-		this.pointerOld.set(event.clientX, event.clientY);
+		_pointerOld.set(event.clientX, event.clientY);
 
 		this.element.addEventListener("mousemove", this.onDocumentMouseMove.bind(this), false);
 		this.element.addEventListener("mouseup", this.onDocumentMouseUp.bind(this), false);
@@ -140,37 +114,37 @@ class CameraControls {
 
 	onDocumentMouseMove(event) {
 
-		if (this.enabled === false) return;
+		if (_enabled === false) return;
 
-		var movementX = event.clientX - this.pointerOld.x;
-		var movementY = event.clientY - this.pointerOld.y;
+		var movementX = event.clientX - _pointerOld.x;
+		var movementY = event.clientY - _pointerOld.y;
 
-		if (this.state === STATE.ROTATE) {
+		if (_state === STATE.ROTATE) {
 
 			this.rotate(this.delta.set(- movementX, - movementY, 0));
 
-		} else if (this.state === STATE.ZOOM ) {
+		} else if (_state === STATE.ZOOM ) {
 
 			this.zoom(this.delta.set(0, 0, movementY));
 
-		} else if (this.state === STATE.PAN ) {
+		} else if (_state === STATE.PAN ) {
 
 			this.pan(this.delta.set(- movementX, movementY, 0));
 
 		}
 
-		this.pointerOld.set(event.clientX, event.clientY);
+		_pointerOld.set(event.clientX, event.clientY);
 
 	}
 
 	onDocumentMouseUp(event) {
 
-		this.element.addEventListener("mousemove", this.onDocumentMouseMove.bind(this), false );
-		this.element.addEventListener("mouseup", this.onDocumentMouseUp.bind(this), false );
-		this.element.addEventListener("mouseout", this.onDocumentMouseUp.bind(this), false );
-		this.element.addEventListener("dblclick", this.onDocumentMouseUp.bind(this), false );
+		this.element.removeEventListener("mousemove", this.onDocumentMouseMove, false );
+		this.element.removeEventListener("mouseup", this.onDocumentMouseUp, false );
+		this.element.removeEventListener("mouseout", this.onDocumentMouseUp, false );
+		this.element.removeEventListener("dblclick", this.onDocumentMouseUp, false );
 
-		this.state = STATE.NONE;
+		_state = STATE.NONE;
 
 	}
 
