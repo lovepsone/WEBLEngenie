@@ -5,6 +5,8 @@
 import {Terrain} from './Terrain.js';
 import {CameraControls} from './CameraControls.js';
 
+let controls;
+
 class MainEngenie {
 
 	constructor(c_fov, c_Width, c_Height) {
@@ -17,8 +19,8 @@ class MainEngenie {
 		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 
-		this.controls = new CameraControls(this.camera, 'Window');
-		this.camera.position.set(0, -6, 9);
+		controls = new CameraControls(this.camera, 'Window');
+		this.camera.position.set(0, -25, 30);
 		this.terrain = new Terrain(this);
 	}
 
@@ -40,6 +42,11 @@ class MainEngenie {
 	getTerrain() {
 
 		return this.terrain;
+	}
+
+	getControlsCamera() {
+
+		return controls;
 	}
 }
 
