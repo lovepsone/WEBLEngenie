@@ -12,6 +12,7 @@ let _vector = new THREE.Vector3();
 let _spherical = new THREE.Spherical();
 let _pointerOld = new THREE.Vector2();
 let _normalMatrix = new THREE.Matrix3();
+let bindMouseDown, bindMouseUp, bindMouseWheel, bindMouseMove;
 
 class CameraControls extends THREE.EventDispatcher {
 
@@ -28,15 +29,17 @@ class CameraControls extends THREE.EventDispatcher {
 
 		this.delta = new THREE.Vector3();
 
-		this.element.addEventListener("mousedown", this.onDocumentMouseDown.bind(this), false);
-		this.element.addEventListener("contextmenu", this.onDocumentContextMenu, false );
-		this.element.addEventListener("wheel", this.onDocumentMouseWheel.bind(this), false );
+		bindMouseDown = this.onDocumentMouseDown.bind(this);
+		bindMouseWheel = this.onDocumentMouseWheel.bind(this);
+		bindMouseMove = this.onDocumentMouseMove.bind(this);
+		bindMouseUp = this.onDocumentMouseUp.bind(this);
+
 	}
 
 	focus(target) {
 
-	this.dispatchEvent({type: 'change'});
-}
+		this.dispatchEvent({type: 'change'});
+	}
 
 	pan(delta) {
 
@@ -105,10 +108,10 @@ class CameraControls extends THREE.EventDispatcher {
 
 		_pointerOld.set(event.clientX, event.clientY);
 
-		this.element.addEventListener("mousemove", this.onDocumentMouseMove.bind(this), false);
-		this.element.addEventListener("mouseup", this.onDocumentMouseUp.bind(this), false);
-		this.element.addEventListener("mouseout", this.onDocumentMouseUp.bind(this), false);
-		this.element.addEventListener("dblclick", this.onDocumentMouseUp.bind(this), false);
+		this.element.addEventListener("mousemove", bindMouseMove, false);
+		this.element.addEventListener("mouseup", bindMouseUp, false);
+		this.element.addEventListener("mouseout", bindMouseUp, false);
+		this.element.addEventListener("dblclick", bindMouseUp, false);
 
 	}
 
@@ -139,10 +142,10 @@ class CameraControls extends THREE.EventDispatcher {
 
 	onDocumentMouseUp(event) {
 
-		this.element.removeEventListener("mousemove", this.onDocumentMouseMove, false );
-		this.element.removeEventListener("mouseup", this.onDocumentMouseUp, false );
-		this.element.removeEventListener("mouseout", this.onDocumentMouseUp, false );
-		this.element.removeEventListener("dblclick", this.onDocumentMouseUp, false );
+		this.element.removeEventListener("mousemove",bindMouseMove, false );
+		this.element.removeEventListener("mouseup", bindMouseUp, false );
+		this.element.removeEventListener("mouseout", bindMouseUp, false );
+		this.element.removeEventListener("dblclick", bindMouseUp, false );
 
 		_state = STATE.NONE;
 
@@ -161,16 +164,22 @@ class CameraControls extends THREE.EventDispatcher {
 		event.preventDefault();
 	}
 
+	UpdateEvents() {
+
+		this.element.addEventListener("mousedown",bindMouseDown, false);
+		this.element.addEventListener("contextmenu", this.onDocumentContextMenu, false );
+		this.element.addEventListener("wheel", bindMouseWheel, false );
+	}
+
 	dispose() {
 
-		this.element.removeEventListener("contextmenu", onDocumentContextMenu, false);
-		this.element.removeEventListener("mousedown", onDocumentMouseDown, false);
-		this.element.removeEventListener("wheel", onDocumentMouseWheel, false);
-
-		this.element.removeEventListener("mousemove", onDocumentMouseMove, false);
-		this.element.removeEventListener("mouseup", onDocumentMouseUp, false);
-		this.element.removeEventListener("mouseout", onDocumentMouseUp, false);
-		this.element.removeEventListener("dblclick", onDocumentMouseUp, false);
+		this.element.removeEventListener("contextmenu", this.onDocumentContextMenu, false);
+		this.element.removeEventListener("mousedown",bindMouseDown, false);
+		this.element.removeEventListener("wheel", bindMouseWheel, false);
+		this.element.removeEventListener("mousemove",bindMouseMove, false);
+		this.element.removeEventListener("mouseup", bindMouseUp, false);
+		this.element.removeEventListener("mouseout", bindMouseUp, false);
+		this.element.removeEventListener("dblclick", bindMouseUp, false);
 	}
 	
 }
