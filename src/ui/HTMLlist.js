@@ -18,6 +18,7 @@ var elemsList = {
 	'bTabsList': ['ButtonEditTerrain', 'TabButton2', 'TabButton3'],
 	'nTabsList': ['EditTerrainContent', 'tabcontent2', 'tabcontent3'],
 	'EditTabList': ['EditRadius', 'EditStrength', 'EditRadiusVal', 'EditStrengthVal'],
+	'CheckCamera': 'camera',
 };
 
 var HTMLlist = [
@@ -27,9 +28,9 @@ var HTMLlist = [
 			{'tag': 'h3', 'style': 'border-bottom: 1px solid white;', 'text': txt.CreateTerrain[0]},
 			{'tag': 'div', 'class': 'd_body', 'text': txt.CreateTerrain[1], 'children': [
 				{'tag': 'label', 'for': elemsList.ParamList[0], 'text': txt.CreateTerrain[2]},
-				{'tag': 'input', 'id': elemsList.ParamList[0], 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 10},
+				{'tag': 'input', 'id': elemsList.ParamList[0], 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 100},
 				{'tag': 'label', 'for': elemsList.ParamList[1], 'text': txt.CreateTerrain[3]},
-				{'tag': 'input', 'id': elemsList.ParamList[1], 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 10},
+				{'tag': 'input', 'id': elemsList.ParamList[1], 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 100},
 			]},
 			{'tag': 'div', 'style': 'border-bottom: 1px solid white;', 'align': 'center', 'children': [
 				{'tag': 'input', 'id': elemsList.ButtonList[0], 'style': 'width: 200px;', 'type': 'button', 'value': txt.CreateTerrain[4]},
@@ -73,6 +74,10 @@ var HTMLlist = [
 		{'tag': 'div', 'id': elemsList.nTabsList[1], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 2'},
 		{'tag': 'div', 'id': elemsList.nTabsList[2], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 3'},
 	]},
+	{'tag': 'div', 'id': 'test', 'style': "position: absolute;top: 36px; right: 310px;", 'children': [
+		{'tag': 'label', 'for': 'camera', 'style':"font-size: 14px; color: #eee;", 'text': txt.Camera},
+		{'tag': 'input', 'id': 'camera', 'type': 'checkbox'},
+	]}
 	
 ];
 

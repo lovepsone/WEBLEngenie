@@ -5,6 +5,7 @@
 var lang = {
 
 	'ru': {
+		'Camera': 'Управление камерой:',
 		'MenuBar': [
 			'Файл',
 			'Создать',
@@ -28,6 +29,7 @@ var lang = {
 	},
 
 	'en': {
+		'Camera': 'Camera control:',
 		'MenuBar': [
 			'File',
 			'Create',
