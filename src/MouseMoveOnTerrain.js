@@ -5,13 +5,16 @@
 let _mouseVector = new THREE.Vector3();
 let _raycaster = new THREE.Raycaster();
 let _MouseDown = false;
+let bindMouseDown, bindMouseUp, bindMouseMove;
 
 class MouseMoveOnTerrain {
 
 	constructor(_viewport) {
 
 		this.element = document.getElementById(_viewport);
-		this.AddEvents();
+		bindMouseDown =  this.onDocumentMouseDown.bind(this);
+		bindMouseUp = this.onDocumentMouseUp.bind(this);
+		bindMouseMove = this.onDocumentMouseMove.bind(this);
 	}
 	
 	onDocumentMouseDown(event) {
@@ -41,16 +44,16 @@ class MouseMoveOnTerrain {
 
 	AddEvents() {
 
-		this.element.addEventListener("mousedown", this.onDocumentMouseDown.bind(this), false);
-		this.element.addEventListener("mouseup", this.onDocumentMouseUp.bind(this), false);
-		this.element.addEventListener("mousemove", this.onDocumentMouseMove.bind(this), false);
+		this.element.addEventListener("mousedown", bindMouseDown, false);
+		this.element.addEventListener("mouseup", bindMouseUp, false);
+		this.element.addEventListener("mousemove", bindMouseMove, false);
 	}
 	
 	DisposeEvents() {
 
-		this.element.removeEventListener("mousedown", this.onDocumentMouseDown, false);
-		this.element.removeEventListener("mouseup", this.onDocumentMouseUp, false);
-		this.element.removeEventListener("mousemove", this.onDocumentMouseMove, false);
+		this.element.removeEventListener("mousedown", bindMouseDown, false);
+		this.element.removeEventListener("mouseup", bindMouseUp, false);
+		this.element.removeEventListener("mousemove", bindMouseMove, false);
 	}
 
 	getMoseDown() {
