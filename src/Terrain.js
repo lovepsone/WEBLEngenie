@@ -31,6 +31,7 @@ class Terrain {
 		this.ScopeMain.scene.add(mesh);
 
 		pressure = new PressureTerrain(this.ScopeMain.camera, mesh, 'Window');
+		pressure.AddEvents();
 		this.ScopeMain.camera.lookAt(mesh.position);
 
 	}
@@ -51,6 +52,22 @@ class Terrain {
 			pressure.UpdateStrength(s);
 		}
 	}
+
+	PressureDisposeEvents() {
+
+		if (typeof(pressure) === 'object' && pressure !== null) {
+
+			pressure.DisposeEvents();
+		}
+	}
+
+	PressureUpdateEvents() {
+
+		if (typeof(pressure) === 'object' && pressure !== null) {
+
+			pressure.AddEvents();
+		}
+	}	
 }
 
 export {Terrain};
