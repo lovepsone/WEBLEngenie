@@ -26,7 +26,7 @@ class Terrain {
 
 		mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0x0000ff, /*wireframe: true,*/ side: THREE.DoubleSide, morphTargets: true}));
 		mesh.name = 'Terrain';
-		mesh.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0x000000, opacity: 0.3, wireframe: true, transparent: true })));
+		mesh.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.3, wireframe: true, transparent: true })));
 
 		this.ScopeMain.scene.add(mesh);
 
@@ -38,7 +38,7 @@ class Terrain {
 
 	setPressureRadius(r) {
 
-		if (typeof(pressure) === 'object' && pressure !== null) {
+		if (pressure instanceof PressureTerrain) {
 
 			pressure.UpdateRadius(r);
 		}
@@ -47,7 +47,7 @@ class Terrain {
 
 	setPressureStrength(s) {
 
-		if (typeof(pressure) === 'object' && pressure !== null) {
+		if (pressure instanceof PressureTerrain) {
 
 			pressure.UpdateStrength(s);
 		}
@@ -55,7 +55,7 @@ class Terrain {
 
 	PressureDisposeEvents() {
 
-		if (typeof(pressure) === 'object' && pressure !== null) {
+		if (pressure instanceof PressureTerrain) {
 
 			pressure.DisposeEvents();
 		}
@@ -63,7 +63,7 @@ class Terrain {
 
 	PressureUpdateEvents() {
 
-		if (typeof(pressure) === 'object' && pressure !== null) {
+		if (pressure instanceof PressureTerrain) {
 
 			pressure.AddEvents();
 		}
