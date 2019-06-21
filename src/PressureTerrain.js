@@ -52,17 +52,16 @@ class PressureTerrain extends MouseMoveOnTerrain {
 			}
 		}
 
-		return buf;
 	}
 
 	UpdateRadius(r) {
 
-		_radius  = r / 10;
+		_radius  = r / 1.0;
 	}
 
 	UpdateStrength(s) {
 
-		_strength = s / 1000;
+		_strength = s / 100;
 	}
 }
 
