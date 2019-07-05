@@ -69,46 +69,46 @@ class Terrain {
 
 		_context.drawImage(image, 0, 0);
     	let pixel = _context.getImageData(0, 0, _width, _depth);
-    	let geom = new THREE.Geometry;
+    	let geometry = new THREE.Geometry;
 
         for (let x = 0; x < _depth; x++) {
 
             for (let z = 0; z < _width; z++) {
 
-                var vertex = new THREE.Vector3(x * _spacingX, pixel.data[z * 4 + (_depth * x * 4)] / _heightOffset, z * _spacingZ);
-                geom.vertices.push(vertex);
+                let vertex = new THREE.Vector3(x * _spacingX, pixel.data[z * 4 + (_depth * x * 4)] / _heightOffset, z * _spacingZ);
+                geometry.vertices.push(vertex);
             }
         }
 
-            // we create a rectangle between four vertices, and we do
-            // that as two triangles.
-            for (var z = 0; z < _depth - 1; z++) {
-                for (var x = 0; x < _width - 1; x++) {
-                    // we need to point to the position in the array
-                    // a - - b
-                    // |  x  |
-                    // c - - d
-                    var a = x + z * _width;
-                    var b = (x + 1) + (z * _width);
-                    var c = x + ((z + 1) * _width);
-                    var d = (x + 1) + ((z + 1) * _width);
-                    var face1 = new THREE.Face3(a, b, d);
-                    var face2 = new THREE.Face3(d, c, a);
-                    geom.faces.push(face1);
-                    geom.faces.push(face2);
-                }
+        for (let z = 0; z < _depth - 1; z++) {
+			
+			for (let x = 0; x < _width - 1; x++) {
+				  
+				//let a = x + z * _width;
+				//let b = (x + 1) + (z * _width);
+				//let c = x + ((z + 1) * _width);
+				//let d = (x + 1) + ((z + 1) * _width);
+				let face1 = new THREE.Face3((x + z * _width), ((x + 1) + (z * _width)), ((x + 1) + ((z + 1) * _width)));
+				let face2 = new THREE.Face3(((x + 1) + ((z + 1) * _width)), (x + ((z + 1) * _width)), (x + z * _width));
+				geometry.faces.push(face1);
+				geometry.faces.push(face2);
             }
+        }
 
-            geom.computeVertexNormals(true);
-            geom.computeFaceNormals();
-            geom.computeBoundingBox();
-            geom.applyMatrix( new THREE.Matrix4().makeTranslation(-geom.boundingBox.max.x /2, 0, -geom.boundingBox.max.z/2) );
+        geometry.computeVertexNormals(true);
+        geometry.computeFaceNormals();
+        geometry.computeBoundingBox();
+		geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-geometry.boundingBox.max.x /2, 0, -geometry.boundingBox.max.z/2));
+			
+		let bufferGeometry = new THREE.BufferGeometry().fromGeometry(geometry);
 
+		_mesh = new THREE.Mesh(bufferGeometry, new THREE.MeshBasicMaterial({color: 0x0000ff, side: THREE.DoubleSide, morphTargets: true}));
+		_mesh.add(new THREE.Mesh(bufferGeometry, new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.3, wireframe: true, transparent: true})));
 
-			_mesh = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({color: 0x0000ff, side: THREE.DoubleSide, morphTargets: true}));
-			_mesh.add(new THREE.Mesh(geom, new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.3, wireframe: true, transparent: true })));
-
-    		_scope.scene.add(_mesh);
+		_scope.scene.add(_mesh);
+			
+		_pressure = new PressureTerrain(_scope.camera, _mesh, 'Window');
+		_pressure.AddEvents();
 	}
 
 	setPressureRadius(r) {
