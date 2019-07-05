@@ -11,17 +11,23 @@ class MainEngenie {
 
 	constructor(c_fov, c_Width, c_Height) {
 
-		this.renderer = new THREE.WebGLRenderer({antialias:true});
-		this.camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.001, 9000);
-		this.scene = new THREE.Scene();
 		// renderer settings
+		this.renderer = new THREE.WebGLRenderer({ antialias:true });
 		this.renderer.setClearColor(0x808080);
 		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 
+		this.camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.001, 9000);
+		this.camera.position.set(0, 160, 100);
+		this.scene = new THREE.Scene();
+
+		var axesHelper = new THREE.AxesHelper(15);
+		this.scene.add(axesHelper);
+		this.camera.lookAt(axesHelper.position);
+
 		controls = new CameraControls(this.camera, 'Window');
-		this.camera.position.set(0, -25, 30);
 		this.terrain = new Terrain(this);
+
 	}
 
 	CreateObject(_width, _height) {
@@ -32,6 +38,7 @@ class MainEngenie {
 	Render() {
 
 		this.renderer.render(this.scene, this.camera);
+		this.camera.updateProjectionMatrix();
 	}
 	
 	getRender() {
@@ -50,9 +57,4 @@ class MainEngenie {
 	}
 }
 
-var AnimationFrame = function()
-{
-	requestAnimationFrame(AnimationFrame);
-};
-
-export {MainEngenie, AnimationFrame};
+export {MainEngenie};
