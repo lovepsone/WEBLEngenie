@@ -1,8 +1,7 @@
 /*
 * author lovepsone
 */
-
-var mesh = null, pressure = null;
+let _mesh = null, _pressure = null;
 
 import {PressureTerrain} from './PressureTerrain.js';
 
@@ -17,55 +16,61 @@ class Terrain {
 
 	Create(_width, _height) {
 
-		if (mesh != null) {
+		if (_mesh instanceof THREE.Mesh) {
 
 			this.ScopeMain.scene.remove(mesh);
+			_mesh = null;
+			_pressure.DisposeEvents();
+			_pressure = null;
+
 		}
 
 		let geometry = new THREE.PlaneBufferGeometry(_width, _height, _width, _height);
+		geometry.rotateX(-Math.PI / 2);
+		geometry.computeBoundingBox();
+		geometry.center();
+		geometry.computeFaceNormals();
 
-		mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0x0000ff, /*wireframe: true,*/ side: THREE.DoubleSide, morphTargets: true}));
-		mesh.name = 'Terrain';
-		mesh.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.3, wireframe: true, transparent: true })));
+		_mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0x0000ff, /*wireframe: true,*/ side: THREE.DoubleSide/*, morphTargets: true*/}));
+		_mesh.name = 'Terrain';
+		_mesh.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.3, wireframe: true, transparent: true })));
 
-		this.ScopeMain.scene.add(mesh);
+		this.ScopeMain.scene.add(_mesh);
 
-		pressure = new PressureTerrain(this.ScopeMain.camera, mesh, 'Window');
-		pressure.AddEvents();
-		this.ScopeMain.camera.lookAt(mesh.position);
-
+		_pressure = new PressureTerrain(this.ScopeMain.camera, _mesh, 'Window');
+		_pressure.AddEvents();
 	}
 
 	setPressureRadius(r) {
 
-		if (pressure instanceof PressureTerrain) {
+		if (_pressure instanceof PressureTerrain) {
 
-			pressure.UpdateRadius(r);
+			_pressure.UpdateRadius(r);
 		}
 	}
 
 
 	setPressureStrength(s) {
 
-		if (pressure instanceof PressureTerrain) {
+		if (_pressure instanceof PressureTerrain) {
 
-			pressure.UpdateStrength(s);
+			_pressure.UpdateStrength(s);
 		}
 	}
 
 	PressureDisposeEvents() {
 
-		if (pressure instanceof PressureTerrain) {
+		if (_pressure instanceof PressureTerrain) {
 
-			pressure.DisposeEvents();
+			_pressure.DisposeEvents();
 		}
 	}
 
 	PressureUpdateEvents() {
 
-		if (pressure instanceof PressureTerrain) {
+		if (_pressure instanceof PressureTerrain) {
 
-			pressure.AddEvents();
+			_pressure.AddEvents();
 		}
 	}	
 }
