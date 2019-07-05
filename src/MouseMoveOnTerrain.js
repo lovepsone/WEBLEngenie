@@ -37,7 +37,9 @@ class MouseMoveOnTerrain {
 
 			var x = (event.layerX / window.innerWidth ) * 2 - 1;
 			var y = - (event.layerY / window.innerHeight ) * 2 + 1;
-			_mouseVector.set(x, y, 0.5);
+			//_mouseVector.set(x, y, 0.5);
+			//y=>z
+			_mouseVector.set(x, 0.5, y);
 		}
 		
 	}

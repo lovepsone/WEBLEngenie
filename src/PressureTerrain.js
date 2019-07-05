@@ -28,11 +28,13 @@ class PressureTerrain extends MouseMoveOnTerrain {
 			let x = (event.layerX / window.innerWidth ) * 2 - 1;
 			let y = - (event.layerY / window.innerHeight ) * 2 + 1;
 
+			//this.getVector().set(x, y, 0.5);
 			this.getVector().set(x, y, 0.5);
 			this.getRayCaster().setFromCamera(this.getVector(), _camera);
-			let intersects = this.getRayCaster().intersectObject(_mesh, true);
+			let intersects = this.getRayCaster().intersectObject(_mesh);
 
 			if (intersects.length > 0) {
+		
 				this.getPositionsGeometry(_mesh.geometry.attributes.position.array, intersects[0].point);
 				_mesh.geometry.attributes.position.needsUpdate = true;
 			}
@@ -42,13 +44,13 @@ class PressureTerrain extends MouseMoveOnTerrain {
 	
 	getPositionsGeometry(_position, _point) {
 
-		var buf = [], r = 0;
+		let r = 0;
 
 		for (var i = 0; i < _position.length; i += 3) {
 			//(x � x_0)^2 + (y � y_0)^2 <= R^2
-			if (_radius  > (r = Math.pow((_point.x - _position[i]), 2) + Math.pow((_point.y - _position[i+1]),2))) {
+			if (_radius  > (r = Math.pow((_point.x - _position[i]), 2) + Math.pow((_point.z - _position[i+2]),2))) {
 
-				_position[i+2] += _strength;
+				_position[i+1] += _strength;
 			}
 		}
 
