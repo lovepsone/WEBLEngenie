@@ -1,24 +1,22 @@
 /*
 * author lovepsone
 */
-let _mesh = null, _pressure = null;
+let _mesh = null, _pressure = null, _scope = null;
 
 import {PressureTerrain} from './PressureTerrain.js';
 
 class Terrain {
 
-	ScopeMain = null;
-
 	constructor(scope) {
 
-		this.ScopeMain = scope;
+		_scope = scope;
 	}
 
 	Create(_width, _height) {
 
 		if (_mesh instanceof THREE.Mesh) {
 
-			this.ScopeMain.scene.remove(mesh);
+			_scope.scene.remove(mesh);
 			_mesh = null;
 			_pressure.DisposeEvents();
 			_pressure = null;
@@ -35,9 +33,9 @@ class Terrain {
 		_mesh.name = 'Terrain';
 		_mesh.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.3, wireframe: true, transparent: true })));
 
-		this.ScopeMain.scene.add(_mesh);
+		_scope.scene.add(_mesh);
 
-		_pressure = new PressureTerrain(this.ScopeMain.camera, _mesh, 'Window');
+		_pressure = new PressureTerrain(_scope.camera, _mesh, 'Window');
 		_pressure.AddEvents();
 	}
 
