@@ -16,7 +16,7 @@ class Terrain {
 
 		if (_mesh instanceof THREE.Mesh) {
 
-			_scope.scene.remove(mesh);
+			_scope.scene.remove(_mesh);
 			_mesh = null;
 			_pressure.DisposeEvents();
 			_pressure = null;
