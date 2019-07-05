@@ -18,6 +18,7 @@ var Engenie = new MainEngenie(60, window.innerWidth, window.innerHeight);
 Frame.appendChild(Engenie.getRender().domElement);
 
 var AnimationFrame = function() {
+
 	requestAnimationFrame(AnimationFrame);
 	Engenie.Render();
 };
