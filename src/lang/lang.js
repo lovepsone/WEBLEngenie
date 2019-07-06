@@ -11,6 +11,7 @@ var lang = {
 			'Создать',
 			'Сохранить',
 			'Загрузить',
+			'Карта высот',
 			],
 		'CreateTerrain': [
 			'Создание Террейна',
@@ -19,6 +20,12 @@ var lang = {
 			'</br>Долгота: ',
 			'Создать',
 			'Отмена',
+		],
+		'HeightMap' : [
+			'Загрузка карты высот (ширина = вышина)',
+			'Укажите размер и путь к файлу:',
+			'</br>Размер: ',
+			'</br>Путь: ',
 		],
 		'TabEditTerrain' : [
 			'Редактор Террейна',
@@ -35,6 +42,7 @@ var lang = {
 			'Create',
 			'Save',
 			'Loading',
+			'Height Map',
 			],
 		'CreateTerrain': [
 			'Create Terrain',
@@ -43,6 +51,12 @@ var lang = {
 			'</br>Length: ',
 			'Create',
 			'Cancel',
+		],
+		'HeightMap' : [
+			'Loading height map (width = height)',
+			'Specify the size and path to the file:',
+			'</br>Size: ',
+			'</br>Patch: ',
 		],
 		'TabEditTerrain' : [
 			'Editor Terrain',

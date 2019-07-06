@@ -1,11 +1,10 @@
 /*
 * Author lovepsone
 */
-'use strict'
 
 import {MainEngenie} 				from './Main.js';
 import {LoaderHTML5} 				from './ui/LoaderHTML.js';
-import {HTMLlist, elemsList}		from './ui/HTMLlist.js';
+import {HTMLlist, DataHTML}			from './ui/HTMLlist.js';
 import {lang} 						from './lang/lang.js';
 
 var Language = 'ru';
@@ -25,75 +24,98 @@ var AnimationFrame = function() {
 
 AnimationFrame();
 
-document.getElementById(elemsList.onClickList[0]).addEventListener("click", onClickCreateTerrain, false);
-document.getElementById(elemsList.onClickList[1]).addEventListener("click", onClickSaveTerrain, false);
-document.getElementById(elemsList.onClickList[2]).addEventListener("click", onClickLoadTerrain, false);
+// handlers Menu Bar
+document.getElementById(DataHTML.MenuBar.CreateTerrain).addEventListener("click", function () {
 
-document.getElementById(elemsList.ButtonList[0]).addEventListener("click", onClickButtonCreateTerrain, false);
-document.getElementById(elemsList.ButtonList[1]).addEventListener("click", onClickButtonCancelDialog, false);
+	document.getElementById(DataHTML.DialogCreateTerrain.widjet).showModal();
+}, false);
 
-document.getElementById(elemsList.EditTabList[0]).addEventListener("change", onChangetEditRadius, false);
-document.getElementById(elemsList.EditTabList[1]).addEventListener("change", onChangetEditStrength, false);
+document.getElementById(DataHTML.MenuBar.SaveTerrain).addEventListener("click", function () {
 
-document.getElementById(elemsList.CheckCamera).addEventListener("change", onCheckCamera, false);
+	console.log('Save terrain in developing');
+}, false);
 
-for (var i = 0; i < elemsList.bTabsList.length; i++) {
+document.getElementById(DataHTML.MenuBar.LoadTerrain).addEventListener("click", function () {
 
-	document.getElementById(elemsList.bTabsList[i]).addEventListener("click", {handleEvent: onClickButtonTabs, NameTab: elemsList.nTabsList[i], button: elemsList.bTabsList[i]}, false);
+	console.log('Loading terrain in developing');
+}, false);
+
+document.getElementById(DataHTML.MenuBar.LoadHeightMap).addEventListener("click", function () {
+
+	document.getElementById(elemsList.DialogList[1]).showModal();
+	/*let form = document.createElement('form');
+	form.style.display = 'none';
+	document.body.appendChild(form);
+
+	let fileInput = document.createElement('input');
+	fileInput.multiple = true;
+	fileInput.type = 'file';
+	fileInput.addEventListener('change', function (event) {
+
+		console.log(fileInput.files[0]);
+		form.reset();
+
+	});
+
+	form.appendChild( fileInput );
+	fileInput.click();*/
+}, false);
+
+// handlers Right Bar
+for (let i = 0; i < DataHTML.RightBar.Buttons.length; i++) {
+
+	document.getElementById(DataHTML.RightBar.Buttons[i]).addEventListener("click", {
+			handleEvent: function (event) {
+
+				for (let i = 0; i < DataHTML.RightBar.Contents.length; i++) {
+
+					document.getElementById(DataHTML.RightBar.Contents[i]).style.display = "none";
+					document.getElementById(DataHTML.RightBar.Buttons[i]).className = document.getElementById(DataHTML.RightBar.Buttons[i]).className.replace(" active", "");
+				}
+
+				document.getElementById(this.NameTab).style.display = "block";
+				document.getElementById(this.button).className += " active";
+
+			}, NameTab: DataHTML.RightBar.Contents[i], button: DataHTML.RightBar.Buttons[i]
+		}, false);
 }
 
-function onClickCreateTerrain() {
+// handlers Dialog Create Terrain
+document.getElementById(DataHTML.DialogCreateTerrain.Buttons[0]).addEventListener("click", function() {
 
-	document.getElementById(elemsList.DialogList[0]).showModal();
-}
-
-function onClickSaveTerrain() {
-
-}
-
-function onClickLoadTerrain() {
-
-}
-
-function onClickButtonCreateTerrain() {
-
-	Engenie.CreateObject(document.getElementById(elemsList.ParamList[0]).value, document.getElementById(elemsList.ParamList[1]).value);
-	document.getElementById(elemsList.DialogList[0]).close();
+	let width = document.getElementById(DataHTML.DialogCreateTerrain.Options[0]).value;
+	let height = document.getElementById(DataHTML.DialogCreateTerrain.Options[1]).value;
+	Engenie.CreateObject(width, height);
 	
-}
+	document.getElementById(DataHTML.DialogCreateTerrain.widjet).close();
 
-function onClickButtonCancelDialog() {
+}, false);
 
-	document.getElementById(elemsList.DialogList[0]).close();
-}
+document.getElementById(DataHTML.DialogCreateTerrain.Buttons[1]).addEventListener("click", function() {
+	
+	document.getElementById(DataHTML.DialogCreateTerrain.widjet).close();
 
-function onClickButtonTabs(event) {
+}, false);
 
-	for (var i = 0; i < elemsList.nTabsList.length; i++) {
+// handlers Pressuere Terrain
+document.getElementById(DataHTML.Pressuere.Options[0]).addEventListener("change", function(event) {
 
-		document.getElementById(elemsList.nTabsList[i]).style.display = "none";
-		document.getElementById(elemsList.bTabsList[i]).className = document.getElementById(elemsList.bTabsList[i]).className.replace(" active", "");
-	}
-
-	document.getElementById(this.NameTab).style.display = "block";
-	document.getElementById(this.button).className += " active";
-}
-
-function onChangetEditRadius(event) {
-
-	var terrain = Engenie.getTerrain();
+	let terrain = Engenie.getTerrain();
 	terrain.setPressureRadius(event.srcElement.value);
-	document.getElementById(elemsList.EditTabList[2]).innerHTML = event.srcElement.value;
-}
+	document.getElementById(DataHTML.Pressuere.Values[0]).innerHTML = event.srcElement.value;
 
-function onChangetEditStrength(event) {
+}, false);
 
-	var terrain = Engenie.getTerrain();
+document.getElementById(DataHTML.Pressuere.Options[1]).addEventListener("change", function(event) {
+
+	let terrain = Engenie.getTerrain();
 	terrain.setPressureStrength(event.srcElement.value);
-	document.getElementById(elemsList.EditTabList[3]).innerHTML = event.srcElement.value;	
-}
+	document.getElementById(DataHTML.Pressuere.Values[1]).innerHTML = event.srcElement.value;
 
-function onCheckCamera(event) {
+}, false);
+
+
+document.getElementById(DataHTML.Camera).addEventListener("change", function(event) {
 
 	if (event.srcElement.checked) {
 
@@ -104,4 +126,5 @@ function onCheckCamera(event) {
 		Engenie.getControlsCamera().dispose();
 		Engenie.getTerrain().PressureUpdateEvents();
 	}
-}
+	
+}, false);
