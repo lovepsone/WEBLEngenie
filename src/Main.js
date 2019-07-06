@@ -32,7 +32,7 @@ class MainEngenie {
 
 	}
 
-	CreateObject(_width, _height) {
+	CreateTerrain(_width, _height) {
 
 		_terrain.Create(_width, _height);
 	}

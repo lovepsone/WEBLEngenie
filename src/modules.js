@@ -85,7 +85,7 @@ document.getElementById(DataHTML.DialogCreateTerrain.Buttons[0]).addEventListene
 
 	let width = document.getElementById(DataHTML.DialogCreateTerrain.Options[0]).value;
 	let height = document.getElementById(DataHTML.DialogCreateTerrain.Options[1]).value;
-	Engenie.CreateObject(width, height);
+	Engenie.CreateTerrain(width, height);
 	
 	document.getElementById(DataHTML.DialogCreateTerrain.widjet).close();
 
