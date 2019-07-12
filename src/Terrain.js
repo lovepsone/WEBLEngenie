@@ -42,7 +42,7 @@ class Terrain {
 		_pressure.AddEvents();
 	}
 
-	LoadHeightMap(patch, depth = 128, width = 128) {
+	LoadHeightMap(image, depth = 128, width = 128) {
 
 		if (_mesh instanceof THREE.Mesh) {
 
@@ -52,20 +52,12 @@ class Terrain {
 			_pressure = null;
 
 		}
-	
-		_ImageLoader = new THREE.ImageLoader();
 		_depth = depth;
 		_width = width;
-		
 		let canvas = document.createElement('canvas');
 		canvas.width = _width;
 		canvas.height = _depth;
 		_context = canvas.getContext('2d');
-
-		_ImageLoader.load(patch, this.onLoadHeightMap);
-	}
-
-	onLoadHeightMap(image) {
 
 		_context.drawImage(image, 0, 0);
     	let pixel = _context.getImageData(0, 0, _width, _depth);

@@ -21,9 +21,15 @@ var DataHTML = {
 		'Options': ['WidthObject', 'LengthObject'],
 		'Buttons': ['bDialogCreate', 'bDialogCancel'],
 	},
+	'DialogLoadHeightMap': {
+		'widjet': 'DialogLoadHeightMap',
+		'Options': [],
+		'Buttons': ['bDialogLoadHeightMap', 'bDialogCancelHeightMap'],
+		'File': 'MapFile',
+	},
 	'Pressuere': {
-		Options: ['EditRadius', 'EditStrength'],
-		Values: ['EditRadiusVal', 'EditStrengthVal'],
+		'Options': ['EditRadius', 'EditStrength'],
+		'Values': ['EditRadiusVal', 'EditStrengthVal'],
 	},
 	'Camera': 'camera',
 };
@@ -34,37 +40,37 @@ var HTMLlist = [
 		{'tag': 'form', 'id': 'f_createObject', 'method': 'dialog', 'children': [
 			{'tag': 'h3', 'style': 'border-bottom: 1px solid white;', 'text': txt.CreateTerrain[0]},
 			{'tag': 'div', 'class': 'd_body', 'text': txt.CreateTerrain[1], 'children': [
-				{'tag': 'label', 'for': DataHTML.DialogCreateTerrain.Options[0], 'text': txt.CreateTerrain[2]},
-				{'tag': 'input', 'id': DataHTML.DialogCreateTerrain.Options[0], 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 100},
-				{'tag': 'label', 'for': DataHTML.DialogCreateTerrain.Options[1], 'text': txt.CreateTerrain[3]},
-				{'tag': 'input', 'id': DataHTML.DialogCreateTerrain.Options[1], 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 100},
+				{'tag': 'div', 'children': [
+					{'tag': 'label', 'for': DataHTML.DialogCreateTerrain.Options[0], 'text': txt.CreateTerrain[2]},
+					{'tag': 'input', 'id': DataHTML.DialogCreateTerrain.Options[0], 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 100},
+				]},
+				{'tag': 'div', 'children': [
+					{'tag': 'label', 'for': DataHTML.DialogCreateTerrain.Options[1], 'text': txt.CreateTerrain[3]},
+					{'tag': 'input', 'id': DataHTML.DialogCreateTerrain.Options[1], 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 100},
+				]},
 			]},
 			{'tag': 'div', 'style': 'border-bottom: 1px solid white;', 'align': 'center', 'children': [
-				{'tag': 'input', 'id': DataHTML.DialogCreateTerrain.Buttons[0], 'style': 'width: 200px;', 'type': 'button', 'value': txt.CreateTerrain[4]},
-				{'tag': 'input', 'id': DataHTML.DialogCreateTerrain.Buttons[1], 'style': 'width: 200px;',  'type': 'button', 'value': txt.CreateTerrain[5]},
+				{'tag': 'input', 'id': DataHTML.DialogCreateTerrain.Buttons[0], 'style': 'width: 120px;margin-right: 10px;', 'type': 'button', 'value': txt.CreateTerrain[4]},
+				{'tag': 'input', 'id': DataHTML.DialogCreateTerrain.Buttons[1], 'style': 'width: 120px;margin-right: 10px;',  'type': 'button', 'value': txt.CreateTerrain[5]},
 			]},
 		]},
 	]},
 	// widjets
-	{'tag': 'dialog', 'id': 'test', 'children': [
-		{'tag': 'form', 'id': 'f_HeightMap', 'method': 'dialog', 'children': [
+	{'tag': 'dialog', 'id': DataHTML.DialogLoadHeightMap.widjet, 'children': [
+		{'tag': 'form', 'id': 'd_HeightMap', 'method': 'dialog', 'children': [
 			{'tag': 'h3', 'style': 'border-bottom: 1px solid white;', 'text': txt.HeightMap[0]},
 			{'tag': 'div', 'class': 'd_body', 'text': txt.HeightMap[1], 'children': [
-				{'tag': 'label', 'text': txt.HeightMap[2]},
-				{'tag': 'select', 'name': 'SizeHeightMap', 'children': [
-					{'tag': 'option', 'value': '64', 'text': '64x64'},
-					{'tag': 'option', 'value': '128', 'text': '128x128'},
-					{'tag': 'option', 'value': '256', 'text': '256x256'},
-					{'tag': 'option', 'value': '512', 'text': '512x512'},
-					{'tag': 'option', 'value': '1024', 'text': '1024x1024'},
-					{'tag': 'option', 'value': '2048', 'text': '2048x2048'},
+				{'tag': 'div', 'children': [
+					{'tag': 'label', 'text': txt.HeightMap[2]},
 				]},
-				{'tag': 'label', 'text': txt.HeightMap[3]},
-			]},/*
+				{'tag': 'div', 'align': 'center', 'children': [
+					{'tag': 'input', 'id': DataHTML.DialogLoadHeightMap.File, 'type':'file', 'style': 'margin-right: 20px;'},
+				]},
+			]},
 			{'tag': 'div', 'style': 'border-bottom: 1px solid white;', 'align': 'center', 'children': [
-				{'tag': 'input', 'id': elemsList.ButtonList[0], 'style': 'width: 200px;', 'type': 'button', 'value': txt.CreateTerrain[4]},
-				{'tag': 'input', 'id': elemsList.ButtonList[1], 'style': 'width: 200px;',  'type': 'button', 'value': txt.CreateTerrain[5]},
-			]},*/
+				{'tag': 'input', 'id': DataHTML.DialogLoadHeightMap.Buttons[0], 'style': 'width: 120px;margin-right: 10px', 'type': 'button', 'value': txt.CreateTerrain[4]},
+				{'tag': 'input', 'id': DataHTML.DialogLoadHeightMap.Buttons[1], 'style': 'width: 120px;margin-right: 10px',  'type': 'button', 'value': txt.CreateTerrain[5]},
+			]},
 		]},
 	]},
 	//

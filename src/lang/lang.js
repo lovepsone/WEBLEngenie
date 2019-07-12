@@ -16,16 +16,14 @@ var lang = {
 		'CreateTerrain': [
 			'Создание Террейна',
 			'Введите широту и долготу: ',
-			'</br>Широта: ',
-			'</br>Долгота: ',
+			'Широта: ',
+			'Долгота: ',
 			'Создать',
 			'Отмена',
 		],
 		'HeightMap' : [
 			'Загрузка карты высот (ширина = вышина)',
-			'Укажите размер и путь к файлу:',
-			'</br>Размер: ',
-			'</br>Путь: ',
+			'Укажите путь к файлу:',
 		],
 		'TabEditTerrain' : [
 			'Редактор Террейна',
@@ -47,16 +45,14 @@ var lang = {
 		'CreateTerrain': [
 			'Create Terrain',
 			'Enter width and length: ',
-			'</br>Width: ',
-			'</br>Length: ',
+			'Width: ',
+			'Length: ',
 			'Create',
 			'Cancel',
 		],
 		'HeightMap' : [
 			'Loading height map (width = height)',
-			'Specify the size and path to the file:',
-			'</br>Size: ',
-			'</br>Patch: ',
+			'Specify path to the file:',
 		],
 		'TabEditTerrain' : [
 			'Editor Terrain',

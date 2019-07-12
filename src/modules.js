@@ -25,40 +25,54 @@ var AnimationFrame = function() {
 AnimationFrame();
 
 // handlers Menu Bar
-document.getElementById(DataHTML.MenuBar.CreateTerrain).addEventListener("click", function () {
+document.getElementById(DataHTML.MenuBar.CreateTerrain).addEventListener("click", function() {
 
 	document.getElementById(DataHTML.DialogCreateTerrain.widjet).showModal();
 }, false);
 
-document.getElementById(DataHTML.MenuBar.SaveTerrain).addEventListener("click", function () {
+document.getElementById(DataHTML.MenuBar.SaveTerrain).addEventListener("click", function() {
 
 	console.log('Save terrain in developing');
 }, false);
 
-document.getElementById(DataHTML.MenuBar.LoadTerrain).addEventListener("click", function () {
+document.getElementById(DataHTML.MenuBar.LoadTerrain).addEventListener("click", function() {
 
 	console.log('Loading terrain in developing');
 }, false);
 
-document.getElementById(DataHTML.MenuBar.LoadHeightMap).addEventListener("click", function () {
+// handlers dialog load height map
+document.getElementById(DataHTML.MenuBar.LoadHeightMap).addEventListener("click", function() {
 
-	document.getElementById(elemsList.DialogList[1]).showModal();
-	/*let form = document.createElement('form');
-	form.style.display = 'none';
-	document.body.appendChild(form);
+	document.getElementById(DataHTML.DialogLoadHeightMap.widjet).showModal();
 
-	let fileInput = document.createElement('input');
-	fileInput.multiple = true;
-	fileInput.type = 'file';
-	fileInput.addEventListener('change', function (event) {
+}, false);
 
-		console.log(fileInput.files[0]);
-		form.reset();
+document.getElementById(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListener("click", function(event) {
 
-	});
+	let reader = new FileReader();
+	let file = document.getElementById(DataHTML.DialogLoadHeightMap.File).files[0];
+	let image = new Image();
 
-	form.appendChild( fileInput );
-	fileInput.click();*/
+	reader.readAsDataURL(file);
+
+	reader.onload = function(e) {
+
+		image.src = e.target.result;
+		image.addEventListener("load", function() {
+
+			Engenie.getTerrain().LoadHeightMap(image, image.width, image.height);
+		}, false);
+
+		image.load;
+		document.getElementById(DataHTML.DialogLoadHeightMap.widjet).close();
+	};
+
+}, false);
+
+document.getElementById(DataHTML.DialogLoadHeightMap.Buttons[1]).addEventListener("click", function() {
+
+	document.getElementById(DataHTML.DialogLoadHeightMap.widjet).close();
+
 }, false);
 
 // handlers Right Bar

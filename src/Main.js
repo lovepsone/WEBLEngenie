@@ -28,7 +28,6 @@ class MainEngenie {
 
 		_controls = new CameraControls(_camera, 'Window');
 		_terrain = new Terrain({scene: _scene, camera: _camera});
-		//_terrain.LoadHeightMap('./HeightMap/Terrain_1.png', 512, 512) // testing
 
 	}
 

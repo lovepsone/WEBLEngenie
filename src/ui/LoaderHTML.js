@@ -59,7 +59,7 @@ class LoaderHTML5 {
 		// form
 		//accept-charset Устанавливает кодировку, в которой сервер может принимать и обрабатывать данные.
 		//autocomplete Включает автозаполнение полей формы.
-		//enctype Способ кодирования данных формы.
+		if (this.getAttr(elems['enctype']))		element.setAttribute('enctype', elems['enctype']);
 		if (this.getAttr(elems['method']))		element.setAttribute('method', elems['method']);
 		if (this.getAttr(elems['name']))		element.setAttribute('name', elems['name']);
 		if (this.getAttr(elems['action']))		element.setAttribute('action', elems['action']);
