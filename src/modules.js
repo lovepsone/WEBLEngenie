@@ -54,13 +54,17 @@ document.getElementById(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListene
 	let image = new Image();
 
 	reader.readAsDataURL(file);
+// для оптимизации требуется удалить обработчкик
+	reader.onload = function(res) {
 
-	reader.onload = function(e) {
-
-		image.src = e.target.result;
+		image.src = res.target.result;
 		image.addEventListener("load", function() {
 
 			Engenie.getTerrain().LoadHeightMap(image, image.width, image.height);
+			image.load = null;
+			image = null;
+			reader.onload = null;
+			reader = null;
 		}, false);
 
 		image.load;
