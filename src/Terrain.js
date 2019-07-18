@@ -63,44 +63,59 @@ class Terrain {
 
 		_context.drawImage(image, 0, 0);
     	let pixel = _context.getImageData(0, 0, _width, _depth);
-    	let geometry = new THREE.Geometry;
 
+		let geometry = new THREE.BufferGeometry(), position = [], index = [];
+		// преобразовыем пиксели в вертекси и фейсы
+		let faces = [], vertices = [];
+		let buffVertices = [], buffNormals = [];
+	
         for (let x = 0; x < _depth; x++) {
 
             for (let z = 0; z < _width; z++) {
 
                 let vertex = new THREE.Vector3(x * _spacingX, pixel.data[z * 4 + (_depth * x * 4)] / _heightOffset, z * _spacingZ);
-                geometry.vertices.push(vertex);
+                vertices.push(vertex);
             }
-        }
-
+		}
+		
         for (let z = 0; z < _depth - 1; z++) {
 			
 			for (let x = 0; x < _width - 1; x++) {
-				  
-				//let a = x + z * _width;
-				//let b = (x + 1) + (z * _width);
-				//let c = x + ((z + 1) * _width);
-				//let d = (x + 1) + ((z + 1) * _width);
-				let face1 = new THREE.Face3((x + z * _width), ((x + 1) + (z * _width)), ((x + 1) + ((z + 1) * _width)));
-				let face2 = new THREE.Face3(((x + 1) + ((z + 1) * _width)), (x + ((z + 1) * _width)), (x + z * _width));
-				geometry.faces.push(face1);
-				geometry.faces.push(face2);
+
+				faces.push(new THREE.Face3((x + z * _width), ((x + 1) + (z * _width)), ((x + 1) + ((z + 1) * _width))));
+				faces.push(new THREE.Face3(((x + 1) + ((z + 1) * _width)), (x + ((z + 1) * _width)), (x + z * _width)));
             }
-        }
+		}
+		// преобразование в буфферную сетку 
+		for(let i = 0; i < faces.length; i ++) {
 
-        geometry.computeVertexNormals(true);
-        geometry.computeFaceNormals();
-        geometry.computeBoundingBox();
+			let face = faces[i];
+			buffVertices.push(vertices[face.a], vertices[face.b], vertices[face.c]);
+			let vertexNormals = face.vertexNormals;
+
+			if (vertexNormals.length === 3) {
+
+				buffNormals.push(vertexNormals[0], vertexNormals[1], vertexNormals[2]);
+			} else {
+
+				let normal = face.normal;
+				buffNormals.push(normal, normal, normal);
+			}
+		}
+
+		let positions = new Float32Array(buffVertices.length * 3);
+		geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3).copyVector3sArray(buffVertices));
+
+		let normals = new Float32Array(buffNormals.length * 3);
+		geometry.addAttribute( 'normal', new THREE.BufferAttribute(normals, 3).copyVector3sArray(buffNormals));
+		geometry.computeBoundingBox();
 		geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-geometry.boundingBox.max.x /2, 0, -geometry.boundingBox.max.z/2));
-			
-		let bufferGeometry = new THREE.BufferGeometry().fromGeometry(geometry);
 
-		_mesh = new THREE.Mesh(bufferGeometry, new THREE.MeshBasicMaterial({color: 0x0000ff, side: THREE.DoubleSide, morphTargets: true}));
-		_mesh.add(new THREE.Mesh(bufferGeometry, new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.3, wireframe: true, transparent: true})));
+		_mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0x0000ff, side: THREE.DoubleSide, morphTargets: true}));
+		_mesh.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.3, wireframe: true, transparent: true})));
 
 		_scope.scene.add(_mesh);
-			
+
 		_pressure = new PressureTerrain(_scope.camera, _mesh, 'Window');
 		_pressure.AddEvents();
 	}
