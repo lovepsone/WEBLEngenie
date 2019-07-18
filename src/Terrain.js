@@ -5,6 +5,7 @@ let _mesh = null, _pressure = null, _scope = null, _ImageLoader = null;
 let _depth = 64, _width = 64;
 let _spacingX = 2, _heightOffset = 2.5, _spacingZ = 2;
 let _context;
+let _worker = null;
 
 import {PressureTerrain} from './PressureTerrain.js';
 
@@ -13,6 +14,8 @@ class Terrain {
 	constructor(scope) {
 
 		_scope = scope;
+		_worker = new Worker('./src/WorkerHeightMap.js');
+		_worker.onmessage = this.WorkerOnMessage;
 	}
 
 	Create(_width, _height) {
@@ -62,51 +65,19 @@ class Terrain {
 		_context = canvas.getContext('2d');
 
 		_context.drawImage(image, 0, 0);
-    	let pixel = _context.getImageData(0, 0, _width, _depth);
-
-		let geometry = new THREE.BufferGeometry(), position = [], index = [];
-		// преобразовыем пиксели в вертекси и фейсы
-		let faces = [], vertices = [];
-		let buffVertices = [], buffNormals = [];
-	
-        for (let x = 0; x < _depth; x++) {
-
-            for (let z = 0; z < _width; z++) {
-
-                let vertex = new THREE.Vector3(x * _spacingX, pixel.data[z * 4 + (_depth * x * 4)] / _heightOffset, z * _spacingZ);
-                vertices.push(vertex);
-            }
-		}
+		let pixel = _context.getImageData(0, 0, _width, _depth);
 		
-        for (let z = 0; z < _depth - 1; z++) {
-			
-			for (let x = 0; x < _width - 1; x++) {
+		_worker.postMessage({'cmd': 'pixels', 'data': pixel, 'size': _width, 'spacingXZ':[_spacingX, _spacingZ], 'heightOffset': _heightOffset});
+	}
 
-				faces.push(new THREE.Face3((x + z * _width), ((x + 1) + (z * _width)), ((x + 1) + ((z + 1) * _width))));
-				faces.push(new THREE.Face3(((x + 1) + ((z + 1) * _width)), (x + ((z + 1) * _width)), (x + z * _width)));
-            }
-		}
-		// преобразование в буфферную сетку 
-		for(let i = 0; i < faces.length; i ++) {
+	WorkerOnMessage(e) {
 
-			let face = faces[i];
-			buffVertices.push(vertices[face.a], vertices[face.b], vertices[face.c]);
-			let vertexNormals = face.vertexNormals;
-
-			if (vertexNormals.length === 3) {
-
-				buffNormals.push(vertexNormals[0], vertexNormals[1], vertexNormals[2]);
-			} else {
-
-				let normal = face.normal;
-				buffNormals.push(normal, normal, normal);
-			}
-		}
-
+		let buffVertices = e.data[0], buffNormals = e.data[1];
+		let geometry = new THREE.BufferGeometry();
 		let positions = new Float32Array(buffVertices.length * 3);
-		geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3).copyVector3sArray(buffVertices));
-
 		let normals = new Float32Array(buffNormals.length * 3);
+
+		geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3).copyVector3sArray(buffVertices));
 		geometry.addAttribute( 'normal', new THREE.BufferAttribute(normals, 3).copyVector3sArray(buffNormals));
 		geometry.computeBoundingBox();
 		geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-geometry.boundingBox.max.x /2, 0, -geometry.boundingBox.max.z/2));
@@ -116,8 +87,8 @@ class Terrain {
 
 		_scope.scene.add(_mesh);
 
-		_pressure = new PressureTerrain(_scope.camera, _mesh, 'Window');
-		_pressure.AddEvents();
+		//_pressure = new PressureTerrain(_scope.camera, _mesh, 'Window');
+		//_pressure.AddEvents();
 	}
 
 	setPressureRadius(r) {
@@ -151,7 +122,7 @@ class Terrain {
 
 			_pressure.AddEvents();
 		}
-	}	
+	}
 }
 
 export {Terrain};
