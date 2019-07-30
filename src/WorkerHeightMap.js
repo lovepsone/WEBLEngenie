@@ -77,8 +77,6 @@ self.onmessage = function(e) {
 
     switch(data.cmd) {
 
-        case 'start':
-            break;
         case 'stop':
             self.close()
             break;
@@ -86,10 +84,5 @@ self.onmessage = function(e) {
             let buff = WorkerHeightMap(data.data, data.size, data.spacingXZ, data.heightOffset);
             self.postMessage({'cmd': 'onLoadData', 'points': buff[0], 'normals': buff[1], 'colors': buff[2], 'max': buff[3], 'min': buff[4]});
             break;
-        case 'colors':
-            break;
-
     }
-
-    //self.postMessage(1);
 };

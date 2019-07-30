@@ -17,10 +17,6 @@ class Terrain {
 	constructor(scope) {
 
 		_scope = scope;
-
-		_worker = new Worker('./src/WorkerHeightMap.js');
-		_worker.onmessage = this.WorkerOnMessage;
-
 		_biomes = new Biomes();
 	}
 
@@ -75,6 +71,9 @@ class Terrain {
 
 	LoadHeightMap(image, depth = 128, width = 128) {
 
+		_worker = new Worker('./src/WorkerHeightMap.js');
+		_worker.onmessage = this.WorkerOnMessage;
+
 		if (_mesh instanceof THREE.Mesh) {
 
 			_scope.scene.remove(_mesh);
@@ -82,8 +81,6 @@ class Terrain {
 			_pressure.DisposeEvents();
 			_pressure.WorkerStop();
 			_pressure = null;
-			//_worker.postMessage({'cmd':'stop'});
-
 		}
 		_depth = depth;
 		_width = width;
@@ -139,7 +136,8 @@ class Terrain {
 				_pressure = new PressureTerrain(_scope.camera, _mesh, 'Window');
 				_pressure.AddEvents();
 
-				_worker.postMessage({'cmd': 'colors', 'points': geometry.attributes.position});
+				_worker.postMessage({'cmd': 'stop'});
+				_worker = null;
 			}
 		}
 				
