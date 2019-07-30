@@ -13,8 +13,8 @@ var txt = lang['ru'];
 var DataHTML = {
 	'MenuBar': {'CreateTerrain': 'CreateTerrain', 'SaveTerrain': 'SaveTerrain', 'LoadTerrain': 'LoadTerrain', 'LoadHeightMap': 'LoadHeightMap'},
 	'RightBar': {
-		'Buttons': ['ButtonEditTerrain', 'TabButton2', 'TabButton3'],
-		'Contents': ['EditTerrainContent', 'tabcontent2', 'tabcontent3'],
+		'Buttons': ['ButtonEditTerrain', 'ButtonTexture', 'TabButton3'],
+		'Contents': ['EditTerrainContent', 'TextureContent', 'tabcontent3'],
 	},
 	'DialogCreateTerrain': {
 		'widjet': 'DialogCreateObject',
@@ -23,13 +23,18 @@ var DataHTML = {
 	},
 	'DialogLoadHeightMap': {
 		'widjet': 'DialogLoadHeightMap',
-		'Options': [],
 		'Buttons': ['bDialogLoadHeightMap', 'bDialogCancelHeightMap'],
 		'File': 'MapFile',
 	},
 	'Pressuere': {
 		'Options': ['EditRadius', 'EditStrength'],
 		'Values': ['EditRadiusVal', 'EditStrengthVal'],
+	},
+	'Biomes': {
+		'Options': [],
+		'Values': [],
+		'Buttons': ['bGenNoise'],
+		'Canvas': 'CanvasGenNoise',
 	},
 	'Camera': 'camera',
 };
@@ -55,7 +60,6 @@ var HTMLlist = [
 			]},
 		]},
 	]},
-	// widjets
 	{'tag': 'dialog', 'id': DataHTML.DialogLoadHeightMap.widjet, 'children': [
 		{'tag': 'form', 'id': 'd_HeightMap', 'method': 'dialog', 'children': [
 			{'tag': 'h3', 'style': 'border-bottom: 1px solid white;', 'text': txt.HeightMap[0]},
@@ -93,8 +97,8 @@ var HTMLlist = [
 	{'tag': 'div', 'id': 'sidebar', 'children': [
 		{'tag': 'div', 'id': 'tab', 'children': [
 			{'tag': 'button', 'id': DataHTML.RightBar.Buttons[0], 'class': ' active', 'text': txt.TabEditTerrain[0]},
-			{'tag': 'button', 'id': DataHTML.RightBar.Buttons[1], 'text': 'test 2'},
-			{'tag': 'button', 'id': DataHTML.RightBar.Buttons[2], 'text': 'test 3'},
+			{'tag': 'button', 'id': DataHTML.RightBar.Buttons[1], 'text': txt.TabEditBiomes[0]},
+			{'tag': 'button', 'id': DataHTML.RightBar.Buttons[2], 'text': 'development'},
 		]},
 		{'tag': 'div', 'id': DataHTML.RightBar.Contents[0], 'style': 'display: block;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'children': [
 			{'tag': 'br'},
@@ -108,7 +112,14 @@ var HTMLlist = [
 			{'tag': 'input', 'id': DataHTML.Pressuere.Options[1],  'style':"font-size: 12px; border: 0px; margin: 5px;width: 120px;", 'type': 'range', 'value': 1, 'max': 100, 'min': -100},
 			{'tag': 'div', 'id': DataHTML.Pressuere.Values[1], 'text': 5, 'align': 'center'},
 		]},
-		{'tag': 'div', 'id': DataHTML.RightBar.Contents[1], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 2'},
+		{'tag': 'div', 'id': DataHTML.RightBar.Contents[1], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none; text-align: center;', 'children': [
+			{'tag': 'br'},
+			{'tag': 'div', 'text': txt.TabEditBiomes[1]},
+			{'tag': 'br'},
+			{'tag': 'div', 'id': DataHTML.Biomes.Canvas},
+			{'tag': 'br'},
+			{'tag': 'button', 'id': DataHTML.Biomes.Buttons[0], 'style':'text-align: center; width: 120px;', 'text': txt.TabEditBiomes[2]},
+		]},
 		{'tag': 'div', 'id': DataHTML.RightBar.Contents[2], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 3'},
 	]},
 	{'tag': 'div', 'style': "position: absolute;top: 36px; right: 310px;", 'children': [

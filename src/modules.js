@@ -132,7 +132,7 @@ document.getElementById(DataHTML.Pressuere.Options[1]).addEventListener("change"
 
 }, false);
 
-
+// handlers cheked camera
 document.getElementById(DataHTML.Camera).addEventListener("change", function(event) {
 
 	if (event.srcElement.checked) {
@@ -145,4 +145,9 @@ document.getElementById(DataHTML.Camera).addEventListener("change", function(eve
 		Engenie.getTerrain().PressureUpdateEvents();
 	}
 	
+}, false);
+
+// handlers biomes
+document.getElementById(DataHTML.Biomes.Buttons[0]).addEventListener("click", function(event) {
+
 }, false);

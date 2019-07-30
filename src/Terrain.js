@@ -1,7 +1,7 @@
 /*
 * author lovepsone
 */
-let _mesh = null, _pressure = null, _scope = null, _ImageLoader = null;
+let _mesh = null, _pressure = null, _biomes = null, _scope = null, _ImageLoader = null;
 let _depth = 64, _width = 64;
 let _spacingX = 2, _heightOffset = 2.5, _spacingZ = 2;
 let _context;
@@ -10,14 +10,18 @@ let _worker = null;
 let max = 0.0, min = 0.0, center = 0.0;
 
 import {PressureTerrain} from './PressureTerrain.js';
+import {Biomes} from './Biomes.js';
 
 class Terrain {
 
 	constructor(scope) {
 
 		_scope = scope;
+
 		_worker = new Worker('./src/WorkerHeightMap.js');
 		_worker.onmessage = this.WorkerOnMessage;
+
+		_biomes = new Biomes();
 	}
 
 	Create(_width, _height) {
@@ -111,86 +115,18 @@ class Terrain {
 				let normals = new Float32Array(buffNormals.length * 3);
 
 				geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3).copyVector3sArray(buffVertices));
-				geometry.addAttribute( 'normal', new THREE.BufferAttribute(normals, 3).copyVector3sArray(buffNormals));
+				geometry.addAttribute('normal', new THREE.BufferAttribute(normals, 3).copyVector3sArray(buffNormals));
 				geometry.addAttribute('color', new THREE.Float32BufferAttribute(buffColors, 3));
 
-				for (let i = 0; i < geometry.attributes.position.count; i++) {
 
-					if (geometry.attributes.position.array[i * 3 + 1] < max /5) {
-						//ForestGreen = 34, 139, 34
-						let fg = new THREE.Color(0xd2691e);
-						geometry.attributes.color.array[i * 3] = fg.r;
-						geometry.attributes.color.array[i * 3 + 1] = fg.g;
-						geometry.attributes.color.array[i * 3 + 2] = fg.b;
+				/*for (let i = 0; i < geometry.attributes.position.count; i++) {
 
-						geometry.attributes.color.array[i * 3 + 3] = fg.r;
-						geometry.attributes.color.array[i * 3 + 4] = fg.g;
-						geometry.attributes.color.array[i * 3 + 5] = fg.b
+					let m =  _noise[Math.round(i / 6)];
+					let h = mapper(geometry.attributes.position.array[i * 3 + 1], min, max + 20);
+					updateAttrColor(geometry.attributes.color, biomeColor(biome(h, m)), i);
 
-						geometry.attributes.color.array[i * 3 + 6] = fg.r;
-						geometry.attributes.color.array[i * 3 + 7] = fg.g;
-						geometry.attributes.color.array[i * 3 + 8] = fg.b
-					}
-					else if (geometry.attributes.position.array[i * 3 + 1] < (max /5)*2) {
-						//Green = 0, 128, 0
-						let fg = new THREE.Color(0x8b4513);
-						geometry.attributes.color.array[i * 3] = fg.r;
-						geometry.attributes.color.array[i * 3 + 1] = fg.g;
-						geometry.attributes.color.array[i * 3 + 2] = fg.b
-
-						geometry.attributes.color.array[i * 3 + 3] = fg.r;
-						geometry.attributes.color.array[i * 3 + 4] = fg.g;
-						geometry.attributes.color.array[i * 3 + 5] = fg.b
-
-						geometry.attributes.color.array[i * 3 + 6] = fg.r;
-						geometry.attributes.color.array[i * 3 + 7] = fg.g;
-						geometry.attributes.color.array[i * 3 + 8] = fg.b	
-					}
-					else if (geometry.attributes.position.array[i * 3 + 1] < (max /5)*3) {
-						//MediumSeaGreen = 0, 128, 0
-						let fg = new THREE.Color(0x006400);
-						geometry.attributes.color.array[i * 3] = fg.r;
-						geometry.attributes.color.array[i * 3 + 1] = fg.g;
-						geometry.attributes.color.array[i * 3 + 2] = fg.b
-
-						geometry.attributes.color.array[i * 3 + 3] = fg.r;
-						geometry.attributes.color.array[i * 3 + 4] = fg.g;
-						geometry.attributes.color.array[i * 3 + 5] = fg.b
-
-						geometry.attributes.color.array[i * 3 + 6] = fg.r;
-						geometry.attributes.color.array[i * 3 + 7] = fg.g;
-						geometry.attributes.color.array[i * 3 + 8] = fg.b	
-					}
-					else if (geometry.attributes.position.array[i * 3 + 1] < (max /5)*4) {
-						let fg = new THREE.Color(0x008000);
-						geometry.attributes.color.array[i * 3] = fg.r;
-						geometry.attributes.color.array[i * 3 + 1] = fg.g;
-						geometry.attributes.color.array[i * 3 + 2] = fg.b
-
-						geometry.attributes.color.array[i * 3 + 3] = fg.r;
-						geometry.attributes.color.array[i * 3 + 4] = fg.g;
-						geometry.attributes.color.array[i * 3 + 5] = fg.b
-
-						geometry.attributes.color.array[i * 3 + 6] = fg.r;
-						geometry.attributes.color.array[i * 3 + 7] = fg.g;
-						geometry.attributes.color.array[i * 3 + 8] = fg.b			
-					}
-					else {
-						let fg = new THREE.Color(0x228b22);
-						geometry.attributes.color.array[i * 3] = fg.r;
-						geometry.attributes.color.array[i * 3 + 1] = fg.g;
-						geometry.attributes.color.array[i * 3 + 2] = fg.b
-
-						geometry.attributes.color.array[i * 3 + 3] = fg.r;
-						geometry.attributes.color.array[i * 3 + 4] = fg.g;
-						geometry.attributes.color.array[i * 3 + 5] = fg.b
-
-						geometry.attributes.color.array[i * 3 + 6] = fg.r;
-						geometry.attributes.color.array[i * 3 + 7] = fg.g;
-						geometry.attributes.color.array[i * 3 + 8] = fg.b			
-					}
 					geometry.attributes.color.needsUpdate = true;
-				}
+				}*/
 
 				geometry.computeBoundingBox();
 				geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-geometry.boundingBox.max.x /2, 0, -geometry.boundingBox.max.z/2));
@@ -205,12 +141,23 @@ class Terrain {
 
 				_worker.postMessage({'cmd': 'colors', 'points': geometry.attributes.position});
 			}
-
-			case 'onLoadColor': {
-				break;
-			}
 		}
 				
+	}
+
+	updateAttrColor(attr, color, current) {
+
+		attr.array[current * 3] = color.r;
+		attr.array[current * 3 + 1] = color.g;
+		attr.array[current * 3 + 2] = color.b;
+	
+		attr.array[current * 3 + 3] = color.r;
+		attr.array[current * 3 + 4] = color.g;
+		attr.array[current * 3 + 5] = color.b;
+	
+		attr.array[current * 3 + 6] = color.r;
+		attr.array[current * 3 + 7] = color.g;
+		attr.array[current * 3 + 8] = color.b;
 	}
 
 	setPressureRadius(r) {
