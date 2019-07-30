@@ -18,7 +18,7 @@ class MainEngenie {
 		_renderer.setPixelRatio(window.devicePixelRatio);
 		_renderer.setSize(window.innerWidth, window.innerHeight);
 
-		_camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.001, 9000);
+		_camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 9000);
 		_camera.position.set(0, 160, 100);
 		_scene = new THREE.Scene();
 
