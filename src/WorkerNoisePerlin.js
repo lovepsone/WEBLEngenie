@@ -176,7 +176,7 @@ self.onmessage = function(e) {
     switch(data.cmd) {
 
         case 'start':
-				perlin = new NoisePerlin(data.size, data.size);
+				perlin = new NoisePerlin(data.size.width, data.size.height);
 				let buff = perlin.generate();
 				self.postMessage(buff);
             break;
