@@ -103,6 +103,11 @@ class DrawNoise {
 
         return {width: _width, height: _height};
     }
+
+    getContext() {
+
+        return ctx;
+    }
 }
 
 export {DrawNoise};
