@@ -8,6 +8,8 @@ let _worker = null;
 let _width = 128, _height = 128;
 let _scope = null;
 
+let _moisture = [];
+
 let colors =  {
     OCEAN:                      0x44447a,
     BEACH:                      0xa09077,
@@ -83,12 +85,24 @@ class Biomes extends DrawNoise {
 
         let data = e.data;
 
-        for (let i = 0; i < data.length; i++) {
+        switch(data.cmd) {
 
-            for (let j = 0; j < data[i].length; j++) {
+            case 'draw':
 
-                _scope.setMatrix(i, j, data[i][j]);
-            }
+                for (let i = 0; i < data.colors.length; i++) {
+
+                    for (let j = 0; j < data.colors[i].length; j++) {
+        
+                        _scope.setMatrix(i, j, data.colors[i][j]);
+                    }
+                }
+
+                let pixel = _scope.getContext().getImageData(0, 0, _scope.getSize().width, _scope.getSize().height);
+                _worker.postMessage({'cmd': 'pixels', 'data': pixel});
+                break;
+            case 'complete':
+                    _moisture = data.result;
+                break;
         }
     }
 };
