@@ -47,11 +47,6 @@ class NoisePerlin {
 
 	constructor(width, height) {
 
-		for(let i = 0; i< 1024; i++) {
-
-			_table.push(Math.round((Math.random()*100)));
-		}
-
 		_width = width /_factor;
 		_height = height /_factor;
 	}
@@ -139,6 +134,12 @@ class NoisePerlin {
 
 	generate() {
 	
+		_table = [];
+		for(let i = 0; i< 1024; i++) {
+
+			_table.push(Math.round((Math.random()*100)));
+		}
+
 		let data = [];
 
 		for(let i = 0; i < ((_width - 1)/_step); i += 1/_step) {
