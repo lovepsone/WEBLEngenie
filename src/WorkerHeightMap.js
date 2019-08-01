@@ -27,7 +27,7 @@ function WorkerHeightMap(pixel, size, spacing, heightOffset) {
 
     let vertices = [];
     let buffVertices = [], buffNormals = [], buffColors = [];
-    var maxH = 0.0, minH = 0.0;
+    var maxH = 0.0, minH = 100000.0;
 
     let _width = _depth = size;
     let _spacingX = spacing[0], _spacingZ = spacing[1];
