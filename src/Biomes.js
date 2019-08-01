@@ -43,8 +43,10 @@ class Biomes extends DrawNoise {
         _worker.postMessage({'cmd': 'start', 'size': this.getSize()});
     }
 
-    get(height, moisture) {
+    get(height, val) {
         
+        let moisture = _moisture[val];
+
         if (height < 0.1) return colors.OCEAN;
         if (height < 0.12) return colors.BEACH;
         
@@ -54,7 +56,7 @@ class Biomes extends DrawNoise {
             if (moisture < 0.2) return colors.BARE;
             if (moisture < 0.5) return colors.TUNDRA;
             
-            return SNOW;
+            return colors.SNOW;
         }
         
         if (height > 0.6) {
@@ -62,7 +64,7 @@ class Biomes extends DrawNoise {
             if (moisture < 0.33) return colors.TEMPERATE_DESERT;
             if (moisture < 0.66) return colors.SHRUBLAND;
             
-            return TAIGA;
+            return colors.TAIGA;
         }
         
         if (height > 0.3) {
@@ -78,7 +80,7 @@ class Biomes extends DrawNoise {
         if (moisture < 0.33) return colors.GRASSLAND;
         if (moisture < 0.66) return colors.TROPICAL_SEASONAL_FOREST;
         
-        return color.TROPICAL_RAIN_FOREST;
+        return colors.TROPICAL_RAIN_FOREST;
     }
 
     WorkerOnMessage(e) {
