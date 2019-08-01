@@ -150,4 +150,6 @@ document.getElementById(DataHTML.Camera).addEventListener("change", function(eve
 // handlers biomes
 document.getElementById(DataHTML.Biomes.Buttons[0]).addEventListener("click", function(event) {
 
+	Engenie.getTerrain().getBiomes().GenerateDataPixels();
+
 }, false);
