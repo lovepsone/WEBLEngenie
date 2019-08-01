@@ -8,41 +8,6 @@ let _table = [];
 let _width = 128, _height = 128;
 let _step = 140, _factor = 1, _min = 1000, _max = 0;
 
-let _RangeMax = 0.0, _RangeMin = 0.0;
-
-let _tmp, current_MIN = 0; current_MAX = 100; // class Reverter
-
-class Reverter {
-
-	constructor(data, min, max) {
-
-		this.values = data;
-		_tmp = data;
-		current_MIN = min;
-		current_MAX = max;
-	}
-
-	reverting(val) {
-
-		return (val - current_MIN) / (current_MAX - current_MIN);
-	}
-
-	mapper() {
-
-		let buff = [];
-		for (let i = 0; i < _width; i++) {
-
-			for (let j = 0; j < _height; j++) {
-
-				_tmp[i][j] = this.reverting(_tmp[i][j]);
-				buff.push(this.values[i][j]);
-			}
-		}
-
-		return buff;
-	}
-}
-
 class NoisePerlin {
 
 	constructor(width, height) {
@@ -50,7 +15,13 @@ class NoisePerlin {
 		_width = width /_factor;
 		_height = height /_factor;
 	}
-	
+
+	setSize(width, height) {
+
+		_width = width /_factor;
+		_height = height /_factor;
+	}
+
 	GetPseudoRandomGradientVector(x, y) {
 
 		let v = ((x*1231 ^ y*8544)+4212)&1023;
@@ -155,20 +126,39 @@ class NoisePerlin {
 
 				color = Math.round((color + 0.4) * 255);
 
-				if (_RangeMax < color) _RangeMax = color;
-				if (_RangeMin > color) _RangeMin = color;
-
 				data[Math.round(i * _step)][Math.round(j * _step)] = color;
 			}
 		}
 
-		let revert = new Reverter(data, _RangeMin, _RangeMax);
-		return data;//revert.mapper();
+		return data;
+	}
+
+	RevertPixels(pixels) {
+
+		let buff = [], max = 0, min = pixels.data[0] + pixels.data[1] + pixels.data[2];
+
+        let size = pixels.height*pixels.width*4;
+	
+        for (let i = 0; i < size; i +=4) {
+
+            let tmp = pixels.data[i] + pixels.data[i + 1] + pixels.data[i + 2];
+			buff.push(tmp);
+
+            if (max < tmp) max = tmp;
+            if (min > tmp) min = tmp;
+		}
+		
+		for (let i = 0; i < buff.length; i++) {
+
+			buff[i] = (buff[i] - min) / (max - min);
+		}
+
+		return buff;
 	}
 
 }
 
-let perlin = null;
+let perlin = new NoisePerlin(128, 128);
 
 self.onmessage = function(e) {
 
@@ -177,11 +167,11 @@ self.onmessage = function(e) {
     switch(data.cmd) {
 
         case 'start':
-				perlin = new NoisePerlin(data.size.width, data.size.height);
-				let buff = perlin.generate();
-				self.postMessage(buff);
+				perlin.setSize(data.size.width, data.size.height);
+				self.postMessage({'cmd': 'draw', 'colors':  perlin.generate()});
             break;
-        case 'stop':
+        case 'pixels':
+				self.postMessage({'cmd': 'complete', 'result': perlin.RevertPixels(data.data)});
             break;
     }
 };
