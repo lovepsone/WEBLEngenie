@@ -6,6 +6,7 @@ import {DrawNoise} from './DrawNoise.js';
 
 let _worker = null;
 let _width = 128, _height = 128;
+let _scope = null;
 
 let colors =  {
     OCEAN:                      0x44447a,
@@ -29,14 +30,15 @@ class Biomes extends DrawNoise {
 
 	constructor() {
 
-        super();
-
+        super( 128, 128, 'CanvasGenNoise');
+        _scope = this;
         _worker = new Worker('./src/WorkerNoisePerlin.js');
         _worker.onmessage = this.WorkerOnMessage;
     }
 
     GenerateDataPixels() {
 
+        _worker.postMessage({'cmd': 'start', 'size': this.getSize()});
     }
 
     get(height, moisture) {
@@ -79,6 +81,15 @@ class Biomes extends DrawNoise {
 
     WorkerOnMessage(e) {
 
+        let data = e.data;
+
+        for (let i = 0; i < data.length; i++) {
+
+            for (let j = 0; j < data[i].length; j++) {
+
+                _scope.setMatrix(i, j, data[i][j]);
+            }
+        }
     }
 };
 
