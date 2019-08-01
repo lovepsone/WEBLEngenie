@@ -32,6 +32,8 @@ class Terrain {
 
 		}
 
+		_biomes.setSize(_width, _height);
+
 		let geometry = new THREE.PlaneBufferGeometry(_width, _height, _width, _height);
 		geometry.rotateX(-Math.PI / 2);
 		geometry.computeBoundingBox();
@@ -82,8 +84,11 @@ class Terrain {
 			_pressure.WorkerStop();
 			_pressure = null;
 		}
+
 		_depth = depth;
 		_width = width;
+
+		_biomes.setSize(_width, _depth);
 		let canvas = document.createElement('canvas');
 		canvas.width = _width;
 		canvas.height = _depth;
@@ -93,6 +98,11 @@ class Terrain {
 		let pixel = _context.getImageData(0, 0, _width, _depth);
 		
 		_worker.postMessage({'cmd': 'pixels', 'data': pixel, 'size': _width, 'spacingXZ':[_spacingX, _spacingZ], 'heightOffset': _heightOffset});
+	}
+
+	getBiomes() {
+
+		return _biomes;
 	}
 
 	WorkerOnMessage(e) {
