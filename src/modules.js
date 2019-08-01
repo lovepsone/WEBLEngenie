@@ -83,7 +83,7 @@ document.getElementById(DataHTML.DialogLoadHeightMap.Buttons[1]).addEventListene
 for (let i = 0; i < DataHTML.RightBar.Buttons.length; i++) {
 
 	document.getElementById(DataHTML.RightBar.Buttons[i]).addEventListener("click", {
-			handleEvent: function (event) {
+			handleEvent: function(event) {
 
 				for (let i = 0; i < DataHTML.RightBar.Contents.length; i++) {
 
@@ -103,7 +103,7 @@ document.getElementById(DataHTML.DialogCreateTerrain.Buttons[0]).addEventListene
 
 	let width = document.getElementById(DataHTML.DialogCreateTerrain.Options[0]).value;
 	let height = document.getElementById(DataHTML.DialogCreateTerrain.Options[1]).value;
-	Engenie.CreateTerrain(width, height);
+	Engenie.getTerrain().Create(width, height);
 	
 	document.getElementById(DataHTML.DialogCreateTerrain.widjet).close();
 

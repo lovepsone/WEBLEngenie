@@ -31,11 +31,6 @@ class MainEngenie {
 
 	}
 
-	CreateTerrain(_width, _height) {
-
-		_terrain.Create(_width, _height);
-	}
-
 	Render() {
 
 		_renderer.render(_scene, _camera);
