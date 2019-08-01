@@ -12,6 +12,21 @@ let max = 0.0, min = 0.0, center = 0.0;
 import {PressureTerrain} from './PressureTerrain.js';
 import {Biomes} from './Biomes.js';
 
+function updateAttrColor(attr, color, current) {
+
+	attr.array[current * 3] = color.r;
+	attr.array[current * 3 + 1] = color.g;
+	attr.array[current * 3 + 2] = color.b;
+
+	attr.array[current * 3 + 3] = color.r;
+	attr.array[current * 3 + 4] = color.g;
+	attr.array[current * 3 + 5] = color.b;
+
+	attr.array[current * 3 + 6] = color.r;
+	attr.array[current * 3 + 7] = color.g;
+	attr.array[current * 3 + 8] = color.b;
+}
+
 class Terrain {
 
 	constructor(scope) {
@@ -126,14 +141,15 @@ class Terrain {
 				geometry.addAttribute('color', new THREE.Float32BufferAttribute(buffColors, 3));
 
 
-				/*for (let i = 0; i < geometry.attributes.position.count; i++) {
+				for (let i = 0; i < geometry.attributes.position.count; i++) {
 
-					let m =  _noise[Math.round(i / 6)];
-					let h = mapper(geometry.attributes.position.array[i * 3 + 1], min, max + 20);
-					updateAttrColor(geometry.attributes.color, biomeColor(biome(h, m)), i);
+					let y = geometry.attributes.position.array[i * 3 + 1];
+					let h = (y - min) / (max - min);
+					let m =  Math.round(i / 6);
+					updateAttrColor(geometry.attributes.color, new THREE.Color(_biomes.get(h,m ))/*biomeColor(biome(h, m))*/, i);
 
 					geometry.attributes.color.needsUpdate = true;
-				}*/
+				}
 
 				geometry.computeBoundingBox();
 				geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-geometry.boundingBox.max.x /2, 0, -geometry.boundingBox.max.z/2));
@@ -151,21 +167,6 @@ class Terrain {
 			}
 		}
 				
-	}
-
-	updateAttrColor(attr, color, current) {
-
-		attr.array[current * 3] = color.r;
-		attr.array[current * 3 + 1] = color.g;
-		attr.array[current * 3 + 2] = color.b;
-	
-		attr.array[current * 3 + 3] = color.r;
-		attr.array[current * 3 + 4] = color.g;
-		attr.array[current * 3 + 5] = color.b;
-	
-		attr.array[current * 3 + 6] = color.r;
-		attr.array[current * 3 + 7] = color.g;
-		attr.array[current * 3 + 8] = color.b;
 	}
 
 	setPressureRadius(r) {
