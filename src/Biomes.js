@@ -2,11 +2,10 @@
 * author lovepsone
 */
 
-import {Draw} from './DrawNoise.js';
+import {DrawNoise} from './DrawNoise.js';
 
 let _worker = null;
 let _width = 128, _height = 128;
-let _noise = null;
 
 let colors =  {
     OCEAN:                      0x44447a,
@@ -26,11 +25,18 @@ let colors =  {
 	TROPICAL_RAIN_FOREST:       0x337755
 };
 
-class Biomes {
+class Biomes extends DrawNoise {
 
-	constructor(width, height) {
+	constructor() {
 
-        _noise = new Draw();
+        super();
+
+        _worker = new Worker('./src/WorkerNoisePerlin.js');
+        _worker.onmessage = this.WorkerOnMessage;
+    }
+
+    GenerateDataPixels() {
+
     }
 
     get(height, moisture) {
@@ -70,8 +76,11 @@ class Biomes {
         
         return color.TROPICAL_RAIN_FOREST;
     }
-}
 
+    WorkerOnMessage(e) {
+
+    }
+};
 
 function mapper(val, current_MIN, current_MAX) {
 
