@@ -8,9 +8,9 @@ let canvas = document.createElement('canvas'), ctx = null;
 let colors = ['#555', '#171717', '#f44336', '#2196f3', '#4caf50'];
 let cellSize = 2;
 
-let matrix = [];
+let matrix = null;
 
-class Draw {
+class DrawNoise {
 
 	constructor(width = 128, height = 128, elemId = 'CanvasGenNoise') {
 
@@ -21,9 +21,10 @@ class Draw {
 
 		ctx = canvas.getContext('2d');
         document.getElementById(elemId).appendChild(canvas);
-        
+        matrix = [];
+
         for(let i = 0; i < _width; i++) {
-            
+
             matrix.push([]);
             
             for(var j = 0; j < _height; j++) {
@@ -34,7 +35,22 @@ class Draw {
     
         this.Field(matrix);
     }
-    
+ 
+    setSize(width, height) {
+
+        _width = width * cellSize;
+        _height = height * cellSize;
+        canvas.width = _width;
+        canvas.height = _height;
+
+        this.clearField();
+    }
+
+    getSize() {
+
+        return {width: _width, height: _height};
+    }
+
     Field(data) {
         
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -90,4 +106,4 @@ class Draw {
     }
 }
 
-export {Draw};
+export {DrawNoise};
