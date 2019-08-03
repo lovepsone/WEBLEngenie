@@ -147,6 +147,18 @@ document.getElementById(DataHTML.Camera).addEventListener("change", function(eve
 	
 }, false);
 
+//handlers cheked wareframe
+document.getElementById(DataHTML.Wireframe).addEventListener("change", function(event) {
+
+	if (event.srcElement.checked) {
+
+		Engenie.getTerrain().WireFrame(true);
+	} else {
+
+		Engenie.getTerrain().WireFrame(false);
+	}
+	
+}, false);
 // handlers biomes
 document.getElementById(DataHTML.Biomes.Buttons[0]).addEventListener("click", function(event) {
 

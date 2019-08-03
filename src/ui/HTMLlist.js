@@ -37,6 +37,7 @@ var DataHTML = {
 		'Canvas': 'CanvasGenNoise',
 	},
 	'Camera': 'camera',
+	'Wireframe': 'wireframe',
 };
 
 var HTMLlist = [
@@ -126,7 +127,11 @@ var HTMLlist = [
 	{'tag': 'div', 'style': "position: absolute;top: 36px; right: 310px;", 'children': [
 		{'tag': 'label', 'for': DataHTML.Camera, 'style':"font-size: 14px; color: #eee;", 'text': txt.Camera},
 		{'tag': 'input', 'id': DataHTML.Camera, 'type': 'checkbox'},
-	]}
+	]},
+	{'tag': 'div', 'style': "position: absolute;top: 60px; right: 310px;", 'children': [
+		{'tag': 'label', 'for': DataHTML.Wireframe, 'style':"font-size: 14px; color: #eee;", 'text': 'WireFrame'},
+		{'tag': 'input', 'id': DataHTML.Wireframe, 'type': 'checkbox'},
+	]},
 	
 ];
 

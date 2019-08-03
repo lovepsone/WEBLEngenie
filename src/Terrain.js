@@ -57,7 +57,6 @@ class Terrain {
 
 		_mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({side: THREE.DoubleSide, vertexColors: THREE.VertexColors}));
 		_mesh.name = 'Terrain';
-		//_mesh.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.3, wireframe: true, transparent: true })));
 
 		_scope.scene.add(_mesh);
 
@@ -166,7 +165,6 @@ class Terrain {
 				geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-geometry.boundingBox.max.x /2, 0, -geometry.boundingBox.max.z/2));
 
 				_mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({side: THREE.DoubleSide, vertexColors: THREE.VertexColors}));
-				//_mesh.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0xff0000, opacity: 0.3, wireframe: true, transparent: true})));
 				_mesh.name = 'Terrain';
 				_scope.scene.add(_mesh);
 
@@ -178,6 +176,14 @@ class Terrain {
 			}
 		}
 				
+	}
+
+	WireFrame(value = true) {
+
+		if (_mesh instanceof THREE.Mesh) {
+
+			_mesh.material.wireframe = value;
+		}
 	}
 
 	setPressureRadius(r) {
