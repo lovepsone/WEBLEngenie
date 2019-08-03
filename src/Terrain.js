@@ -29,6 +29,8 @@ class Terrain {
 			_pressure.DisposeEvents();
 			_pressure.WorkerStop();
 			_pressure = null;
+			_max = 0.0;
+			_min = 0.0;
 		}
 
 		_biomes.setSize(_width, _height);
@@ -75,7 +77,8 @@ class Terrain {
 			_pressure.DisposeEvents();
 			_pressure.WorkerStop();
 			_pressure = null;
-
+			_max = 0.0;
+			_min = 0.0;
 		}
 
 		_depth = depth;
@@ -101,6 +104,16 @@ class Terrain {
 	}
 
 	ApplyBiomes() {
+
+		if (_mesh instanceof THREE.Mesh && _max == 0) {
+
+			for (let i = 0; i < _mesh.geometry.attributes.position.count; i++) {
+
+				if (_max < _mesh.geometry.attributes.position.array[i * 3 + 1]) _max = _mesh.geometry.attributes.position.array[i * 3 + 1];
+				if (_min > _mesh.geometry.attributes.position.array[i * 3 + 1]) _min = _mesh.geometry.attributes.position.array[i * 3 + 1];
+			}
+
+		}
 
 		if (_mesh instanceof THREE.Mesh && _max != 0.0) {
 
