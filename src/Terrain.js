@@ -29,10 +29,10 @@ class Terrain {
 			_pressure.DisposeEvents();
 			_pressure.WorkerStop();
 			_pressure = null;
-
 		}
 
 		_biomes.setSize(_width, _height);
+		_biomes.setTypePixels(0);
 
 		let geometry = new THREE.PlaneBufferGeometry(_width, _height, _width, _height);
 		geometry.rotateX(-Math.PI / 2);
@@ -49,7 +49,7 @@ class Terrain {
 			colors[i * 3 + 2] = 1;
 		}
 
-			
+		//console.log(geometry.attributes.position.count);	
 		geometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 		geometry.attributes.color.needsUpdate = true;
 
@@ -63,7 +63,7 @@ class Terrain {
 		_pressure.AddEvents();
 	}
 
-	LoadHeightMap(image, depth = 128, width = 128) {
+	LoadHeightMap(image, width = 128, depth = 128) {
 
 		_worker = new Worker('./src/WorkerHeightMap.js');
 		_worker.onmessage = this.WorkerOnMessage;
@@ -75,13 +75,15 @@ class Terrain {
 			_pressure.DisposeEvents();
 			_pressure.WorkerStop();
 			_pressure = null;
+
 		}
 
 		_depth = depth;
 		_width = width;
 
 		_biomes.setSize(_width, _depth);
-	
+		_biomes.setTypePixels(1);
+
 		let canvas = document.createElement('canvas');
 		canvas.width = _width;
 		canvas.height = _depth;
@@ -102,11 +104,21 @@ class Terrain {
 
 		if (_mesh instanceof THREE.Mesh) {
 
+			let j = 0;
 			for (let i = 0; i < _mesh.geometry.attributes.position.count; i++) {
 
 				let y = _mesh.geometry.attributes.position.array[i * 3 + 1];
 				let height = (y - _min) / (_max - _min);
-				let val_m =  Math.round(i / 6);
+				let val_m =  0;
+
+				if ((i % 3) != 0) {
+
+					val_m = j;
+				} else {
+					j++;
+					val_m = j;
+				}
+
 				let color = new THREE.Color(_biomes.get(height, val_m));
 	
 				_mesh.geometry.attributes.color.array[i * 3] = color.r;

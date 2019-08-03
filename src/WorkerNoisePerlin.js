@@ -138,16 +138,26 @@ class NoisePerlin {
 		let buff = [], max = 0, min = pixels.data[0] + pixels.data[1] + pixels.data[2];
 
         let size = pixels.height*pixels.width*4;
-	
+		
         for (let i = 0; i < size; i +=4) {
 
-            let tmp = pixels.data[i] + pixels.data[i + 1] + pixels.data[i + 2];
-			buff.push(tmp);
+			let tmp = pixels.data[i] + pixels.data[i + 1] + pixels.data[i + 2];
+	
+			if (type == 0) {
+
+				buff.push(tmp);
+			} else if (type == 1) {
+
+				buff.push(tmp);
+				buff.push(tmp);
+			}
+
 
             if (max < tmp) max = tmp;
             if (min > tmp) min = tmp;
 		}
-		
+
+
 		for (let i = 0; i < buff.length; i++) {
 
 			buff[i] = (buff[i] - min) / (max - min);
