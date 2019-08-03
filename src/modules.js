@@ -153,3 +153,10 @@ document.getElementById(DataHTML.Biomes.Buttons[0]).addEventListener("click", fu
 	Engenie.getTerrain().getBiomes().GenerateDataPixels();
 
 }, false);
+
+// biomes Apply
+document.getElementById(DataHTML.Biomes.Buttons[1]).addEventListener("click", function(event) {
+
+	Engenie.getTerrain().ApplyBiomes();
+
+}, false);

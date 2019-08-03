@@ -33,7 +33,7 @@ var DataHTML = {
 	'Biomes': {
 		'Options': [],
 		'Values': [],
-		'Buttons': ['bGenNoise'],
+		'Buttons': ['bGenNoise', 'bNoiseApply'],
 		'Canvas': 'CanvasGenNoise',
 	},
 	'Camera': 'camera',
@@ -119,6 +119,7 @@ var HTMLlist = [
 			{'tag': 'div', 'id': DataHTML.Biomes.Canvas},
 			{'tag': 'br'},
 			{'tag': 'button', 'id': DataHTML.Biomes.Buttons[0], 'style':'text-align: center; width: 120px;', 'text': txt.TabEditBiomes[2]},
+			{'tag': 'button', 'id': DataHTML.Biomes.Buttons[1], 'style':'text-align: center; width: 120px;', 'text': txt.TabEditBiomes[3]},
 		]},
 		{'tag': 'div', 'id': DataHTML.RightBar.Contents[2], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'text': 'test 3'},
 	]},

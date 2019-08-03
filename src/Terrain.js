@@ -7,17 +7,10 @@ let _spacingX = 2, _heightOffset = 2.5, _spacingZ = 2;
 let _context;
 let _worker = null;
 
-let max = 0.0, min = 0.0, center = 0.0;
+let _max = 0.0, _min = 0.0;
 
 import {PressureTerrain} from './PressureTerrain.js';
 import {Biomes} from './Biomes.js';
-
-function updateAttrColor(attr, color, current) {
-
-	attr.array[current * 3] = color.r;
-	attr.array[current * 3 + 1] = color.g;
-	attr.array[current * 3 + 2] = color.b;
-}
 
 class Terrain {
 
@@ -88,6 +81,7 @@ class Terrain {
 		_width = width;
 
 		_biomes.setSize(_width, _depth);
+	
 		let canvas = document.createElement('canvas');
 		canvas.width = _width;
 		canvas.height = _depth;
@@ -104,6 +98,26 @@ class Terrain {
 		return _biomes;
 	}
 
+	ApplyBiomes() {
+
+		if (_mesh instanceof THREE.Mesh) {
+
+			for (let i = 0; i < _mesh.geometry.attributes.position.count; i++) {
+
+				let y = _mesh.geometry.attributes.position.array[i * 3 + 1];
+				let height = (y - _min) / (_max - _min);
+				let val_m =  Math.round(i / 6);
+				let color = new THREE.Color(_biomes.get(height, val_m));
+	
+				_mesh.geometry.attributes.color.array[i * 3] = color.r;
+				_mesh.geometry.attributes.color.array[i * 3 + 1] = color.g;
+				_mesh.geometry.attributes.color.array[i * 3 + 2] = color.b;
+				_mesh.geometry.attributes.color.needsUpdate = true;
+
+			}
+		}
+	}
+
 	WorkerOnMessage(e) {
 
 		switch(e.data.cmd) {
@@ -112,9 +126,8 @@ class Terrain {
 
 				let buffVertices = e.data.points, buffNormals = e.data.normals, buffColors = e.data.colors;
 
-				max =  e.data.max;
-				min = e.data.min;
-				center = max /2;	// min = 0 в данном случаи
+				_max =  e.data.max;
+				_min = e.data.min;
 
 				let geometry = new THREE.BufferGeometry();
 				let positions = new Float32Array(buffVertices.length * 3);
@@ -123,17 +136,6 @@ class Terrain {
 				geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3).copyVector3sArray(buffVertices));
 				geometry.addAttribute('normal', new THREE.BufferAttribute(normals, 3).copyVector3sArray(buffNormals));
 				geometry.addAttribute('color', new THREE.Float32BufferAttribute(buffColors, 3));
-
-
-				for (let i = 0; i < geometry.attributes.position.count; i++) {
-
-					let y = geometry.attributes.position.array[i * 3 + 1];
-					let h = (y - min) / (max - min);
-					let m =  Math.round(i / 6);
-					updateAttrColor(geometry.attributes.color, new THREE.Color(_biomes.get(h,m ))/*biomeColor(biome(h, m))*/, i);
-
-					geometry.attributes.color.needsUpdate = true;
-				}
 
 				geometry.computeBoundingBox();
 				geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-geometry.boundingBox.max.x /2, 0, -geometry.boundingBox.max.z/2));
