@@ -17,14 +17,6 @@ function updateAttrColor(attr, color, current) {
 	attr.array[current * 3] = color.r;
 	attr.array[current * 3 + 1] = color.g;
 	attr.array[current * 3 + 2] = color.b;
-
-	attr.array[current * 3 + 3] = color.r;
-	attr.array[current * 3 + 4] = color.g;
-	attr.array[current * 3 + 5] = color.b;
-
-	attr.array[current * 3 + 6] = color.r;
-	attr.array[current * 3 + 7] = color.g;
-	attr.array[current * 3 + 8] = color.b;
 }
 
 class Terrain {
@@ -62,14 +54,6 @@ class Terrain {
 			colors[i * 3] = 0;
 			colors[i * 3 + 1] = 0;
 			colors[i * 3 + 2] = 1;
-
-			colors[i * 3 + 3] = 0;
-			colors[i * 3 + 4] = 0;
-			colors[i * 3 + 5] = 1;
-
-			colors[i * 3 + 6] = 0;
-			colors[i * 3 + 7] = 0;
-			colors[i * 3 + 8] = 1;
 		}
 
 			

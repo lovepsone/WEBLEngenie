@@ -18,9 +18,7 @@ function convertFaseToPointsAndNormals(_face, _vertices, _points, _normals, _col
         _normals.push(normal, normal, normal);
     }
 
-    _colors.push(0, 0, 1, 0, 0, 1, 0, 0, 0.5);
-    _colors.push(0, 0, 1, 0, 0, 0.5, 0, 0, 1);
-    _colors.push(0, 0, 0.5, 0, 0, 1, 0, 0, 1);
+    _colors.push(0, 0, 1, 0, 0, 1, 0, 0, 1);
 }
 
 function WorkerHeightMap(pixel, size, spacing, heightOffset) {
