@@ -35,6 +35,7 @@ var lang = {
 			'Редактор Биомов',
 			'Шум для биомов',
 			'Генерация шума',
+			'Применить',
 		],
 	},
 
@@ -66,9 +67,10 @@ var lang = {
 			'Strength: ',
 		],
 		'TabEditBiomes': [
-			'Редактор Биомов',
-			'Шум для биомов',
-			'Генерация шума',
+			'Biome Editor',
+			'Noise for biomes',
+			'Noise generation',
+			'Apply',
 		],
 	}
 }
