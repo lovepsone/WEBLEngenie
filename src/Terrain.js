@@ -102,7 +102,7 @@ class Terrain {
 
 	ApplyBiomes() {
 
-		if (_mesh instanceof THREE.Mesh) {
+		if (_mesh instanceof THREE.Mesh && _max != 0.0) {
 
 			let j = 0;
 			for (let i = 0; i < _mesh.geometry.attributes.position.count; i++) {
