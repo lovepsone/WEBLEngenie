@@ -68,7 +68,7 @@ class PressureTerrain extends MouseMoveOnTerrain {
 
 	UpdateStrength(s) {
 
-		_strength = s / 100;
+		_strength = s / 1.0;
 		_worker.postMessage({'cmd': 'strength', 'val': _strength});
 	}
 
