@@ -7,6 +7,7 @@ import {DrawNoise} from './DrawNoise.js';
 let _worker = null;
 let _width = 128, _height = 128;
 let _scope = null;
+let TypePixelsRevert = 0;
 
 let _moisture = [];
 
@@ -100,12 +101,17 @@ class Biomes extends DrawNoise {
                 }
 
                 let pixel = _scope.getContext().getImageData(0, 0, _scope.getSize().width, _scope.getSize().height);
-                _worker.postMessage({'cmd': 'pixels', 'data': pixel});
+                _worker.postMessage({'cmd': 'pixels', 'data': pixel, 'TypeRevert': TypePixelsRevert});
                 break;
             case 'complete':
                     _moisture = data.result;
                 break;
         }
+    }
+
+    setTypePixels(val = 0) {
+
+        TypePixelsRevert = val;
     }
 };
 

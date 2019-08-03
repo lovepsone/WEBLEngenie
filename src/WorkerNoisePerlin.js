@@ -133,7 +133,7 @@ class NoisePerlin {
 		return data;
 	}
 
-	RevertPixels(pixels) {
+	RevertPixels(pixels, type) {
 
 		let buff = [], max = 0, min = pixels.data[0] + pixels.data[1] + pixels.data[2];
 
@@ -171,7 +171,7 @@ self.onmessage = function(e) {
 				self.postMessage({'cmd': 'draw', 'colors':  perlin.generate()});
             break;
         case 'pixels':
-				self.postMessage({'cmd': 'complete', 'result': perlin.RevertPixels(data.data)});
+				self.postMessage({'cmd': 'complete', 'result': perlin.RevertPixels(data.data, data.TypeRevert)});
             break;
     }
 };
