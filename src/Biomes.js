@@ -48,13 +48,13 @@ class Biomes extends DrawNoise {
         let moisture = _moisture[val];
 
         if (height < 0.1) return colors.OCEAN;
-        if (height < 0.12) return colors.BEACH;
+        if (height < 0.2) return colors.BEACH;
         
         if (height > 0.8) {
             
-            if (moisture < 0.1) return colors.SCORCHED;
-            if (moisture < 0.2) return colors.BARE;
-            if (moisture < 0.5) return colors.TUNDRA;
+            if (moisture < 0.2) return colors.SCORCHED;
+            if (moisture < 0.4) return colors.BARE;
+            if (moisture < 0.6) return colors.TUNDRA;
             
             return colors.SNOW;
         }
@@ -67,18 +67,18 @@ class Biomes extends DrawNoise {
             return colors.TAIGA;
         }
         
-        if (height > 0.3) {
+        if (height > 0.4) {
             
-            if (moisture < 0.16) return colors.TEMPERATE_DESERT;
-            if (moisture < 0.50) return colors.GRASSLAND;
-            if (moisture < 0.83) return colors.TEMPERATE_DECIDUOUS_FOREST;
+            if (moisture < 0.2) return colors.TEMPERATE_DESERT;
+            if (moisture < 0.4) return colors.GRASSLAND;
+            if (moisture < 0.6) return colors.TEMPERATE_DECIDUOUS_FOREST;
             
             return colors.TEMPERATE_RAIN_FOREST;
         }
         
-        if (moisture < 0.16) return colors.SUBTROPICAL_DESERT;
-        if (moisture < 0.33) return colors.GRASSLAND;
-        if (moisture < 0.66) return colors.TROPICAL_SEASONAL_FOREST;
+        if (moisture < 0.2) return colors.SUBTROPICAL_DESERT;
+        if (moisture < 0.4) return colors.GRASSLAND;
+        if (moisture < 0.6) return colors.TROPICAL_SEASONAL_FOREST;
         
         return colors.TROPICAL_RAIN_FOREST;
     }
