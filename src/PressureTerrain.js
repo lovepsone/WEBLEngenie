@@ -3,7 +3,7 @@
 */
 
 let _radius = 0.5;
-let _strength = 0.005;
+let _strength = 0.5;
 let _mesh = null;
 let _camera = null;
 let _worker = null;
@@ -26,23 +26,40 @@ class PressureTerrain extends MouseMoveOnTerrain {
 
 		event.preventDefault();
 
-		if (this.getMoseDown()) {
+		let x = (event.layerX / window.innerWidth ) * 2 - 1;
+		let y = - (event.layerY / window.innerHeight ) * 2 + 1;
 
-			let x = (event.layerX / window.innerWidth ) * 2 - 1;
-			let y = - (event.layerY / window.innerHeight ) * 2 + 1;
+		//this.getVector().set(x, y, 0.5);
+		this.getVector().set(x, y, 0.5);
+		this.getRayCaster().setFromCamera(this.getVector(), _camera);
+		this.getRayCaster().firstHitOnly = true;
 
-			//this.getVector().set(x, y, 0.5);
-			this.getVector().set(x, y, 0.5);
-			this.getRayCaster().setFromCamera(this.getVector(), _camera);
+		let intersects = this.getRayCaster().intersectObject(_mesh);
+		const bvh = _mesh.geometry.boundsTree;
+
+		if (intersects.length > 0) {
+
+			this.getBrush().position.copy(intersects[0].point);
+
+			if (this.getMoseDown()) {
+			}
+		}
+		/*if (this.getMoseDown()) {
+
 			let intersects = this.getRayCaster().intersectObject(_mesh);
+			const bvh = _mesh.geometry.boundsTree;
 
 			if (intersects.length > 0) {
 
-				_worker.postMessage({'cmd': 'pressure', 'attr': _mesh.geometry.attributes.position.array, 'point': intersects[0].point});
+				//this.getBrush().position.copy(intersects[ 0 ].point);
+				//_mesh.geometry.attributes.position.array[intersects[0].face.a*3 + 1] += _strength;
+				//_mesh.geometry.attributes.position.array[intersects[0].face.b*3 + 1] += _strength;
+				//_mesh.geometry.attributes.position.array[intersects[0].face.c*3 + 1] += _strength;
+				//_worker.postMessage({'cmd': 'pressure', 'attr': _mesh.geometry.attributes.position.array, 'point': intersects[0].point});
 				//this.getPositionsGeometry(_mesh.geometry.attributes.position.array, intersects[0].point);
 				//_mesh.geometry.attributes.position.needsUpdate = true;
 			}
-		}
+		}*/
 		
 	}
 	
@@ -68,7 +85,7 @@ class PressureTerrain extends MouseMoveOnTerrain {
 
 	UpdateStrength(s) {
 
-		_strength = s / 1.0;
+		_strength = s / 10.0;
 		_worker.postMessage({'cmd': 'strength', 'val': _strength});
 	}
 

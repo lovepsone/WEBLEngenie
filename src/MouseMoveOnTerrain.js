@@ -6,6 +6,7 @@ let _mouseVector = new THREE.Vector3();
 let _raycaster = new THREE.Raycaster();
 let _MouseDown = false;
 let bindMouseDown, bindMouseUp, bindMouseMove;
+let _brushMesh = null;
 
 class MouseMoveOnTerrain {
 
@@ -15,6 +16,9 @@ class MouseMoveOnTerrain {
 		bindMouseDown =  this.onDocumentMouseDown.bind(this);
 		bindMouseUp = this.onDocumentMouseUp.bind(this);
 		bindMouseMove = this.onDocumentMouseMove.bind(this);
+
+		_brushMesh = new THREE.Mesh(new THREE.SphereBufferGeometry(1, 40, 40), new THREE.MeshStandardMaterial({color: 0xEC407A, roughness: 0.75, metalness: 0, transparent: true, opacity: 0.5, premultipliedAlpha: true, emissive: 0xEC407A, emissiveIntensity: 0.5}));
+		_brushMesh.name = "Brush";
 	}
 	
 	onDocumentMouseDown(event) {
@@ -49,6 +53,7 @@ class MouseMoveOnTerrain {
 		this.element.addEventListener("mousedown", bindMouseDown, false);
 		this.element.addEventListener("mouseup", bindMouseUp, false);
 		this.element.addEventListener("mousemove", bindMouseMove, false);
+		_brushMesh.visible = true;
 	}
 	
 	DisposeEvents() {
@@ -56,6 +61,7 @@ class MouseMoveOnTerrain {
 		this.element.removeEventListener("mousedown", bindMouseDown, false);
 		this.element.removeEventListener("mouseup", bindMouseUp, false);
 		this.element.removeEventListener("mousemove", bindMouseMove, false);
+		_brushMesh.visible = false;
 	}
 
 	getMoseDown() {
@@ -71,6 +77,11 @@ class MouseMoveOnTerrain {
 	getVector() {
 
 		return _mouseVector;
+	}
+
+	getBrush() {
+
+		return _brushMesh;
 	}
 }
 
