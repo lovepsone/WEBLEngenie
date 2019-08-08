@@ -3,7 +3,6 @@
 */
 let _mesh = null, _pressure = null, _biomes = null, _scope = null, _ImageLoader = null;
 let _depth = 64, _width = 64;
-let _spacingX = 2, _heightOffset = 2.5, _spacingZ = 2;
 let _context;
 let _worker = null;
 
@@ -50,8 +49,7 @@ class Terrain {
 			colors[i * 3 + 1] = 0;
 			colors[i * 3 + 2] = 1;
 		}
-
-		//console.log(geometry.attributes.position.count);	
+	
 		geometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 		geometry.attributes.color.needsUpdate = true;
 
@@ -84,7 +82,7 @@ class Terrain {
 		_width = width;
 
 		_biomes.setSize(_width, _depth);
-		_biomes.setTypePixels(1);
+		_biomes.setTypePixels(0);
 
 		let canvas = document.createElement('canvas');
 		canvas.width = _width;
@@ -93,8 +91,39 @@ class Terrain {
 
 		_context.drawImage(image, 0, 0);
 		let pixel = _context.getImageData(0, 0, _width, _depth);
+
+		let DataHeight = [], colors = [];
 		
-		_worker.postMessage({'cmd': 'pixels', 'data': pixel, 'size': _width, 'spacingXZ':[_spacingX, _spacingZ], 'heightOffset': _heightOffset});
+		for (let i = 0, n = pixel.data.length; i < n; i += 4) {
+			
+			DataHeight.push(( pixel.data[i] + pixel.data[i+1] + pixel.data[i+2]) / 3);
+		}
+
+		let geometry = new THREE.PlaneBufferGeometry(_width, _depth, _width - 1, _depth - 1);
+		geometry.rotateX(-Math.PI / 2);
+		geometry.computeBoundingBox();
+		geometry.center();
+		geometry.computeFaceNormals();
+
+		for (let i = 0, n = geometry.attributes.position.count; i < n; ++ i) {
+
+			geometry.attributes.position.array[i*3 + 1] += (DataHeight[i] / 255) * 50;
+			colors[i * 3] = 0;
+			colors[i * 3 + 1] = 0;
+			colors[i * 3 + 2] = 1;
+		}
+
+		geometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+		geometry.attributes.color.needsUpdate = true;
+		geometry.attributes.position.needsUpdate = true;
+
+		_mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({side: THREE.DoubleSide, vertexColors: THREE.VertexColors}));
+		_mesh.name = 'Terrain';
+
+		_scope.scene.add(_mesh);
+	
+		_pressure = new PressureTerrain(_scope.camera, _mesh, 'Window');
+		_pressure.AddEvents();
 	}
 
 	getBiomes() {
@@ -140,42 +169,6 @@ class Terrain {
 
 			}
 		}
-	}
-
-	WorkerOnMessage(e) {
-
-		switch(e.data.cmd) {
-
-			case 'onLoadData': {
-
-				let buffVertices = e.data.points, buffNormals = e.data.normals, buffColors = e.data.colors;
-
-				_max =  e.data.max;
-				_min = e.data.min;
-
-				let geometry = new THREE.BufferGeometry();
-				let positions = new Float32Array(buffVertices.length * 3);
-				let normals = new Float32Array(buffNormals.length * 3);
-
-				geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3).copyVector3sArray(buffVertices));
-				geometry.addAttribute('normal', new THREE.BufferAttribute(normals, 3).copyVector3sArray(buffNormals));
-				geometry.addAttribute('color', new THREE.Float32BufferAttribute(buffColors, 3));
-
-				geometry.computeBoundingBox();
-				geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-geometry.boundingBox.max.x /2, 0, -geometry.boundingBox.max.z/2));
-
-				_mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({side: THREE.DoubleSide, vertexColors: THREE.VertexColors}));
-				_mesh.name = 'Terrain';
-				_scope.scene.add(_mesh);
-
-				_pressure = new PressureTerrain(_scope.camera, _mesh, 'Window');
-				_pressure.AddEvents();
-
-				_worker.postMessage({'cmd': 'stop'});
-				_worker = null;
-			}
-		}
-				
 	}
 
 	WireFrame(value = true) {
