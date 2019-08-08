@@ -19,13 +19,13 @@ var intersectionPointWorld = new THREE.Vector3();
 function checkIntersection( object, material, raycaster, ray, pA, pB, pC, point ) {
 
 	var intersect;
-	if ( material.side === BackSide ) {
+	if ( material.side ===  THREE.BackSide ) {
 
 		intersect = ray.intersectTriangle( pC, pB, pA, true, point );
 
 	} else {
 
-		intersect = ray.intersectTriangle( pA, pB, pC, material.side !== DoubleSide, point );
+		intersect = ray.intersectTriangle( pA, pB, pC, material.side !==  THREE.DoubleSide, point );
 
 	}
 
@@ -62,12 +62,12 @@ function checkBufferGeometryIntersection( object, raycaster, ray, position, uv, 
 			uvB.fromBufferAttribute( uv, b );
 			uvC.fromBufferAttribute( uv, c );
 
-			intersection.uv = Triangle.getUV( intersectionPoint, vA, vB, vC, uvA, uvB, uvC, new Vector2( ) );
+			intersection.uv =  THREE.Triangle.getUV( intersectionPoint, vA, vB, vC, uvA, uvB, uvC, new  THREE.Vector2( ) );
 
 		}
 
-		var normal = new Vector3();
-		intersection.face = new Face3( a, b, c, Triangle.getNormal( vA, vB, vC, normal ) );
+		var normal = new  THREE.Vector3();
+		intersection.face = new  THREE.Face3( a, b, c,  THREE.Triangle.getNormal( vA, vB, vC, normal ) );
 		intersection.faceIndex = a;
 
 	}
