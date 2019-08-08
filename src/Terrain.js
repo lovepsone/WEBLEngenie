@@ -8,6 +8,11 @@ let _max = 0.0, _min = 0.0;
 
 import {PressureTerrain} from './PressureTerrain.js';
 import {Biomes} from './Biomes.js';
+import {acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from './../libs/BVH/index.js';
+
+THREE.Mesh.prototype.raycast = acceleratedRaycast;
+THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
+THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
 
 class Terrain {
 
@@ -53,10 +58,11 @@ class Terrain {
 
 		_mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({side: THREE.DoubleSide, vertexColors: THREE.VertexColors}));
 		_mesh.name = 'Terrain';
-
+		_mesh.geometry.computeBoundsTree();
 		_scope.scene.add(_mesh);
 
 		_pressure = new PressureTerrain(_scope.camera, _mesh, 'Window');
+		_scope.scene.add(_pressure.getBrush());
 		_pressure.AddEvents();
 	}
 
@@ -114,10 +120,11 @@ class Terrain {
 
 		_mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({side: THREE.DoubleSide, vertexColors: THREE.VertexColors}));
 		_mesh.name = 'Terrain';
-
+		_mesh.geometry.computeBoundsTree();
 		_scope.scene.add(_mesh);
 	
 		_pressure = new PressureTerrain(_scope.camera, _mesh, 'Window');
+		_scope.scene.add(_pressure.getBrush());
 		_pressure.AddEvents();
 	}
 
