@@ -1,5 +1,8 @@
+/*
+* author gkjohnson
+* https://github.com/gkjohnson/three-mesh-bvh/
+*/
 
-import * as THREE from 'three';
 import { intersectTris, intersectClosestTri } from './Utils/RayIntersectTriUtlities.js';
 import { arrayToBox } from './Utils/ArrayBoxUtilities.js';
 import { OrientedBox } from './Utils/OrientedBox.js';

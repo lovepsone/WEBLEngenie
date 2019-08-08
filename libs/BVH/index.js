@@ -1,4 +1,8 @@
-import * as THREE from 'three';
+/*
+* author gkjohnson
+* https://github.com/gkjohnson/three-mesh-bvh/
+*/
+
 import MeshBVH from './MeshBVH.js';
 import Visualizer from './MeshBVHVisualizer.js';
 import { CENTER, AVERAGE, SAH } from './Constants.js';

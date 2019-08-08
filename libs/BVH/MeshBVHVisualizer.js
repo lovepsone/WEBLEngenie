@@ -1,4 +1,8 @@
-import * as THREE from 'three';
+/*
+* author gkjohnson
+* https://github.com/gkjohnson/three-mesh-bvh/
+*/
+
 import { arrayToBox } from './Utils/ArrayBoxUtilities.js';
 
 const wiremat = new THREE.LineBasicMaterial( { color: 0x00FF88, transparent: true, opacity: 0.3 } );

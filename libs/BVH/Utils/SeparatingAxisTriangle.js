@@ -1,18 +1,22 @@
-import { Triangle, Vector3, Line3, Sphere } from 'three';
+/*
+* author gkjohnson
+* https://github.com/gkjohnson/three-mesh-bvh/
+*/
+
 import { SeparatingAxisBounds } from './SeparatingAxisBounds.js';
 import { closestPointsSegmentToSegment } from './MathUtilities.js';
 
-export class SeparatingAxisTriangle extends Triangle {
+export class SeparatingAxisTriangle extends THREE.Triangle {
 
 	constructor( ...args ) {
 
 		super( ...args );
 
 		this.isSeparatingAxisTriangle = true;
-		this.satAxes = new Array( 4 ).fill().map( () => new Vector3() );
+		this.satAxes = new Array( 4 ).fill().map( () => new THREE.Vector3() );
 		this.satBounds = new Array( 4 ).fill().map( () => new SeparatingAxisBounds() );
 		this.points = [ this.a, this.b, this.c ];
-		this.sphere = new Sphere();
+		this.sphere = new THREE.Sphere();
 
 	}
 
@@ -67,7 +71,7 @@ SeparatingAxisTriangle.prototype.intersectsTriangle = ( function () {
 	const arr2 = new Array( 3 );
 	const cachedSatBounds = new SeparatingAxisBounds();
 	const cachedSatBounds2 = new SeparatingAxisBounds();
-	const cachedAxis = new Vector3();
+	const cachedAxis = new THREE.Vector3();
 	return function intersectsTriangle( other ) {
 
 		if ( ! other.isSeparatingAxisTriangle ) {
@@ -131,7 +135,7 @@ SeparatingAxisTriangle.prototype.intersectsTriangle = ( function () {
 
 SeparatingAxisTriangle.prototype.distanceToPoint = ( function () {
 
-	const target = new Vector3();
+	const target = new THREE.Vector3();
 	return function distanceToPoint( point ) {
 
 		this.closestPointToPoint( point, target );
@@ -144,11 +148,11 @@ SeparatingAxisTriangle.prototype.distanceToPoint = ( function () {
 
 SeparatingAxisTriangle.prototype.distanceToTriangle = ( function () {
 
-	const point = new Vector3();
-	const point2 = new Vector3();
+	const point = new THREE.Vector3();
+	const point2 = new THREE.Vector3();
 	const cornerFields = [ 'a', 'b', 'c' ];
-	const line1 = new Line3();
-	const line2 = new Line3();
+	const line1 = new THREE.Line3();
+	const line2 = new THREE.Line3();
 
 	return function distanceToTriangle( other, target1 = null, target2 = null ) {
 

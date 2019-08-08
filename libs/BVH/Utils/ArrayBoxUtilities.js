@@ -1,3 +1,8 @@
+/*
+* author gkjohnson
+* https://github.com/gkjohnson/three-mesh-bvh/
+*/
+
 // Returns a Float32Array representing the bounds data for box.
 export function boxToArray( bx ) {
 

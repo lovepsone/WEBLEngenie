@@ -1,4 +1,7 @@
-import { Vector3 } from 'three';
+/*
+* author gkjohnson
+* https://github.com/gkjohnson/three-mesh-bvh/
+*/
 
 export class SeparatingAxisBounds {
 
@@ -56,7 +59,7 @@ export class SeparatingAxisBounds {
 
 SeparatingAxisBounds.prototype.setFromBox = ( function () {
 
-	const p = new Vector3();
+	const p = new THREE.Vector3();
 	return function setFromBox( axis, box ) {
 
 		const boxMin = box.min;

@@ -1,17 +1,20 @@
-import { Vector3, Vector2, Triangle, DoubleSide, BackSide, Face3 } from 'three';
+/*
+* author gkjohnson
+* https://github.com/gkjohnson/three-mesh-bvh/
+*/
 
 // Ripped and modified From THREE.js Mesh raycast
 // https://github.com/mrdoob/three.js/blob/0aa87c999fe61e216c1133fba7a95772b503eddf/src/objects/Mesh.js#L115
-var vA = new Vector3();
-var vB = new Vector3();
-var vC = new Vector3();
+var vA = new THREE.Vector3();
+var vB = new THREE.Vector3();
+var vC = new THREE.Vector3();
 
-var uvA = new Vector2();
-var uvB = new Vector2();
-var uvC = new Vector2();
+var uvA = new THREE.Vector2();
+var uvB = new THREE.Vector2();
+var uvC = new THREE.Vector2();
 
-var intersectionPoint = new Vector3();
-var intersectionPointWorld = new Vector3();
+var intersectionPoint = new THREE.Vector3();
+var intersectionPointWorld = new THREE.Vector3();
 
 function checkIntersection( object, material, raycaster, ray, pA, pB, pC, point ) {
 
