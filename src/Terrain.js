@@ -4,8 +4,6 @@
 let _mesh = null, _pressure = null, _biomes = null, _scope = null, _ImageLoader = null;
 let _depth = 64, _width = 64;
 let _context;
-let _worker = null;
-
 let _max = 0.0, _min = 0.0;
 
 import {PressureTerrain} from './PressureTerrain.js';
@@ -63,9 +61,6 @@ class Terrain {
 	}
 
 	LoadHeightMap(image, width = 128, depth = 128) {
-
-		_worker = new Worker('./src/WorkerHeightMap.js');
-		_worker.onmessage = this.WorkerOnMessage;
 
 		if (_mesh instanceof THREE.Mesh) {
 
