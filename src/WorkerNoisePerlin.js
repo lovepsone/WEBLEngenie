@@ -133,30 +133,20 @@ class NoisePerlin {
 		return data;
 	}
 
-	RevertPixels(pixels, type) {
+	RevertPixels(pixels) {
 
-		let buff = [], max = 0, min = pixels.data[0] + pixels.data[1] + pixels.data[2];
+		let buff = [], max = 0, min = 10000;
 
-        let size = pixels.height*pixels.width*4;
-		
-        for (let i = 0; i < size; i +=4) {
+		for (let i = 0, n = pixels.data.length; i < n; i += 4) {
 
-			let tmp = pixels.data[i] + pixels.data[i + 1] + pixels.data[i + 2];
-	
-			if (type == 0) {
-
-				buff.push(tmp);
-			} else if (type == 1) {
-
-				buff.push(tmp);
-				buff.push(tmp);
-			}
-
+			let tmp = (pixels.data[i] + pixels.data[i + 1] + pixels.data[i + 2]) / 3;
+			tmp = tmp / 255;
+			tmp = tmp * 100;
+			buff.push(tmp);
 
             if (max < tmp) max = tmp;
             if (min > tmp) min = tmp;
 		}
-
 
 		for (let i = 0; i < buff.length; i++) {
 
@@ -165,7 +155,6 @@ class NoisePerlin {
 
 		return buff;
 	}
-
 }
 
 let perlin = new NoisePerlin(128, 128);
@@ -181,7 +170,7 @@ self.onmessage = function(e) {
 				self.postMessage({'cmd': 'draw', 'colors':  perlin.generate()});
             break;
         case 'pixels':
-				self.postMessage({'cmd': 'complete', 'result': perlin.RevertPixels(data.data, data.TypeRevert)});
+				self.postMessage({'cmd': 'complete', 'result': perlin.RevertPixels(data.data)});
             break;
     }
 };

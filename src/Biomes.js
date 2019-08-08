@@ -101,7 +101,7 @@ class Biomes extends DrawNoise {
                 }
 
                 let pixel = _scope.getContext().getImageData(0, 0, _scope.getSize().width, _scope.getSize().height);
-                _worker.postMessage({'cmd': 'pixels', 'data': pixel, 'TypeRevert': TypePixelsRevert});
+                _worker.postMessage({'cmd': 'pixels', 'data': pixel});
                 break;
             case 'complete':
                     _moisture = data.result;

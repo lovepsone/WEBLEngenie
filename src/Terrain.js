@@ -91,7 +91,7 @@ class Terrain {
 		
 		for (let i = 0, n = pixel.data.length; i < n; i += 4) {
 			
-			DataHeight.push(( pixel.data[i] + pixel.data[i+1] + pixel.data[i+2]) / 3);
+			DataHeight.push((pixel.data[i] + pixel.data[i+1] + pixel.data[i+2]) / 3);
 		}
 
 		let geometry = new THREE.PlaneBufferGeometry(_width, _depth, _width - 1, _depth - 1);
@@ -140,22 +140,12 @@ class Terrain {
 
 		if (_mesh instanceof THREE.Mesh && _max != 0.0) {
 
-			let j = 0;
 			for (let i = 0; i < _mesh.geometry.attributes.position.count; i++) {
 
 				let y = _mesh.geometry.attributes.position.array[i * 3 + 1];
 				let height = (y - _min) / (_max - _min);
-				let val_m =  0;
 
-				if ((i % 3) != 0) {
-
-					val_m = j;
-				} else {
-					j++;
-					val_m = j;
-				}
-
-				let color = new THREE.Color(_biomes.get(height, val_m));
+				let color = new THREE.Color(_biomes.get(height, i));
 	
 				_mesh.geometry.attributes.color.array[i * 3] = color.r;
 				_mesh.geometry.attributes.color.array[i * 3 + 1] = color.g;
