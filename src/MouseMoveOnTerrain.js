@@ -17,7 +17,7 @@ class MouseMoveOnTerrain {
 		bindMouseUp = this.onDocumentMouseUp.bind(this);
 		bindMouseMove = this.onDocumentMouseMove.bind(this);
 
-		_brushMesh = new THREE.Mesh(new THREE.SphereBufferGeometry(1, 40, 40), new THREE.MeshStandardMaterial({color: 0xEC407A, roughness: 0.75, metalness: 0, transparent: true, opacity: 0.5, premultipliedAlpha: true, emissive: 0xEC407A, emissiveIntensity: 0.5}));
+		_brushMesh = new THREE.Mesh(new THREE.SphereBufferGeometry(1, 50, 50), new THREE.MeshStandardMaterial({color: 0xEC407A, roughness: 0.75, metalness: 0, transparent: true, opacity: 0.5, premultipliedAlpha: true, emissive: 0xEC407A, emissiveIntensity: 0.5}));
 		_brushMesh.name = "Brush";
 	}
 	

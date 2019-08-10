@@ -30,8 +30,8 @@ class PressureTerrain extends MouseMoveOnTerrain {
 		this.getRayCaster().firstHitOnly = true;
 
 		let intersects = this.getRayCaster().intersectObject(_mesh);
-		const bvh = _mesh.geometry.boundsTree;
-		this.getBrush().scale.setScalar(1);
+		let bvh = _mesh.geometry.boundsTree;
+		this.getBrush().scale.setScalar(_radius);
 
 		if (intersects.length > 0) {
 
@@ -40,8 +40,8 @@ class PressureTerrain extends MouseMoveOnTerrain {
 			if (this.getMoseDown()) {
 
 				const indices = [];
-				const sphere = new THREE.Sphere(this.getBrush().position, 1);
-				const posAttr = _mesh.geometry.getAttribute('position');
+				const sphere = new THREE.Sphere(this.getBrush().position, _radius);
+				let posAttr = _mesh.geometry.getAttribute('position');
 				const indexAttr =_mesh.geometry.index;
 
 				bvh.shapecast(_mesh, box => sphere.intersectsBox(box), (tri, a, b, c) => 
@@ -59,7 +59,8 @@ class PressureTerrain extends MouseMoveOnTerrain {
 				for (let i = 0, l = indices.length; i < l; i ++ ) {
 					
 					let index = indexAttr.getX(indices[i]);
-					posAttr.setY(index, posAttr.getY(index) + _strength);
+					let y = posAttr.getY(index) + _strength;
+					posAttr.setY(index, y);
 				}
 				posAttr.needsUpdate = true;
 			}
@@ -68,12 +69,12 @@ class PressureTerrain extends MouseMoveOnTerrain {
 
 	UpdateRadius(r) {
 
-		_radius  = r / 1.0;
+		_radius  = r / 10.0;
 	}
 
 	UpdateStrength(s) {
 
-		_strength = s / 10.0;
+		_strength = s / 5.0;
 	}
 }
 

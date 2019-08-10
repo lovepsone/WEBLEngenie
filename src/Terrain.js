@@ -29,7 +29,6 @@ class Terrain {
 			_scope.scene.remove(_mesh);
 			_mesh = null;
 			_pressure.DisposeEvents();
-			_pressure.WorkerStop();
 			_pressure = null;
 			_max = 0.0;
 			_min = 0.0;
@@ -73,7 +72,6 @@ class Terrain {
 			_scope.scene.remove(_mesh);
 			_mesh = null;
 			_pressure.DisposeEvents();
-			_pressure.WorkerStop();
 			_pressure = null;
 			_max = 0.0;
 			_min = 0.0;
