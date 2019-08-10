@@ -8,7 +8,7 @@ let _max = 0.0, _min = 0.0;
 
 import {PressureTerrain} from './PressureTerrain.js';
 import {Biomes} from './Biomes.js';
-import {acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from './../libs/BVH/index.js';
+import {acceleratedRaycast, computeBoundsTree, disposeBoundsTree} from './../libs/BVH/index.js';
 
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
