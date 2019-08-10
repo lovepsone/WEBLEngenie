@@ -65,9 +65,19 @@ document.getElementById(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListene
 			image = null;
 			reader.onload = null;
 			reader = null;
+
+			if (document.getElementById(DataHTML.Wireframe).checked) {
+
+				Engenie.getTerrain().WireFrame(true);
+			} else {
+		
+				Engenie.getTerrain().WireFrame(false);
+			}
+	
 		}, false);
 
 		image.load;
+
 		document.getElementById(DataHTML.DialogLoadHeightMap.widjet).close();
 	};
 
