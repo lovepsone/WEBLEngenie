@@ -104,7 +104,15 @@ document.getElementById(DataHTML.DialogCreateTerrain.Buttons[0]).addEventListene
 	let width = document.getElementById(DataHTML.DialogCreateTerrain.Options[0]).value;
 	let height = document.getElementById(DataHTML.DialogCreateTerrain.Options[1]).value;
 	Engenie.getTerrain().Create(width, height);
-	
+
+	if (document.getElementById(DataHTML.Wireframe).checked) {
+
+		Engenie.getTerrain().WireFrame(true);
+	} else {
+
+		Engenie.getTerrain().WireFrame(false);
+	}
+
 	document.getElementById(DataHTML.DialogCreateTerrain.widjet).close();
 
 }, false);
