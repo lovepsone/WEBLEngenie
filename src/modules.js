@@ -5,14 +5,16 @@
 import {MainEngenie} 				from './Main.js';
 import {LoaderHTML5} 				from './ui/LoaderHTML.js';
 import {HTMLlist, DataHTML}			from './ui/HTMLlist.js';
+import {UI, UIFrame}				from './ui/UI.js';
 import {lang} 						from './lang/lang.js';
 
-var Language = 'ru';
+let Language = 'ru';
 
 new LoaderHTML5(HTMLlist);
+let _UIFrame = new UIFrame(DataHTML.Camera, DataHTML.Wireframe);
 
-var Frame = document.getElementById('Window');
-var Engenie = new MainEngenie(60, window.innerWidth, window.innerHeight);
+let Frame = UI.getElement('Window');
+let Engenie = new MainEngenie(60, window.innerWidth, window.innerHeight);
 
 Frame.appendChild(Engenie.getRender().domElement);
 
@@ -25,32 +27,33 @@ var AnimationFrame = function() {
 AnimationFrame();
 
 // handlers Menu Bar
-document.getElementById(DataHTML.MenuBar.CreateTerrain).addEventListener("click", function() {
+UI.getElement(DataHTML.MenuBar.CreateTerrain).addEventListener("click", function() {
 
-	document.getElementById(DataHTML.DialogCreateTerrain.widjet).showModal();
+	UI.getElement(DataHTML.DialogCreateTerrain.widjet).showModal();
 }, false);
 
-document.getElementById(DataHTML.MenuBar.SaveTerrain).addEventListener("click", function() {
+
+UI.getElement(DataHTML.MenuBar.SaveTerrain).addEventListener("click", function() {
 
 	console.log('Save terrain in developing');
 }, false);
 
-document.getElementById(DataHTML.MenuBar.LoadTerrain).addEventListener("click", function() {
+UI.getElement(DataHTML.MenuBar.LoadTerrain).addEventListener("click", function() {
 
 	console.log('Loading terrain in developing');
 }, false);
 
 // handlers dialog load height map
-document.getElementById(DataHTML.MenuBar.LoadHeightMap).addEventListener("click", function() {
+UI.getElement(DataHTML.MenuBar.LoadHeightMap).addEventListener("click", function() {
 
-	document.getElementById(DataHTML.DialogLoadHeightMap.widjet).showModal();
+	UI.getElement(DataHTML.DialogLoadHeightMap.widjet).showModal();
 
 }, false);
 
-document.getElementById(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListener("click", function(event) {
+UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListener("click", function(event) {
 
 	let reader = new FileReader();
-	let file = document.getElementById(DataHTML.DialogLoadHeightMap.File).files[0];
+	let file = UI.getElement(DataHTML.DialogLoadHeightMap.File).files[0];
 	let image = new Image();
 
 	reader.readAsDataURL(file);
@@ -65,93 +68,90 @@ document.getElementById(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListene
 			image = null;
 			reader.onload = null;
 			reader = null;
-
-			if (document.getElementById(DataHTML.Wireframe).checked) {
-
-				Engenie.getTerrain().WireFrame(true);
-			} else {
-		
-				Engenie.getTerrain().WireFrame(false);
-			}
+			Engenie.getTerrain().WireFrame(_UIFrame.CheckedWireframe());
 	
 		}, false);
 
 		image.load;
 
-		document.getElementById(DataHTML.DialogLoadHeightMap.widjet).close();
+		UI.getElement(DataHTML.DialogLoadHeightMap.widjet).close();
 	};
 
 }, false);
 
-document.getElementById(DataHTML.DialogLoadHeightMap.Buttons[1]).addEventListener("click", function() {
+UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[1]).addEventListener("click", function() {
 
-	document.getElementById(DataHTML.DialogLoadHeightMap.widjet).close();
+	UI.getElement(DataHTML.DialogLoadHeightMap.widjet).close();
 
 }, false);
 
 // handlers Right Bar
 for (let i = 0; i < DataHTML.RightBar.Buttons.length; i++) {
 
-	document.getElementById(DataHTML.RightBar.Buttons[i]).addEventListener("click", {
+	UI.getElement(DataHTML.RightBar.Buttons[i]).addEventListener("click", {
 			handleEvent: function(event) {
 
 				for (let i = 0; i < DataHTML.RightBar.Contents.length; i++) {
 
-					document.getElementById(DataHTML.RightBar.Contents[i]).style.display = "none";
-					document.getElementById(DataHTML.RightBar.Buttons[i]).className = document.getElementById(DataHTML.RightBar.Buttons[i]).className.replace(" active", "");
+					UI.getElement(DataHTML.RightBar.Contents[i]).style.display = "none";
+					UI.getElement(DataHTML.RightBar.Buttons[i]).className = document.getElementById(DataHTML.RightBar.Buttons[i]).className.replace(" active", "");
 				}
 
-				document.getElementById(this.NameTab).style.display = "block";
-				document.getElementById(this.button).className += " active";
+				UI.getElement(this.NameTab).style.display = "block";
+				UI.getElement(this.button).className += " active";
 
 			}, NameTab: DataHTML.RightBar.Contents[i], button: DataHTML.RightBar.Buttons[i]
 		}, false);
 }
 
 // handlers Dialog Create Terrain
-document.getElementById(DataHTML.DialogCreateTerrain.Buttons[0]).addEventListener("click", function() {
+UI.getElement(DataHTML.DialogCreateTerrain.Buttons[0]).addEventListener("click", function() {
 
-	let width = document.getElementById(DataHTML.DialogCreateTerrain.Options[0]).value;
-	let height = document.getElementById(DataHTML.DialogCreateTerrain.Options[1]).value;
+	let width = UI.getElement(DataHTML.DialogCreateTerrain.Options[0]).value;
+	let height = UI.getElement(DataHTML.DialogCreateTerrain.Options[1]).value;
+
 	Engenie.getTerrain().Create(width, height);
+	Engenie.getTerrain().WireFrame(_UIFrame.CheckedWireframe());
 
-	if (document.getElementById(DataHTML.Wireframe).checked) {
+	if (_UIFrame.CheckedCamera()) {
 
-		Engenie.getTerrain().WireFrame(true);
+		Engenie.getControlsCamera().UpdateEvents();
+		Engenie.getTerrain().PressureDisposeEvents();
 	} else {
 
-		Engenie.getTerrain().WireFrame(false);
+		Engenie.getControlsCamera().dispose();
+		Engenie.getTerrain().PressureUpdateEvents();
 	}
 
-	document.getElementById(DataHTML.DialogCreateTerrain.widjet).close();
+	UI.getElement(DataHTML.DialogCreateTerrain.widjet).close();
 
 }, false);
 
-document.getElementById(DataHTML.DialogCreateTerrain.Buttons[1]).addEventListener("click", function() {
+UI.getElement(DataHTML.DialogCreateTerrain.Buttons[1]).addEventListener("click", function() {
 	
-	document.getElementById(DataHTML.DialogCreateTerrain.widjet).close();
+	UI.getElement(DataHTML.DialogCreateTerrain.widjet).close();
 
 }, false);
 
 // handlers Pressuere Terrain
-document.getElementById(DataHTML.Pressuere.Options[0]).addEventListener("change", function(event) {
+UI.getElement(DataHTML.Pressuere.Options[0]).addEventListener("change", function(event) {
 
 	let terrain = Engenie.getTerrain();
 	terrain.setPressureRadius(event.srcElement.value);
-	document.getElementById(DataHTML.Pressuere.Values[0]).innerHTML = event.srcElement.value;
+	UI.getElement(DataHTML.Pressuere.Values[0]).innerHTML = event.srcElement.value;
 
 }, false);
 
-document.getElementById(DataHTML.Pressuere.Options[1]).addEventListener("change", function(event) {
+UI.getElement(DataHTML.Pressuere.Options[1]).addEventListener("change", function(event) {
 
 	let terrain = Engenie.getTerrain();
 	terrain.setPressureStrength(event.srcElement.value);
-	document.getElementById(DataHTML.Pressuere.Values[1]).innerHTML = event.srcElement.value;
+	UI.getElement(DataHTML.Pressuere.Values[1]).innerHTML = event.srcElement.value;
 
 }, false);
 
 // handlers cheked camera
-document.getElementById(DataHTML.Camera).addEventListener("change", function(event) {
+UI.getElement(DataHTML.Camera).addEventListener("change", function(event) {
 
 	if (event.srcElement.checked) {
 
@@ -162,30 +162,23 @@ document.getElementById(DataHTML.Camera).addEventListener("change", function(eve
 		Engenie.getControlsCamera().dispose();
 		Engenie.getTerrain().PressureUpdateEvents();
 	}
-	
 }, false);
-
+//
 //handlers cheked wareframe
-document.getElementById(DataHTML.Wireframe).addEventListener("change", function(event) {
+UI.getElement(DataHTML.Wireframe).addEventListener("change", function(event) {
 
-	if (event.srcElement.checked) {
-
-		Engenie.getTerrain().WireFrame(true);
-	} else {
-
-		Engenie.getTerrain().WireFrame(false);
-	}
-	
+	Engenie.getTerrain().WireFrame(event.srcElement.checked);
 }, false);
+
 // handlers biomes
-document.getElementById(DataHTML.Biomes.Buttons[0]).addEventListener("click", function(event) {
+UI.getElement(DataHTML.Biomes.Buttons[0]).addEventListener("click", function(event) {
 
 	Engenie.getTerrain().getBiomes().GenerateDataPixels();
 
 }, false);
 
 // biomes Apply
-document.getElementById(DataHTML.Biomes.Buttons[1]).addEventListener("click", function(event) {
+UI.getElement(DataHTML.Biomes.Buttons[1]).addEventListener("click", function(event) {
 
 	Engenie.getTerrain().ApplyBiomes();
 
