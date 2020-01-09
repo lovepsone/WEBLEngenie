@@ -25,6 +25,39 @@ var AnimationFrame = function() {
 
 AnimationFrame();
 
+function ControlPen(currentTab) {
+
+	let buf = currentTab;
+
+	if (UI.getElement(DataHTML.Camera).checked) {
+
+		buf = -1;
+	} else {
+
+		Engenie.getControlsCamera().dispose();
+	}
+
+	switch(buf) {
+
+		case -1: //cancel all
+			Engenie.getControlsCamera().UpdateEvents()
+			Engenie.getTerrain().PressureDisposeEvents();
+			break;
+		
+		case 0:
+			Engenie.getTerrain().PressureUpdateEvents();
+			break;
+
+		case 1: // editor biomes
+			Engenie.getTerrain().PressureDisposeEvents();
+			break;
+
+		case 2:
+			Engenie.getTerrain().PressureDisposeEvents();
+			break;
+	}
+}
+
 // handlers Menu Bar
 UI.getElement(DataHTML.MenuBar.CreateTerrain).addEventListener("click", function() {
 
@@ -46,7 +79,6 @@ UI.getElement(DataHTML.MenuBar.LoadTerrain).addEventListener("click", function()
 UI.getElement(DataHTML.MenuBar.LoadHeightMap).addEventListener("click", function() {
 
 	UI.getElement(DataHTML.DialogLoadHeightMap.widjet).showModal();
-
 }, false);
 
 UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListener("click", function(event) {
@@ -81,7 +113,6 @@ UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListener("click",
 UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[1]).addEventListener("click", function() {
 
 	UI.getElement(DataHTML.DialogLoadHeightMap.widjet).close();
-
 }, false);
 
 // handlers Right Bar
@@ -98,6 +129,7 @@ for (let i = 0; i < DataHTML.RightBar.Buttons.length; i++) {
 		UI.getElement(event.srcElement.name).style.display = "block";
 		UI.getElement(event.srcElement.id).className += " active";
 		_UIFrame.setCurrentTab(event.srcElement.value);
+		ControlPen(_UIFrame.getCurrentTab());
 	}, false);
 }
 
@@ -121,13 +153,11 @@ UI.getElement(DataHTML.DialogCreateTerrain.Buttons[0]).addEventListener("click",
 	}
 
 	UI.getElement(DataHTML.DialogCreateTerrain.widjet).close();
-
 }, false);
 
 UI.getElement(DataHTML.DialogCreateTerrain.Buttons[1]).addEventListener("click", function() {
 	
 	UI.getElement(DataHTML.DialogCreateTerrain.widjet).close();
-
 }, false);
 
 // handlers Pressuere Terrain
@@ -144,21 +174,12 @@ UI.getElement(DataHTML.Pressuere.Options[1]).addEventListener("change", function
 	let terrain = Engenie.getTerrain();
 	terrain.setPressureStrength(event.srcElement.value);
 	UI.getElement(DataHTML.Pressuere.Values[1]).innerHTML = event.srcElement.value;
-
 }, false);
 
 // handlers cheked camera
 UI.getElement(DataHTML.Camera).addEventListener("change", function(event) {
 
-	if (event.srcElement.checked) {
-
-		Engenie.getControlsCamera().UpdateEvents();
-		Engenie.getTerrain().PressureDisposeEvents();
-	} else {
-
-		Engenie.getControlsCamera().dispose();
-		Engenie.getTerrain().PressureUpdateEvents();
-	}
+	ControlPen(_UIFrame.getCurrentTab());
 }, false);
 //
 //handlers cheked wareframe
