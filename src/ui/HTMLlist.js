@@ -97,9 +97,9 @@ var HTMLlist = [
 	//side bar 
 	{'tag': 'div', 'id': 'sidebar', 'children': [
 		{'tag': 'div', 'id': 'tab', 'children': [
-			{'tag': 'button', 'id': DataHTML.RightBar.Buttons[0], 'class': ' active', 'text': txt.TabEditTerrain[0]},
-			{'tag': 'button', 'id': DataHTML.RightBar.Buttons[1], 'text': txt.TabEditBiomes[0]},
-			{'tag': 'button', 'id': DataHTML.RightBar.Buttons[2], 'text': 'development'},
+			{'tag': 'button', 'id': DataHTML.RightBar.Buttons[0], 'class': ' active', 'text': txt.TabEditTerrain[0], 'name': DataHTML.RightBar.Contents[0], 'value': 0},
+			{'tag': 'button', 'id': DataHTML.RightBar.Buttons[1], 'text': txt.TabEditBiomes[0], 'name': DataHTML.RightBar.Contents[1], 'value': 1},
+			{'tag': 'button', 'id': DataHTML.RightBar.Buttons[2], 'text': 'development', 'name': DataHTML.RightBar.Contents[2], 'value': 2},
 		]},
 		{'tag': 'div', 'id': DataHTML.RightBar.Contents[0], 'style': 'display: block;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'children': [
 			{'tag': 'br'},
