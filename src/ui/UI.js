@@ -34,7 +34,7 @@ class UIFrame {
 
 	setCurrentTab(id) {
 
-		_currentTab = id;
+		_currentTab =  Number.parseInt(id);
 	}
 
 	getCurrentTab() {
