@@ -12,7 +12,6 @@ let Language = 'ru';
 
 new LoaderHTML5(HTMLlist);
 let _UIFrame = new UIFrame(DataHTML.Camera, DataHTML.Wireframe);
-
 let Frame = UI.getElement('Window');
 let Engenie = new MainEngenie(60, window.innerWidth, window.innerHeight);
 
@@ -88,20 +87,18 @@ UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[1]).addEventListener("click",
 // handlers Right Bar
 for (let i = 0; i < DataHTML.RightBar.Buttons.length; i++) {
 
-	UI.getElement(DataHTML.RightBar.Buttons[i]).addEventListener("click", {
-			handleEvent: function(event) {
+	UI.getElement(DataHTML.RightBar.Buttons[i]).addEventListener("click", function(event) {
 
-				for (let i = 0; i < DataHTML.RightBar.Contents.length; i++) {
+		for (let i = 0; i < DataHTML.RightBar.Contents.length; i++) {
 
-					UI.getElement(DataHTML.RightBar.Contents[i]).style.display = "none";
-					UI.getElement(DataHTML.RightBar.Buttons[i]).className = document.getElementById(DataHTML.RightBar.Buttons[i]).className.replace(" active", "");
-				}
+			UI.getElement(DataHTML.RightBar.Contents[i]).style.display = "none";
+			UI.getElement(DataHTML.RightBar.Buttons[i]).className = UI.getElement(DataHTML.RightBar.Buttons[i]).className.replace(" active", "");
+		}
 
-				UI.getElement(this.NameTab).style.display = "block";
-				UI.getElement(this.button).className += " active";
-
-			}, NameTab: DataHTML.RightBar.Contents[i], button: DataHTML.RightBar.Buttons[i]
-		}, false);
+		UI.getElement(event.srcElement.name).style.display = "block";
+		UI.getElement(event.srcElement.id).className += " active";
+		_UIFrame.setCurrentTab(event.srcElement.value);
+	}, false);
 }
 
 // handlers Dialog Create Terrain
