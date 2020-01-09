@@ -4,20 +4,21 @@
 let UI = document;
 UI.getElement = document.getElementById;
 
-let elemCamera = null;
-let elemWireframe = null;
+let _elemCamera = null;
+let _elemWireframe = null;
+let _currentTab = 0;
 
 class UIFrame {
 
 	constructor(camera, wireframe) {
 
-		elemCamera = camera;
-		elemWireframe = wireframe;
+		_elemCamera = camera;
+		_elemWireframe = wireframe;
 	}
 
 	CheckedCamera() {
 
-		if (UI.getElement(elemCamera).checked)
+		if (UI.getElement(_elemCamera).checked)
 			return true;
 
 		return false;
@@ -25,10 +26,20 @@ class UIFrame {
 
 	CheckedWireframe() {
 
-		if (UI.getElement(elemWireframe).checked)
+		if (UI.getElement(_elemWireframe).checked)
 			return true;
 
 		return false;
+	}
+
+	setCurrentTab(id) {
+
+		_currentTab = id;
+	}
+
+	getCurrentTab() {
+
+		return _currentTab;
 	}
 }
 
