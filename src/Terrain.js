@@ -67,7 +67,7 @@ class Terrain {
 		_pressure.AddEvents();
 
 		_road = new Road(_scope.camera, _mesh, 'Window', _scope.scene);
-		//_scope.scene.add(_road.getBrush());
+
 		_road.AddEvents();
 		_road.DisposeEvents();
 	}
@@ -131,6 +131,8 @@ class Terrain {
 		_pressure = new PressureTerrain(_scope.camera, _mesh, 'Window');
 		_scope.scene.add(_pressure.getBrush());
 		_pressure.AddEvents();
+
+		_road = new Road(_scope.camera, _mesh, 'Window', _scope.scene);
 	}
 
 	getBiomes() {
