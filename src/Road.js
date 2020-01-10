@@ -3,7 +3,6 @@
 */
 
 import * as THREE from './../libs/three/Three.js';
-import {MouseMoveOnTerrain} from './MouseMoveOnTerrain.js';
 
 let _CounterBox = 0
 let _boxes = [];
@@ -46,17 +45,17 @@ class Road {
 		_mouseVector.x = (event.layerX / window.innerWidth ) * 2 - 1;
         _mouseVector.y = - (event.layerY / window.innerHeight ) * 2 + 1;
         
-		this.getRayCaster().setFromCamera(this.getVector(), _camera);
-		this.getRayCaster().firstHitOnly = true;
+		_raycaster.setFromCamera(this.getVector(), _camera);
+		_raycaster.firstHitOnly = true;
 
-		let intersects = this.getRayCaster().intersectObject(_mesh);
+		let intersects = _raycaster.intersectObject(_mesh);
 		let bvh = _mesh.geometry.boundsTree;
-		this.getBrush().scale.setScalar(1);
+        _brushMesh.scale.setScalar(1);
 
 		if (intersects.length > 0) {
 
             _brushMesh.visible = true;
-            this.getBrush().position.copy(intersects[0].point);
+            _brushMesh.position.copy(intersects[0].point);
         } else {
 
             _brushMesh.visible = false;
@@ -76,16 +75,6 @@ class Road {
 		this.element.removeEventListener("mousemove", bindMouseMove, false);
 		_brushMesh.visible = false;
     }
-    
-	getRayCaster() {
-
-		return _raycaster;
-	}
-
-	getVector() {
-
-		return _mouseVector;
-	}
 
 	getBrush() {
 
