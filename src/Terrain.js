@@ -53,7 +53,7 @@ class Terrain {
 			colors[i * 3 + 2] = 1;
 		}
 	
-		geometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+		geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 		geometry.attributes.color.needsUpdate = true;
 
 		_mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({side: THREE.DoubleSide, vertexColors: THREE.VertexColors}));
@@ -113,7 +113,7 @@ class Terrain {
 			colors[i * 3 + 2] = 1;
 		}
 
-		geometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+		geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 		geometry.attributes.color.needsUpdate = true;
 		geometry.attributes.position.needsUpdate = true;
 
