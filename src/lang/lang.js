@@ -37,6 +37,11 @@ var lang = {
 			'Генерация шума',
 			'Применить',
 		],
+		'TabEditRoads': [
+			'Редактор Дороги',
+			'Перо',
+			'Генерировать',
+		],
 	},
 
 	'en': {
@@ -71,6 +76,11 @@ var lang = {
 			'Noise for biomes',
 			'Noise generation',
 			'Apply',
+		],
+		'TabEditRoads': [
+			'Editor Roads',
+			'Pen',
+			'Generate',
 		],
 	}
 }

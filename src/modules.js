@@ -107,7 +107,6 @@ UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListener("click",
 
 		UI.getElement(DataHTML.DialogLoadHeightMap.widjet).close();
 	};
-
 }, false);
 
 UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[1]).addEventListener("click", function() {
@@ -166,7 +165,6 @@ UI.getElement(DataHTML.Pressuere.Options[0]).addEventListener("change", function
 	let terrain = Engenie.getTerrain();
 	terrain.setPressureRadius(event.srcElement.value);
 	UI.getElement(DataHTML.Pressuere.Values[0]).innerHTML = event.srcElement.value;
-
 }, false);
 
 UI.getElement(DataHTML.Pressuere.Options[1]).addEventListener("change", function(event) {
@@ -182,7 +180,7 @@ UI.getElement(DataHTML.Camera).addEventListener("change", function(event) {
 	ControlPen(_UIFrame.getCurrentTab());
 }, false);
 //
-//handlers cheked wareframe
+//handlers checked wareframe
 UI.getElement(DataHTML.Wireframe).addEventListener("change", function(event) {
 
 	Engenie.getTerrain().WireFrame(event.srcElement.checked);
@@ -192,12 +190,21 @@ UI.getElement(DataHTML.Wireframe).addEventListener("change", function(event) {
 UI.getElement(DataHTML.Biomes.Buttons[0]).addEventListener("click", function(event) {
 
 	Engenie.getTerrain().getBiomes().GenerateDataPixels();
-
 }, false);
 
 // biomes Apply
 UI.getElement(DataHTML.Biomes.Buttons[1]).addEventListener("click", function(event) {
 
 	Engenie.getTerrain().ApplyBiomes();
+}, false);
 
+//handlers Edit Road
+UI.getElement(DataHTML.Road.Options[0]).addEventListener("change", function(event) {
+
+	console.log('handler checked Edit Road Pen in developing');
+}, false);
+
+UI.getElement(DataHTML.Road.Buttons[0]).addEventListener("click", function(event) {
+
+	console.log('handler Generate Road in developing');
 }, false);
