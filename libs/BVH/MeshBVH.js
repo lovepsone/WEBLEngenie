@@ -1,8 +1,4 @@
-/*
-* author gkjohnson
-* https://github.com/gkjohnson/three-mesh-bvh/
-*/
-
+import * as THREE from './../three/Three.js';
 import MeshBVHNode from './MeshBVHNode.js';
 import BVHConstructionContext from './BVHConstructionContext.js';
 import { arrayToBox, boxToArray } from './Utils/ArrayBoxUtilities.js';

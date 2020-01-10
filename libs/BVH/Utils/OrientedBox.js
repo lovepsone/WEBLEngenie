@@ -1,26 +1,22 @@
-/*
-* author gkjohnson
-* https://github.com/gkjohnson/three-mesh-bvh/
-*/
-
+import { Box3, Vector3, Matrix4, Sphere, Line3 } from './../../three/Three.js';
 import { SeparatingAxisBounds } from './SeparatingAxisBounds.js';
 import { SeparatingAxisTriangle } from './SeparatingAxisTriangle.js';
 import { closestPointsSegmentToSegment } from './MathUtilities.js';
 
-export class OrientedBox extends THREE.Box3 {
+export class OrientedBox extends Box3 {
 
 	constructor( ...args ) {
 
 		super( ...args );
 
 		this.isOrientedBox = true;
-		this.matrix = new THREE.Matrix4();
-		this.invMatrix = new THREE.Matrix4();
-		this.points = new Array( 8 ).fill().map( () => new THREE.Vector3() );
-		this.satAxes = new Array( 3 ).fill().map( () => new THREE.Vector3() );
+		this.matrix = new Matrix4();
+		this.invMatrix = new Matrix4();
+		this.points = new Array( 8 ).fill().map( () => new Vector3() );
+		this.satAxes = new Array( 3 ).fill().map( () => new Vector3() );
 		this.satBounds = new Array( 3 ).fill().map( () => new SeparatingAxisBounds() );
 		this.alignedSatBounds = new Array( 3 ).fill().map( () => new SeparatingAxisBounds() );
-		this.sphere = new THREE.Sphere();
+		this.sphere = new Sphere();
 
 	}
 
@@ -143,7 +139,7 @@ OrientedBox.prototype.intersectsTriangle = ( function () {
 	const pointsArr = new Array( 3 );
 	const cachedSatBounds = new SeparatingAxisBounds();
 	const cachedSatBounds2 = new SeparatingAxisBounds();
-	const cachedAxis = new THREE.Vector3();
+	const cachedAxis = new Vector3();
 	return function intersectsTriangle( triangle ) {
 
 		if ( ! triangle.isSeparatingAxisTriangle ) {
@@ -222,7 +218,7 @@ OrientedBox.prototype.closestPointToPoint = ( function () {
 
 OrientedBox.prototype.distanceToPoint = ( function () {
 
-	const target = new THREE.Vector3();
+	const target = new Vector3();
 	return function distanceToPoint( point ) {
 
 		this.closestPointToPoint( point, target );
@@ -236,11 +232,11 @@ OrientedBox.prototype.distanceToPoint = ( function () {
 OrientedBox.prototype.distanceToBox = ( function () {
 
 	const xyzFields = [ 'x', 'y', 'z' ];
-	const segments1 = new Array( 12 ).fill().map( () => new THREE.Line3() );
-	const segments2 = new Array( 12 ).fill().map( () => new THREE.Line3() );
+	const segments1 = new Array( 12 ).fill().map( () => new Line3() );
+	const segments2 = new Array( 12 ).fill().map( () => new Line3() );
 
-	const point1 = new THREE.Vector3();
-	const point2 = new THREE.Vector3();
+	const point1 = new Vector3();
+	const point2 = new Vector3();
 
 	return function distanceToBox( box, threshold = 0, target1 = null, target2 = null ) {
 

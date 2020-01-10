@@ -1,8 +1,5 @@
-/*
-* author gkjohnson
-* https://github.com/gkjohnson/three-mesh-bvh/
-*/
 
+import * as THREE from './../three/Three.js';
 import { intersectTris, intersectClosestTri } from './Utils/RayIntersectTriUtlities.js';
 import { arrayToBox } from './Utils/ArrayBoxUtilities.js';
 import { OrientedBox } from './Utils/OrientedBox.js';
@@ -290,7 +287,12 @@ MeshBVHNode.prototype.intersectsGeometry = ( function () {
 
 			if ( geometry.boundsTree ) {
 
-				function triangleCallback( tri ) {
+				arrayToBox( this.boundingData, obb2 );
+				obb2.matrix.copy( invertedMat );
+				obb2.update();
+
+				cachedMesh.geometry = geometry;
+				const res = geometry.boundsTree.shapecast( cachedMesh, box => obb2.intersectsBox( box ), function ( tri ) {
 
 					tri.a.applyMatrix4( geometryToBvh );
 					tri.b.applyMatrix4( geometryToBvh );
@@ -312,14 +314,7 @@ MeshBVHNode.prototype.intersectsGeometry = ( function () {
 
 					return false;
 
-				}
-
-				arrayToBox( this.boundingData, obb2 );
-				obb2.matrix.copy( invertedMat );
-				obb2.update();
-
-				cachedMesh.geometry = geometry;
-				const res = geometry.boundsTree.shapecast( cachedMesh, box => obb2.intersectsBox( box ), triangleCallback );
+				} );
 				cachedMesh.geometry = null;
 
 				return res;

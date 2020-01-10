@@ -1,8 +1,4 @@
-/*
-* author gkjohnson
-* https://github.com/gkjohnson/three-mesh-bvh/
-*/
-
+import * as THREE from './../three/Three.js';
 import { arrayToBox, getLongestEdgeIndex } from './Utils/ArrayBoxUtilities.js';
 import { CENTER, AVERAGE, SAH } from './Constants.js';
 

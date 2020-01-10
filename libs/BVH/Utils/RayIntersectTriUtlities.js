@@ -1,8 +1,3 @@
-/*
-* author gkjohnson
-* https://github.com/gkjohnson/three-mesh-bvh/
-*/
-
 import { intersectTri } from './ThreeIntersectionUtilities.js';
 
 export function intersectTris( mesh, geo, raycaster, ray, offset, count, intersections ) {

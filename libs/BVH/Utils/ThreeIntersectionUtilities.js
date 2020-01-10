@@ -1,31 +1,28 @@
-/*
-* author gkjohnson
-* https://github.com/gkjohnson/three-mesh-bvh/
-*/
+import { Vector3, Vector2, Triangle, DoubleSide, BackSide, Face3 } from './../../three/Three.js';
 
 // Ripped and modified From THREE.js Mesh raycast
 // https://github.com/mrdoob/three.js/blob/0aa87c999fe61e216c1133fba7a95772b503eddf/src/objects/Mesh.js#L115
-var vA = new THREE.Vector3();
-var vB = new THREE.Vector3();
-var vC = new THREE.Vector3();
+var vA = new Vector3();
+var vB = new Vector3();
+var vC = new Vector3();
 
-var uvA = new THREE.Vector2();
-var uvB = new THREE.Vector2();
-var uvC = new THREE.Vector2();
+var uvA = new Vector2();
+var uvB = new Vector2();
+var uvC = new Vector2();
 
-var intersectionPoint = new THREE.Vector3();
-var intersectionPointWorld = new THREE.Vector3();
+var intersectionPoint = new Vector3();
+var intersectionPointWorld = new Vector3();
 
 function checkIntersection( object, material, raycaster, ray, pA, pB, pC, point ) {
 
 	var intersect;
-	if ( material.side ===  THREE.BackSide ) {
+	if ( material.side === BackSide ) {
 
 		intersect = ray.intersectTriangle( pC, pB, pA, true, point );
 
 	} else {
 
-		intersect = ray.intersectTriangle( pA, pB, pC, material.side !==  THREE.DoubleSide, point );
+		intersect = ray.intersectTriangle( pA, pB, pC, material.side !== DoubleSide, point );
 
 	}
 
@@ -62,12 +59,12 @@ function checkBufferGeometryIntersection( object, raycaster, ray, position, uv, 
 			uvB.fromBufferAttribute( uv, b );
 			uvC.fromBufferAttribute( uv, c );
 
-			intersection.uv =  THREE.Triangle.getUV( intersectionPoint, vA, vB, vC, uvA, uvB, uvC, new  THREE.Vector2( ) );
+			intersection.uv = Triangle.getUV( intersectionPoint, vA, vB, vC, uvA, uvB, uvC, new Vector2( ) );
 
 		}
 
-		var normal = new  THREE.Vector3();
-		intersection.face = new  THREE.Face3( a, b, c,  THREE.Triangle.getNormal( vA, vB, vC, normal ) );
+		var normal = new Vector3();
+		intersection.face = new Face3( a, b, c, Triangle.getNormal( vA, vB, vC, normal ) );
 		intersection.faceIndex = a;
 
 	}
