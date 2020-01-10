@@ -1,7 +1,7 @@
 /*
 * author lovepsone
 */
-let _mesh = null, _pressure = null, _biomes = null, _scope = null, _ImageLoader = null;
+let _mesh = null, _pressure = null, _biomes = null, _road = null, _scope = null, _ImageLoader = null;
 let _depth = 64, _width = 64;
 let _context;
 let _max = 0.0, _min = 0.0;
@@ -9,6 +9,7 @@ let _max = 0.0, _min = 0.0;
 import * as THREE from './../libs/three/Three.js';
 import {PressureTerrain} from './PressureTerrain.js';
 import {Biomes} from './Biomes.js';
+import {Road} from './Road.js';
 import {acceleratedRaycast, computeBoundsTree, disposeBoundsTree} from './../libs/BVH/index.js';
 
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
@@ -64,6 +65,11 @@ class Terrain {
 		_pressure = new PressureTerrain(_scope.camera, _mesh, 'Window');
 		_scope.scene.add(_pressure.getBrush());
 		_pressure.AddEvents();
+
+		_road = new Road(_scope.camera, _mesh, 'Window', _scope.scene);
+		//_scope.scene.add(_road.getBrush());
+		_road.AddEvents();
+		_road.DisposeEvents();
 	}
 
 	LoadHeightMap(image, width = 128, depth = 128) {
@@ -200,6 +206,22 @@ class Terrain {
 		if (_pressure instanceof PressureTerrain) {
 
 			_pressure.AddEvents();
+		}
+	}
+
+	RoadDisposeEvents() {
+
+		if (_road instanceof Road) {
+
+			_road.DisposeEvents();
+		}
+	}
+
+	RoadUpdateEvents() {
+
+		if (_road instanceof Road) {
+
+			_road.AddEvents();
 		}
 	}
 }

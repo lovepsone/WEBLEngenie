@@ -42,18 +42,23 @@ function ControlPen(currentTab) {
 		case -1: //cancel all
 			Engenie.getControlsCamera().UpdateEvents()
 			Engenie.getTerrain().PressureDisposeEvents();
+			Engenie.getTerrain().RoadDisposeEvents();
 			break;
 		
 		case 0:
 			Engenie.getTerrain().PressureUpdateEvents();
+			Engenie.getTerrain().RoadDisposeEvents();
 			break;
 
 		case 1: // editor biomes
 			Engenie.getTerrain().PressureDisposeEvents();
+			Engenie.getTerrain().RoadDisposeEvents();
 			break;
 
 		case 2:
 			Engenie.getTerrain().PressureDisposeEvents();
+			if (UI.getElement(DataHTML.Road.Options[0]).checked)
+				Engenie.getTerrain().RoadUpdateEvents();
 			break;
 	}
 }
@@ -201,7 +206,13 @@ UI.getElement(DataHTML.Biomes.Buttons[1]).addEventListener("click", function(eve
 //handlers Edit Road
 UI.getElement(DataHTML.Road.Options[0]).addEventListener("change", function(event) {
 
-	console.log('handler checked Edit Road Pen in developing');
+	if (UI.getElement(DataHTML.Road.Options[0]).checked) {
+
+		Engenie.getTerrain().RoadUpdateEvents();
+	} else {
+
+		Engenie.getTerrain().RoadDisposeEvents();
+	}
 }, false);
 
 UI.getElement(DataHTML.Road.Buttons[0]).addEventListener("click", function(event) {
