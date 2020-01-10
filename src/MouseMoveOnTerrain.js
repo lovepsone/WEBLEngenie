@@ -2,6 +2,8 @@
 * author lovepsone
 */
 
+import * as THREE from './../libs/three/Three.js';
+
 let _mouseVector = new THREE.Vector2();
 let _raycaster = new THREE.Raycaster();
 let _MouseDown = false;

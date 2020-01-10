@@ -9,6 +9,7 @@ let _camera = null;
 
 import {MouseMoveOnTerrain} from './MouseMoveOnTerrain.js';
 import {sphereIntersectTriangle} from './../libs/BVH/Utils/MathUtilities.js';
+import * as THREE from './../libs/three/Three.js';
 
 class PressureTerrain extends MouseMoveOnTerrain {
 

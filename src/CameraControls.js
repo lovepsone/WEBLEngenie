@@ -2,6 +2,8 @@
 * author lovepsone
 */
 
+import * as THREE from './../libs/three/Three.js';
+
 const STATE = { NONE: - 1, ROTATE: 0, ZOOM: 1, PAN: 2 };
 let _state = STATE.NONE;
 let _object = null;

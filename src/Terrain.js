@@ -6,6 +6,7 @@ let _depth = 64, _width = 64;
 let _context;
 let _max = 0.0, _min = 0.0;
 
+import * as THREE from './../libs/three/Three.js';
 import {PressureTerrain} from './PressureTerrain.js';
 import {Biomes} from './Biomes.js';
 import {acceleratedRaycast, computeBoundsTree, disposeBoundsTree} from './../libs/BVH/index.js';
