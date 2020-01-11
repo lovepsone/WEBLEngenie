@@ -105,13 +105,32 @@ class Road {
 	
 	Generate() {
 
+		let points = [];
+	
 		for (let i = 0; i < _boxes.length; i++) {
 
+			points.push(new THREE.Vector3().copy(_boxes[i].position));
 			_scene.remove(_boxes[i]);
 
 			if (i < _lines.length)
 				_scene.remove(_lines[i]);
 		}
+
+		var spline = new THREE.CatmullRomCurve3(points);
+		//spline.curveType = 'catmullrom';
+		spline.closed = false;
+
+		let extrudeSettings = {
+			steps: 50 * _boxes.length,
+			bevelEnabled: true,
+			extrudePath: spline
+		};
+
+		let shape = new THREE.Shape();
+		shape.moveTo(0, 0);
+		shape.lineTo(0, 5);
+		let mesh = new THREE.Mesh(new THREE.ExtrudeBufferGeometry(shape, extrudeSettings), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}));
+		_scene.add( mesh );
 
 		_boxes.length = 0;
 		_lines.length = 0;
