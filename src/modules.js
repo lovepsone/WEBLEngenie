@@ -217,5 +217,5 @@ UI.getElement(DataHTML.Road.Options[0]).addEventListener("change", function(even
 
 UI.getElement(DataHTML.Road.Buttons[0]).addEventListener("click", function(event) {
 
-	console.log('handler Generate Road in developing');
+	Engenie.getTerrain().getRoad().Generate();
 }, false);

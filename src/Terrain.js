@@ -170,6 +170,14 @@ class Terrain {
 		}
 	}
 
+	getRoad() {
+
+		if (_road instanceof Road) {
+
+			return _road;
+		}
+	}
+
 	WireFrame(value = true) {
 
 		if (_mesh instanceof THREE.Mesh) {

@@ -6,6 +6,7 @@ import * as THREE from './../libs/three/Three.js';
 
 let _CounterBox = 0
 let _boxes = [];
+let _lines = [];
 let _mesh = null;
 let _camera = null;
 let _scene = null;
@@ -37,8 +38,6 @@ class Road {
 
         event.preventDefault();
 
-        _boxes.push( new THREE.Mesh(new THREE.SphereBufferGeometry(1, 50, 50), new THREE.MeshStandardMaterial({color: 0xEC407A, roughness: 0.75, metalness: 0, transparent: true, opacity: 0.5, premultipliedAlpha: true, emissive: 0xEC407A, emissiveIntensity: 0.5})));
-
         _mouseVector.x = (event.layerX / window.innerWidth ) * 2 - 1;
         _mouseVector.y = - (event.layerY / window.innerHeight ) * 2 + 1;
 
@@ -48,10 +47,21 @@ class Road {
 
 		if (intersects.length > 0) {
 
+			_boxes.push( new THREE.Mesh(new THREE.BoxBufferGeometry(1, 1, 1), new THREE.MeshStandardMaterial({color: 0x00ff00, roughness: 0.75, metalness: 0, transparent: true, opacity: 0.5, premultipliedAlpha: true, emissive: 0xEC407A, emissiveIntensity: 0.5})));
             _boxes[_CounterBox].position.copy(intersects[0].point);
             _scene.add(_boxes[_CounterBox]);
+			_CounterBox++;
 
-            _CounterBox++;
+			if (_CounterBox > 1) {
+
+				let v1 = new THREE.Vector3().copy(_boxes[_CounterBox - 2].position);
+				let v2 = new THREE.Vector3().copy(_boxes[_CounterBox - 1].position);
+				let geometry = new THREE.BufferGeometry().setFromPoints(new THREE.LineCurve3(v1, v2).getPoints(50));
+				let material = new THREE.LineBasicMaterial({color : 0x00ff00});
+				let line = new THREE.Line(geometry, material);
+				_lines.push(line);
+				_scene.add(line);
+			}
         }
 	}
 	
@@ -91,7 +101,22 @@ class Road {
 		this.element.removeEventListener("mousedown", bindMouseDown, false);
 		this.element.removeEventListener("mousemove", bindMouseMove, false);
 		_brushMesh.visible = false;
-    }
+	}
+	
+	Generate() {
+
+		for (let i = 0; i < _boxes.length; i++) {
+
+			_scene.remove(_boxes[i]);
+
+			if (i < _lines.length)
+				_scene.remove(_lines[i]);
+		}
+
+		_boxes.length = 0;
+		_lines.length = 0;
+		_CounterBox = 0;
+	}
 }
 
 export {Road};
