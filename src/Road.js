@@ -116,7 +116,7 @@ class Road {
 				_scene.remove(_lines[i]);
 		}
 
-		var spline = new THREE.CatmullRomCurve3(points);
+		let spline = new THREE.CatmullRomCurve3(points);
 		//spline.curveType = 'catmullrom';
 		spline.closed = false;
 
@@ -129,7 +129,14 @@ class Road {
 		let shape = new THREE.Shape();
 		shape.moveTo(0, 0);
 		shape.lineTo(0, 5);
-		let mesh = new THREE.Mesh(new THREE.ExtrudeBufferGeometry(shape, extrudeSettings), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}));
+
+		let texture = new THREE.TextureLoader().load('./road/road2.jpg');
+		texture.center.set(.5, .5);
+		//texture.rotation = THREE.Math.degToRad(90);
+		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+		//texture.magFilter = THREE.LinearMipmapLinearFilter;
+
+		let mesh = new THREE.Mesh(new THREE.ExtrudeBufferGeometry(shape, extrudeSettings), new THREE.MeshBasicMaterial({/*color: 0xff0000, wireframe: true*/ map: texture}));
 		_scene.add( mesh );
 
 		_boxes.length = 0;
