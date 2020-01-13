@@ -3,6 +3,7 @@
 */
 
 import * as THREE from './../libs/three/Three.js';
+import {ThreeBSP} from  './../libs/ThreeCSG/threeCSG.js';
 
 let _CounterBox = 0
 let _boxes = [];
