@@ -82,7 +82,7 @@ class ThreeBSP {
 
             // #todo: add hierarchy support
             this.fromMesh(object);
-        } else if (object instanceof ThreeBSP.Node) {
+        } else if (object instanceof Node) {
 
             this.tree = object;
             return this;
@@ -248,10 +248,10 @@ class ThreeBSP {
             }
         }
 
-        geometry.addAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvs), 2));
-        geometry.addAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
-        geometry.addAttribute('normal', new THREE.BufferAttribute(new Float32Array(normals), 3));
-        //geometry.addAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3));
+        geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvs), 2));
+        geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+        geometry.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(normals), 3));
+        //geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3));
         geometry.setIndex( new THREE.BufferAttribute(new Uint32Array(indices), 1));
 
         return geometry;

@@ -102,15 +102,19 @@ class Polygon {
                 num_negative++;
             }
         }
-        /*---------------------------------------------------------*/
-        if (num_positive === vertice_count && num_negative === 0) {
+
+        if (num_positive > 0 && num_negative === 0) {
+    
             return FRONT;
-        } else if (num_positive === 0 && num_negative === vertice_count) {
+        } else if (num_positive === 0 && num_negative > 0) {
+
             return BACK;
-        } else if (num_positive > 0 && num_negative > 0) {
-            return SPANNING;
-        } else {
+        } else if ( num_positive === 0 && num_negative === 0 ) {
+
             return COPLANAR;
+        } else {
+
+            return SPANNING;
         }
     }
 
