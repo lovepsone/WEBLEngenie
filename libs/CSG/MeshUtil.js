@@ -29,6 +29,10 @@ function GeometryToTriangles(geometry) {
 
 function BufferGeometryToTriangles(geometry) {
 
+    if ( geometry.index === null) {
+
+        throw 'not  working with indexed bufferGeometries';
+    }
     // working with indexed bufferGeometries
     const positions = geometry.attributes.position.array;
     const indexes = geometry.index.array;
