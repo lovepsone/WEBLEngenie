@@ -9,12 +9,6 @@ import * as THREE from './../libs/three/Three.js';
 let _renderer, _camera, _scene; 
 let _controls = null, _terrain = null;
 
-function lanhrag() {
-	let _masx = [0, 4, 10 , 5, 0, -2, -7];
-	let _masz = [0, 4, 8 , 10, 12, 14, 16];
-
-}
-
 class MainEngenie {
 
 	constructor(c_fov, c_Width, c_Height) {
