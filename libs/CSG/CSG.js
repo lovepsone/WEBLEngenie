@@ -13,7 +13,6 @@
 
 import * as THREE from './../three/Three.js';
 import {Node} from './Node.js';
-//import {Vector} from './Vector.js';
 import {Vertex} from './Vertex.js';
 import {Polygon} from './Polygon.js';
 
