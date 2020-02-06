@@ -3,7 +3,6 @@
 */
 
 import * as THREE from './../libs/three/Three.js';
-import {ThreeBSP} from  './../libs/ThreeCSG/threeCSG.js';
 
 let _CounterBox = 0
 let _boxes = [];
@@ -16,6 +15,8 @@ let _raycaster = new THREE.Raycaster();
 
 let bindMouseDown, bindMouseMove;
 let _brushMesh = null;
+
+let _worker = null
 
 class Road {
 
@@ -103,7 +104,12 @@ class Road {
 		this.element.removeEventListener("mousemove", bindMouseMove, false);
 		_brushMesh.visible = false;
 	}
-	
+
+	WorkerOnMessage(e) {
+		
+	}
+
+
 	Generate() {
 
 		let points = [];
@@ -117,32 +123,82 @@ class Road {
 				_scene.remove(_lines[i]);
 		}
 
-		let spline = new THREE.CatmullRomCurve3(points);
-		//spline.curveType = 'catmullrom';
-		spline.closed = false;
-
-		let extrudeSettings = {
-			steps: 50 * _boxes.length,
-			bevelEnabled: true,
-			extrudePath: spline
-		};
+		let extrudeSettings = {steps: 10 * _boxes.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false)};
 
 		let shape = new THREE.Shape();
 		shape.moveTo(0, 0);
 		shape.lineTo(0, 5);
 
-		let texture = new THREE.TextureLoader().load('./road/road2.jpg');
-		texture.center.set(.5, .5);
-		//texture.rotation = THREE.Math.degToRad(90);
-		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-		//texture.magFilter = THREE.LinearMipmapLinearFilter;
+		let mesh = new THREE.Mesh(new THREE.ExtrudeBufferGeometry(shape, extrudeSettings), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true /*map: texture*/}));
+		_scene.add(mesh);
+		_mesh.updateMatrix();
+		mesh.updateMatrix();
+	
+		let _marr = _mesh.geometry.getAttribute('position');
 
-		let mesh = new THREE.Mesh(new THREE.ExtrudeBufferGeometry(shape, extrudeSettings), new THREE.MeshBasicMaterial({/*color: 0xff0000, wireframe: true*/ map: texture}));
-		_scene.add( mesh );
+		let _ray = new THREE.Raycaster();
+		let _origin = new THREE.Vector3();
+		let _direction = [new THREE.Vector3(0, 1, 0), new THREE.Vector3(0,-1, 0)];
+
+		let buf = {
+			vertex: [],
+			index: [],
+		};
+
+		for (let i = 0; i < _marr.count; i++) {
+
+			_origin.set(_marr.array[i*3], _marr.array[i*3+1], _marr.array[i*3+2]);
+
+			for (let j = 0; j < _direction.length; j++) {
+
+				_ray.set(_origin, _direction[j].normalize());
+				let intersect = _ray.intersectObject(mesh);
+
+				if (intersect.length > 0) {
+
+					buf.vertex.push(intersect[0].point);
+					buf.index.push(i);
+				}
+			}
+		}
+
+		for (let i = 0; i < _marr.count; i++) {
+
+			for (let j = 0; j < buf.vertex.length; j++) {
+
+				let tmp1 = new THREE.Vector2(_marr.array[i*3], _marr.array[i*3+2]);
+				let tmp2 = new THREE.Vector2(buf.vertex[j].x, buf.vertex[j].z);
+
+				if (tmp1.distanceTo(tmp2) < 3.5) {
+		
+					if (this.checkIndex(buf.index, i) === false) {
+
+							buf.index.push(i);
+							buf.vertex.push(buf.vertex[j]);
+					}
+				}
+			}
+		}
+	
+		for (let i = 0; i < buf.vertex.length; i++) {
+
+			_marr.array[buf.index[i]*3+1] = buf.vertex[i].y;
+			_marr.needsUpdate = true;
+		}
 
 		_boxes.length = 0;
 		_lines.length = 0;
 		_CounterBox = 0;
+	}
+
+	checkIndex(masIndexes, index) {
+
+		for (let i = 0; i < masIndexes.length; i++) {
+
+			if (masIndexes[i] === index)
+				return true;
+		}
+		return false;
 	}
 }
 
