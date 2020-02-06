@@ -153,24 +153,14 @@ class Road {
 			if (i < _lines.length)
 				_scene.remove(_lines[i]);
 		}
-
-        _worker = new Worker('./src/WorkerRoad.js', {type: 'module'});
-        _worker.onmessage = this.WorkerOnMessage;
+		
+		_worker = new Worker('./src/WorkerRoad.js', {type: 'module'});
+		_worker.onmessage = this.WorkerOnMessage;
 		_worker.postMessage({'cmd': 'generate', 'points': _mesh.geometry.getAttribute('position'), 'ExtrudePoints':points});
 
 		_boxes.length = 0;
 		_lines.length = 0;
 		_CounterBox = 0;
-	}
-
-	checkIndex(masIndexes, index) {
-
-		for (let i = 0; i < masIndexes.length; i++) {
-
-			if (masIndexes[i] === index)
-				return true;
-		}
-		return false;
 	}
 }
 
