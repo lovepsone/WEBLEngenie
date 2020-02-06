@@ -106,7 +106,38 @@ class Road {
 	}
 
 	WorkerOnMessage(e) {
-		
+
+		let data = e.data;
+
+		if (data.cmd === 'generated') {
+
+			let buff = data.dataRoad;
+			let position = _mesh.geometry.getAttribute('position');
+			let color = _mesh.geometry.getAttribute('color');
+
+			for (let i = 0; i < buff.vertex.length; i++) {
+
+				position.array[buff.index[i]*3+1] = buff.vertex[i].y;
+				position.needsUpdate = true;
+
+				if (buff.color[i] === 0) {
+
+					color.array[buff.index[i]*3] = 0;
+					color.array[buff.index[i]*3 + 1] = 0;
+					color.array[buff.index[i]*3 + 2] = 0;
+					color.needsUpdate = true;
+				} else {
+
+					color.array[buff.index[i]*3] = 1;
+					color.array[buff.index[i]*3 + 1] = 1;
+					color.array[buff.index[i]*3 + 2] = 1;
+					color.needsUpdate = true;
+				}
+			}
+
+			_worker.terminate();
+			_worker = null;
+		}
 	}
 
 
@@ -123,68 +154,9 @@ class Road {
 				_scene.remove(_lines[i]);
 		}
 
-		let extrudeSettings = {steps: 10 * _boxes.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false)};
-
-		let shape = new THREE.Shape();
-		shape.moveTo(0, 0);
-		shape.lineTo(0, 5);
-
-		let mesh = new THREE.Mesh(new THREE.ExtrudeBufferGeometry(shape, extrudeSettings), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true /*map: texture*/}));
-		_scene.add(mesh);
-		_mesh.updateMatrix();
-		mesh.updateMatrix();
-	
-		let _marr = _mesh.geometry.getAttribute('position');
-
-		let _ray = new THREE.Raycaster();
-		let _origin = new THREE.Vector3();
-		let _direction = [new THREE.Vector3(0, 1, 0), new THREE.Vector3(0,-1, 0)];
-
-		let buf = {
-			vertex: [],
-			index: [],
-		};
-
-		for (let i = 0; i < _marr.count; i++) {
-
-			_origin.set(_marr.array[i*3], _marr.array[i*3+1], _marr.array[i*3+2]);
-
-			for (let j = 0; j < _direction.length; j++) {
-
-				_ray.set(_origin, _direction[j].normalize());
-				let intersect = _ray.intersectObject(mesh);
-
-				if (intersect.length > 0) {
-
-					buf.vertex.push(intersect[0].point);
-					buf.index.push(i);
-				}
-			}
-		}
-
-		for (let i = 0; i < _marr.count; i++) {
-
-			for (let j = 0; j < buf.vertex.length; j++) {
-
-				let tmp1 = new THREE.Vector2(_marr.array[i*3], _marr.array[i*3+2]);
-				let tmp2 = new THREE.Vector2(buf.vertex[j].x, buf.vertex[j].z);
-
-				if (tmp1.distanceTo(tmp2) < 3.5) {
-		
-					if (this.checkIndex(buf.index, i) === false) {
-
-							buf.index.push(i);
-							buf.vertex.push(buf.vertex[j]);
-					}
-				}
-			}
-		}
-	
-		for (let i = 0; i < buf.vertex.length; i++) {
-
-			_marr.array[buf.index[i]*3+1] = buf.vertex[i].y;
-			_marr.needsUpdate = true;
-		}
+        _worker = new Worker('./src/WorkerRoad.js', {type: 'module'});
+        _worker.onmessage = this.WorkerOnMessage;
+		_worker.postMessage({'cmd': 'generate', 'points': _mesh.geometry.getAttribute('position'), 'ExtrudePoints':points});
 
 		_boxes.length = 0;
 		_lines.length = 0;
