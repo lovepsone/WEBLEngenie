@@ -99,13 +99,18 @@ UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListener("click",
 		image.src = res.target.result;
 		image.addEventListener("load", function() {
 
-			Engenie.getTerrain().LoadHeightMap(image, image.width, image.height);
-			image.load = null;
-			image = null;
-			reader.onload = null;
-			reader = null;
-			Engenie.getTerrain().WireFrame(_UIFrame.CheckedWireframe());
-	
+			if (image.width === image.height && image.width < 1024) {
+
+				Engenie.getTerrain().LoadHeightMap(image, image.width, image.height);
+				image.load = null;
+				image = null;
+				reader.onload = null;
+				reader = null;
+				Engenie.getTerrain().WireFrame(_UIFrame.CheckedWireframe());
+			} else {
+
+				console.warn('Invalid image size.');
+			}
 		}, false);
 
 		image.load;
