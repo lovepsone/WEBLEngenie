@@ -2,83 +2,67 @@
 * author lovepsone
 */
 
-let _position;
-let _size = 0;
-let _BigMatrix = [];
-let _SmallMatries = [];
-/* 
-* width and depth = 128 || 256 || 512
-*
-* SIZE_DIVIDER = 8
-*
-* size | count| width and depth
-* 8x8  |  16  | 128 (8 * 16 = 128)
-* 8x8  |  32  | 256 (8 * 32 = 256)
-* 8x8  |  64  | 512 (8 * 64 = 512)
-*/
+let _colors = [];
 
-const SIZE_DIVIDER = 16; // 8, 16, 32
+for (let i = 0; i < 32*32; ++ i) {
+
+    _colors[i * 3] = 0;
+    _colors[i * 3 + 1] = 0;
+    _colors[i * 3 + 2] = 1;
+}
+
+import * as THREE from './../libs/three/Three.js';
+import {COMMON_POINTS_BLOCK, POSITIONS} from './CONST.js';
+
+for (let i = 0; i < COMMON_POINTS_BLOCK.length; i++) {
+
+    _colors[COMMON_POINTS_BLOCK[i] * 3] = 1;
+    _colors[COMMON_POINTS_BLOCK[i] * 3 + 1] = 0;
+    _colors[COMMON_POINTS_BLOCK[i] * 3 + 2] = 1;
+}
+
+let _tiles = null, _size = 128, _blocks = 4;
 
 class Tile {
 
-    constructor(position, size) {
+    constructor(size) {
 
-        _position = position;
         _size = size;
+        _blocks = _size*_size/1024;
+        _tiles = new THREE.Group();
+    
+        const material = new THREE.MeshBasicMaterial({side: THREE.DoubleSide, vertexColors: THREE.VertexColors, wireframe:true});
+        const geometry = new THREE.PlaneBufferGeometry(32, 32, 31, 31);
+        geometry.setAttribute('color', new THREE.Float32BufferAttribute(_colors, 3));
+        geometry.attributes.color.needsUpdate = true;
+        geometry.rotateX(-Math.PI / 2);
+		geometry.computeBoundingBox();
+		geometry.center();
+		geometry.computeFaceNormals();
 
-        this.setBigMatrix(_position);
-    }
+        for (let i = 0; i < _blocks; i++) {
 
-    setBigMatrix(position) {
-
-        let line = 0, colum = 0;
-        _BigMatrix[line] = [];
-
-        for (let i = 0; i < position.count; i++) {
-
-            _BigMatrix[line][colum] = [position.array[i + 0], position.array[i + 1], position.array[i + 2]];
-            colum++;
-
-            if (colum == _size) {
-
-                colum = 0;
-                line++;
-                if (line < _size) _BigMatrix[line] = []; 
-            }
-
-        }
-
-        this.setSmallMatries(_BigMatrix);
-    }
-
-    setSmallMatries(matrix) {
-
-        let NumMatries = 0, offset = 0;
-        _SmallMatries[NumMatries] = [];
-
-        for (let i = 0; i < matrix.length; i++) {
-
-            if ((i % SIZE_DIVIDER == 0) && i != 0) {
-
-                offset += _size / SIZE_DIVIDER;
-                if (!Array.isArray(_SmallMatries[ offset])) _SmallMatries[ offset] = [];
-            }
-
-            NumMatries = 0 + offset;
-
-            for (let j = 0; j < matrix[i].length; j++) {
-
-                if ((j % SIZE_DIVIDER) == 0 && j != 0) {
-
-                    NumMatries++;
-                    if (!Array.isArray(_SmallMatries[NumMatries])) _SmallMatries[NumMatries] = [];
-                }
-
-                _SmallMatries[NumMatries].push(matrix[i][j]);
-            }
+            let mesh = new THREE.Mesh(geometry, material);
+            mesh.position.copy(POSITIONS[_size][i]);
+            _tiles.add(mesh);
         }
     }
 
+    setHeightMap(data) {
+
+        // нужна проверка на размер карты высот
+        //const _blocks = _size*_size/1024;
+
+        for(let i = 0; i < data.length; i++) {
+
+
+        }
+    }
+
+    getTiles() {
+
+        return _tiles;
+    }
 }
 
 export {Tile}
