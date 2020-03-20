@@ -68,9 +68,25 @@ const values_128x128 = [-48, -16, 16, 48];
 const values_256x256 = [-112, -80, -48, -16, 16, 48, 80, 112];
 const values_512x512 = [-240, -208, -176, -144, -112, -80, -48, -16, 16, 48, 80, 112, 144, 176, 208, 240];
 
-let p = [];
-p[64] = MatchPositionBlocks(SIZE_64x64, values_64x64);
-p[128] = MatchPositionBlocks(SIZE_128x128, values_128x128),
-p[256] = MatchPositionBlocks(SIZE_256x256, values_256x256),
-p[512] = MatchPositionBlocks(SIZE_512x512, values_512x512)
-export const POSITIONS = p;
+let buf_p = [];
+buf_p[64] = MatchPositionBlocks(SIZE_64x64, values_64x64);
+buf_p[128] = MatchPositionBlocks(SIZE_128x128, values_128x128);
+buf_p[256] = MatchPositionBlocks(SIZE_256x256, values_256x256);
+buf_p[512] = MatchPositionBlocks(SIZE_512x512, values_512x512);
+export const POSITIONS = buf_p;
+
+function geetMatrixTile() {
+
+    let buf_m = [], _line = 0;
+
+    for (let i = 0; i < 1024; i++) {
+
+        if ((i % 32) == 0 && i != 0) _line++;
+        if (!Array.isArray(buf_m[_line])) buf_m[_line] = [];
+        buf_m[_line].push(i);
+    }
+
+    return buf_m;
+}
+
+export const MATRIX_TILE = geetMatrixTile();
