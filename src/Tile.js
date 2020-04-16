@@ -7,12 +7,13 @@ let _colors = [];
 for (let i = 0; i < 32*32; ++ i) {
 
     _colors[i * 3] = 0;
-    _colors[i * 3 + 1] = 0;
+    _colors[i * 3 + 1] = 1;
     _colors[i * 3 + 2] = 1;
 }
 
 import * as THREE from './../libs/three/Three.js';
 import {COMMON_POINTS_BLOCK, POSITIONS} from './CONST.js';
+import {GeneratePoints} from './GeneratePoints.js';
 
 for (let i = 0; i < COMMON_POINTS_BLOCK.length; i++) {
 
@@ -21,7 +22,7 @@ for (let i = 0; i < COMMON_POINTS_BLOCK.length; i++) {
     _colors[COMMON_POINTS_BLOCK[i] * 3 + 2] = 1;
 }
 
-let _tiles = null, _size = 128, _blocks = 4;
+let _tiles = null, _size = 128, _blocks = 4, _matrix = [];
 
 class Tile {
 
@@ -46,17 +47,13 @@ class Tile {
             mesh.position.copy(POSITIONS[_size][i]);
             _tiles.add(mesh);
         }
+    
+        let tmp = new GeneratePoints(_size);
+        _matrix = tmp.generate();
     }
 
     setHeightMap(data) {
 
-        // нужна проверка на размер карты высот
-        //const _blocks = _size*_size/1024;
-
-        for(let i = 0; i < data.length; i++) {
-
-
-        }
     }
 
     getTiles() {
