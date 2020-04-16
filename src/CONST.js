@@ -59,10 +59,10 @@ export const COMMON_POINTS_BLOCK = COMMON_POINTS_BLOCK_TOP.concat(COMMON_POINTS_
 * size geometry = 256*256; tiles = 64
 * size geometry = 512*512; tiles = 256
 */
-const SIZE_64x64 = 4;
-const SIZE_128x128 = 16;
-const SIZE_256x256 = 64;
-const SIZE_512x512 = 256;
+export const SIZE_64x64 = 4;
+export const SIZE_128x128 = 16;
+export const SIZE_256x256 = 64;
+export const SIZE_512x512 = 256;
 const values_64x64 = [-16, 16];
 const values_128x128 = [-48, -16, 16, 48];
 const values_256x256 = [-112, -80, -48, -16, 16, 48, 80, 112];
@@ -74,19 +74,3 @@ buf_p[128] = MatchPositionBlocks(SIZE_128x128, values_128x128);
 buf_p[256] = MatchPositionBlocks(SIZE_256x256, values_256x256);
 buf_p[512] = MatchPositionBlocks(SIZE_512x512, values_512x512);
 export const POSITIONS = buf_p;
-
-function geetMatrixTile() {
-
-    let buf_m = [], _line = 0;
-
-    for (let i = 0; i < 1024; i++) {
-
-        if ((i % 32) == 0 && i != 0) _line++;
-        if (!Array.isArray(buf_m[_line])) buf_m[_line] = [];
-        buf_m[_line].push(i);
-    }
-
-    return buf_m;
-}
-
-export const MATRIX_TILE = geetMatrixTile();
