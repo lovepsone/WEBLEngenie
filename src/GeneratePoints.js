@@ -68,14 +68,14 @@ export class GeneratePoints {
 
     getPointsLineBlocks() {
 
-        let id = 0, tmp = [], value = 0, count = 0;
+        let id = 0, tmp = [], value = 0, count = 0, RESize = this.getRESize(_size);
     
         for (let i = 0; i < 32; i++) {
     
             id = 0;
             value = i * 32;
     
-            for (let j = 0; j < this.getRESize(_size); j++) {
+            for (let j = 0; j < RESize; j++) {
     
                 if ((value % 32) == 0 && (value != i * 32)) {
     
@@ -136,6 +136,8 @@ export class GeneratePoints {
     
             data1.push(data2[i])
         }
+
+        data2 = null;
         //return data1;
     }
 
@@ -147,6 +149,7 @@ export class GeneratePoints {
 
             let tmp = this.UpIdLineBlocks(result);
             this.UnionBlocks(result, tmp);
+            tmp = null;
         }
 
         return result;
