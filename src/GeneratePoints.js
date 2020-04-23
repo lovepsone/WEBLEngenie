@@ -7,18 +7,90 @@ import {SIZE_64x64, SIZE_128x128, SIZE_256x256, SIZE_512x512} from './CONST.js';
 
 let _size = 64;
 
-export class GeneratePoints {
+export class PointsBlock {
 
     constructor(size) {
-        
-        _size = size;
+
+        this.size = size;
+        this.blocks = [];
+
+        let id = 0, value = 0, count = 0, RESize = this.getCountBlock();
+    
+        for (let i = 0; i < 32; i++) {
+    
+            id = 0;
+            value = i * 32;
+    
+            for (let j = 0; j < RESize; j++) {
+    
+                if ((value % 32) == 0 && (value != i * 32)) {
+    
+                    id ++;
+                    value = i * 32;
+                    this.blocks[count - 1] = [this.blocks[count - 1][0], this.blocks[count - 1][1], id, value];
+                    value++;
+                }
+
+                this.blocks.push([id, value]);
+                value++;
+                count++;
+            }
+        }
     }
 
-    getRESize(size) {
+    OffsetBlocks() {
+
+        let offset = this.getOffsetBlocks();
+
+        for(let i = 0; i < this.blocks.length; i++) {
+    
+            for (let j = 0; j < this.blocks[i].length; j += 2) {
+
+                this.blocks[i][j] += offset;
+            }
+        }
+    }
+
+    UnionBlock(data) {
+
+        if (!(data instanceof PointsBlock)) {
+
+            console.error('Input is not a class PointsBlock', data);
+            return;
+        } else if (this.size != data.size) {
+
+            console.error('Block sizes do not match', this.size,'!=', data.size);
+            return;   
+        }
+
+        let j = 0, count = this.blocks.length - this.getCountBlock(), length = this.blocks.length;
+
+        for(let i = count; i < length; i++) {
+
+            for (let n = 0; n < data.blocks[j].length; n++) {
+
+                const tmp = data.blocks[j][n];
+                //this.blocks[i].push(tmp);
+                this.blocks[i][this.blocks[i].length] = tmp;
+            }
+            j++;
+        }
+
+        count = this.getCountBlock();
+        length = data.blocks.length;
+
+        for (let i = count; i < length; i++) {
+
+            const tmp = data.blocks[i].slice();
+            this.blocks.push(tmp);
+        }
+    }
+
+    getCountBlock() {
 
         let result = 0;
     
-        switch(size) {
+        switch(this.size) {
     
             case 64:
                 result = 64 - 1;
@@ -40,11 +112,11 @@ export class GeneratePoints {
         return result;
     }
 
-    getLineCount(size) {
+    getOffsetBlocks() {
 
         let result = 2;
     
-        switch(size) {
+        switch(this.size) {
     
             case 64:
                 result = Math.sqrt(SIZE_64x64);
@@ -65,93 +137,20 @@ export class GeneratePoints {
     
         return result;
     }
+}
 
-    getPointsLineBlocks() {
+export function testGenerate() {
 
-        let id = 0, tmp = [], value = 0, count = 0, RESize = this.getRESize(_size);
-    
-        for (let i = 0; i < 32; i++) {
-    
-            id = 0;
-            value = i * 32;
-    
-            for (let j = 0; j < RESize; j++) {
-    
-                if ((value % 32) == 0 && (value != i * 32)) {
-    
-                    id ++;
-                    const t = value - 1;
-                    value = i * 32;
-                    tmp[count - 1].value = [t, id, value];
-                    value++;
-                }
-    
-                tmp.push({id: id, value: value});
-                value++;
-                count++; // array id tmp
-            }
-        }
-    
-        return tmp;
+    let a = 512;
+    let t = new PointsBlock(a);
+    let t2 = new PointsBlock(a);
+
+    for (let i = 0; i < t.getOffsetBlocks() - 1; i++) {
+
+        t2.OffsetBlocks();
+        t.UnionBlock(t2);
     }
 
-    UpIdLineBlocks(data) {
-
-        let tmp = this.getLineCount(_size), result = [];
-    
-        for(let i = 0; i < data.length; i++) {
-    
-            if (Array.isArray(data[i].value)) {
-    
-                result.push({id: data[i].id + tmp, value: [data[i].value[0], data[i].value[1] + tmp, data[i].value[2]]});
-            } else {
-    
-                result.push({id: data[i].id + tmp, value: data[i].value});
-            }
-        }
-    
-        return result;
-    }
-
-    UnionBlocks(data1, data2) {
-    
-        let j = 0;
-    
-        for(let i = data1.length - this.getRESize(_size); i < data1.length; i++) {
-    
-            if (Array.isArray(data2[j].value)) {
-    
-                data1[i].value.push(data2[j].id, data2[j].value[0], data2[j].value[1], data2[j].value[2]);
-            } else {
-    
-                const tmp = data1[i].value;
-                data1[i].value = [];
-                data1[i].value.push(tmp, data2[j].id, data2[j].value);
-            }
-    
-            j++;
-        }
-    
-        for (let i = this.getRESize(_size); i < data2.length; i++) {
-    
-            data1.push(data2[i])
-        }
-
-        data2 = null;
-        //return data1;
-    }
-
-    generate() {
-
-        let result = this.getPointsLineBlocks();
-
-        for (let i = 0; i < this.getLineCount(_size) - 1; i++) {
-
-            let tmp = this.UpIdLineBlocks(result);
-            this.UnionBlocks(result, tmp);
-            tmp = null;
-        }
-
-        return result;
-    }
-};
+    console.log(t);
+    console.log(t2);
+}
