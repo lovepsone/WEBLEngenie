@@ -13,7 +13,7 @@ for (let i = 0; i < 32*32; ++ i) {
 
 import * as THREE from './../libs/three/Three.js';
 import {COMMON_POINTS_BLOCK, POSITIONS} from './CONST.js';
-import {GeneratePoints} from './GeneratePoints.js';
+import {PointsBlock} from './PointsBlock.js';
 
 for (let i = 0; i < COMMON_POINTS_BLOCK.length; i++) {
 
@@ -22,7 +22,7 @@ for (let i = 0; i < COMMON_POINTS_BLOCK.length; i++) {
     _colors[COMMON_POINTS_BLOCK[i] * 3 + 2] = 1;
 }
 
-let _tiles = null, _size = 128, _blocks = 4, _matrix = [];
+let _tiles = null, _size = 128, _blocks = 4, _matrix;
 
 class Tile {
 
@@ -47,9 +47,17 @@ class Tile {
             mesh.position.copy(POSITIONS[_size][i]);
             _tiles.add(mesh);
         }
+
+        _matrix = new PointsBlock(Number.parseInt(_size));
+        let tmp = new PointsBlock(Number.parseInt(_size));
     
-        let tmp = new GeneratePoints(_size);
-        _matrix = tmp.generate();
+        for (let i = 0; i < _matrix.getOffsetBlocks() - 1; i++) {
+    
+            tmp.OffsetBlocks();
+            _matrix.UnionBlock(tmp);
+        }
+
+        tmp = null;
     }
 
     setHeightMap(data) {
