@@ -7,7 +7,7 @@ import {SIZE_64x64, SIZE_128x128, SIZE_256x256, SIZE_512x512} from './CONST.js';
 
 let _size = 64;
 
-export class PointsBlock {
+class PointsBlock {
 
     constructor(size) {
 
@@ -15,9 +15,9 @@ export class PointsBlock {
         this.blocks = [];
 
         let id = 0, value = 0, count = 0, RESize = this.getCountBlock();
-    
+
         for (let i = 0; i < 32; i++) {
-    
+
             id = 0;
             value = i * 32;
     
@@ -89,7 +89,7 @@ export class PointsBlock {
     getCountBlock() {
 
         let result = 0;
-    
+
         switch(this.size) {
     
             case 64:
@@ -108,7 +108,7 @@ export class PointsBlock {
                 result = 512 - 15;
                 break;
         }
-    
+
         return result;
     }
 
@@ -139,18 +139,4 @@ export class PointsBlock {
     }
 }
 
-export function testGenerate() {
-
-    let a = 512;
-    let t = new PointsBlock(a);
-    let t2 = new PointsBlock(a);
-
-    for (let i = 0; i < t.getOffsetBlocks() - 1; i++) {
-
-        t2.OffsetBlocks();
-        t.UnionBlock(t2);
-    }
-
-    console.log(t);
-    console.log(t2);
-}
+export {PointsBlock}
