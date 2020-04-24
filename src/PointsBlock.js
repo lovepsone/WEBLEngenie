@@ -3,7 +3,7 @@
 * Author lovepsone
 */
 
-import {SIZE_64x64, SIZE_128x128, SIZE_256x256, SIZE_512x512} from './CONST.js';
+import {SIZE_64x64, SIZE_128x128, SIZE_256x256, SIZE_512x512} from './CONST_TILES.js';
 
 let _size = 64;
 

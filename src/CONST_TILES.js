@@ -2,7 +2,7 @@
 * Author lovepsone
 */
 
-import * as THREE from './../libs/three/Three.js';
+import * as THREE from '../libs/three/Three.js';
 
 function MatchPositionBlocks(size, values) {
 

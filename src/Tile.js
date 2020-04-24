@@ -12,7 +12,7 @@ for (let i = 0; i < 32*32; ++ i) {
 }
 
 import * as THREE from './../libs/three/Three.js';
-import {COMMON_POINTS_BLOCK, POSITIONS} from './CONST.js';
+import {COMMON_POINTS_BLOCK, POSITIONS} from './CONST_TILES.js';
 import {PointsBlock} from './PointsBlock.js';
 
 for (let i = 0; i < COMMON_POINTS_BLOCK.length; i++) {
