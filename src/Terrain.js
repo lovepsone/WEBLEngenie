@@ -11,7 +11,6 @@ import {PressureTerrain} from './PressureTerrain.js';
 import {Biomes} from './Biomes.js';
 import {Road} from './Road.js';
 import {acceleratedRaycast, computeBoundsTree, disposeBoundsTree} from './../libs/BVH/index.js';
-import {Tile} from './Tile.js';
 
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -55,7 +54,6 @@ class Terrain {
 			colors[i * 3 + 2] = 1;
 		}
 
-		let test = new Tile(geometry.attributes.position, _width);
 		geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 		geometry.attributes.color.needsUpdate = true;
 
