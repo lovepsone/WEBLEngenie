@@ -145,10 +145,8 @@ for (let i = 0; i < DataHTML.RightBar.Buttons.length; i++) {
 // handlers Dialog Create Terrain
 UI.getElement(DataHTML.DialogCreateTerrain.Buttons[0]).addEventListener("click", function() {
 
-	let width = UI.getElement(DataHTML.DialogCreateTerrain.Options[0]).value;
-	let height = UI.getElement(DataHTML.DialogCreateTerrain.Options[1]).value;
-
-	Engenie.getTerrain().Create(width, height);
+	const size = UI.getElement(DataHTML.DialogCreateTerrain.Options[0]).value;
+	Engenie.getTerrain().Create(size, size);
 	Engenie.getTerrain().WireFrame(_UIFrame.CheckedWireframe());
 
 	if (_UIFrame.CheckedCamera()) {

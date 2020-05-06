@@ -18,7 +18,7 @@ var DataHTML = {
 	},
 	'DialogCreateTerrain': {
 		'widjet': 'DialogCreateObject',
-		'Options': ['WidthObject', 'LengthObject'],
+		'Options': ['SizeTerrain'],
 		'Buttons': ['bDialogCreate', 'bDialogCancel'],
 	},
 	'DialogLoadHeightMap': {
@@ -51,13 +51,13 @@ var HTMLlist = [
 		{'tag': 'form', 'id': 'f_createObject', 'method': 'dialog', 'children': [
 			{'tag': 'h3', 'style': 'border-bottom: 1px solid white;', 'text': txt.CreateTerrain[0]},
 			{'tag': 'div', 'class': 'd_body', 'text': txt.CreateTerrain[1], 'children': [
-				{'tag': 'div', 'children': [
-					{'tag': 'label', 'for': DataHTML.DialogCreateTerrain.Options[0], 'text': txt.CreateTerrain[2]},
-					{'tag': 'input', 'id': DataHTML.DialogCreateTerrain.Options[0], 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 128},
-				]},
-				{'tag': 'div', 'children': [
-					{'tag': 'label', 'for': DataHTML.DialogCreateTerrain.Options[1], 'text': txt.CreateTerrain[3]},
-					{'tag': 'input', 'id': DataHTML.DialogCreateTerrain.Options[1], 'style':"font-size: 12px; border: 0px; margin: 5px;width: 60px;", 'type': 'number', 'value': 128},
+			]},
+			{'tag': 'div', 'align': 'center', 'children': [
+				{'tag':'select', 'id': DataHTML.DialogCreateTerrain.Options[0], 'style':"font-size: 14px; border: 0px; margin: 5px;width: 200px;", 'name': DataHTML.DialogCreateTerrain.Options[0], 'children': [
+					{'tag': 'option', 'value': '64', 'text': 'size: 64x64'},
+					{'tag': 'option', 'value': '128', 'text': 'size: 128x128'},
+					{'tag': 'option', 'value': '256', 'text': 'size: 256x256'},
+					{'tag': 'option', 'value': '512', 'text': 'size: 512x512'}
 				]},
 			]},
 			{'tag': 'div', 'style': 'border-bottom: 1px solid white;', 'align': 'center', 'children': [
