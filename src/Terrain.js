@@ -2,9 +2,9 @@
 * author lovepsone
 */
 let _mesh = null, _pressure = null, _biomes = null, _road = null, _scope = null, _ImageLoader = null;
-let _depth = 128, _width = 128;
 let _context;
 let _max = 0.0, _min = 0.0;
+let _size = 64;
 
 import * as THREE from './../libs/three/Three.js';
 import {PressureTerrain} from './PressureTerrain.js';
@@ -24,7 +24,7 @@ class Terrain {
 		_biomes = new Biomes();
 	}
 
-	Create(_width, _height) {
+	Create(size) {
 
 		if (_mesh instanceof THREE.Mesh) {
 
@@ -36,10 +36,12 @@ class Terrain {
 			_min = 0.0;
 		}
 
-		_biomes.setSize(_width, _height);
+		_size = size;
+
+		_biomes.setSize(_size, _size);
 		_biomes.setTypePixels(0);
 
-		let geometry = new THREE.PlaneBufferGeometry(_width, _height, _width - 1, _height - 1);
+		let geometry = new THREE.PlaneBufferGeometry(_size, _size, _size - 1, _size - 1);
 		geometry.rotateX(-Math.PI / 2);
 		geometry.computeBoundingBox();
 		geometry.center();
@@ -71,74 +73,40 @@ class Terrain {
 		_road.DisposeEvents();
 	}
 
-	LoadHeightMap(image, width = 128, depth = 128) {
-
-		if (_mesh instanceof THREE.Mesh) {
-
-			_scope.scene.remove(_mesh);
-			_mesh = null;
-			_pressure.DisposeEvents();
-			_pressure = null;
-			_max = 0.0;
-			_min = 0.0;
-		}
-
-		_depth = depth;
-		_width = width;
-
-		_biomes.setSize(_width, _depth);
-		_biomes.setTypePixels(0);
+	LoadHeightMap(image) {
 
 		let canvas = document.createElement('canvas');
-		canvas.width = _width;
-		canvas.height = _depth;
+		canvas.width = image.width;
+		canvas.height = image.height;
 		_context = canvas.getContext('2d');
 
 		_context.drawImage(image, 0, 0);
-		let pixel = _context.getImageData(0, 0, _width, _depth);
+		let pixel = _context.getImageData(0, 0, image.width, image.height);
 
-		let DataHeight = [], colors = [];
-		
+		let DataHeight = [];
+		//let DataHeight = new Float32Array(image.width * image.height);
+
 		for (let i = 0, n = pixel.data.length; i < n; i += 4) {
 			
 			DataHeight.push((pixel.data[i] + pixel.data[i+1] + pixel.data[i+2]) / 3);
 		}
 
-		let geometry = new THREE.PlaneBufferGeometry(_width, _depth, _width - 1, _depth - 1);
-		geometry.rotateX(-Math.PI / 2);
-		geometry.computeBoundingBox();
-		geometry.center();
-		geometry.computeFaceNormals();
+		for (let i = 0, n = _mesh.geometry.attributes.position.count; i < n; ++ i) {
 
-		for (let i = 0, n = geometry.attributes.position.count; i < n; ++ i) {
-
-			geometry.attributes.position.array[i*3 + 1] += (DataHeight[i] / 255) * 50;
-			colors[i * 3] = 0;
-			colors[i * 3 + 1] = 0;
-			colors[i * 3 + 2] = 1;
+			_mesh.geometry.attributes.position.array[i*3 + 1] += (DataHeight[i] / 255) * 50;
+			_mesh.geometry.attributes.position.needsUpdate = true;
 		}
-
-		geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-		geometry.attributes.color.needsUpdate = true;
-		geometry.attributes.position.needsUpdate = true;
-
-		_mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({side: THREE.DoubleSide, vertexColors: THREE.VertexColors}));
-		_mesh.name = 'Terrain';
-		_mesh.geometry.computeBoundsTree();
-		_scope.scene.add(_mesh);
-	
-		_pressure = new PressureTerrain(_scope.camera, _mesh, 'Window');
-		_scope.scene.add(_pressure.getBrush());
-		_pressure.AddEvents();
-
-		_road = new Road(_scope.camera, _mesh, 'Window', _scope.scene);
-		_road.AddEvents();
-		_road.DisposeEvents();
+		//_mesh.geometry.computeBoundsTree();
 	}
 
 	getBiomes() {
 
 		return _biomes;
+	}
+
+	getSize() {
+
+		return _size;
 	}
 
 	ApplyBiomes() {

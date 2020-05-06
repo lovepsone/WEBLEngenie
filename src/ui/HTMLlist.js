@@ -74,7 +74,7 @@ var HTMLlist = [
 					{'tag': 'label', 'text': txt.HeightMap[2]},
 				]},
 				{'tag': 'div', 'align': 'center', 'children': [
-					{'tag': 'input', 'id': DataHTML.DialogLoadHeightMap.File, 'type':'file', 'style': 'margin-right: 20px;'},
+					{'tag': 'input', 'id': DataHTML.DialogLoadHeightMap.File, 'type':'file', 'style':"font-size: 12px; border: 0px; margin: 5px;width: 200px;"},
 				]},
 			]},
 			{'tag': 'div', 'style': 'border-bottom: 1px solid white;', 'align': 'center', 'children': [

@@ -99,9 +99,9 @@ UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListener("click",
 		image.src = res.target.result;
 		image.addEventListener("load", function() {
 
-			if (image.width === image.height && image.width < 1024) {
+			if (image.width === image.height && image.width < 1024 && image.width == Engenie.getTerrain().getSize()) {
 
-				Engenie.getTerrain().LoadHeightMap(image, image.width, image.height);
+				Engenie.getTerrain().LoadHeightMap(image);
 				image.load = null;
 				image = null;
 				reader.onload = null;
@@ -109,6 +109,10 @@ UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListener("click",
 				Engenie.getTerrain().WireFrame(_UIFrame.CheckedWireframe());
 			} else {
 
+				image.load = null;
+				image = null;
+				reader.onload = null;
+				reader = null;
 				console.warn('Invalid image size.');
 			}
 		}, false);
@@ -145,8 +149,7 @@ for (let i = 0; i < DataHTML.RightBar.Buttons.length; i++) {
 // handlers Dialog Create Terrain
 UI.getElement(DataHTML.DialogCreateTerrain.Buttons[0]).addEventListener("click", function() {
 
-	const size = UI.getElement(DataHTML.DialogCreateTerrain.Options[0]).value;
-	Engenie.getTerrain().Create(size, size);
+	Engenie.getTerrain().Create(UI.getElement(DataHTML.DialogCreateTerrain.Options[0]).value);
 	Engenie.getTerrain().WireFrame(_UIFrame.CheckedWireframe());
 
 	if (_UIFrame.CheckedCamera()) {
