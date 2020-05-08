@@ -5,7 +5,7 @@ const wiremat = new THREE.LineBasicMaterial( { color: 0x00FF88, transparent: tru
 const boxGeom = new THREE.Box3Helper().geometry;
 let boundingBox = new THREE.Box3();
 
-class MeshBVHRootVisualizer extends THREE.Object3D {
+class MeshBVHRootVisualizer extends THREE.Group {
 
 	constructor( mesh, depth = 10, group = 0 ) {
 
@@ -23,63 +23,50 @@ class MeshBVHRootVisualizer extends THREE.Object3D {
 
 	update() {
 
-		if ( this._mesh.geometry.boundsTree !== this._boundsTree || this._oldDepth !== this.depth ) {
+		this._oldDepth = this.depth;
+		this._boundsTree = this._mesh.geometry.boundsTree;
 
-			this._oldDepth = this.depth;
-			this._boundsTree = this._mesh.geometry.boundsTree;
+		let requiredChildren = 0;
+		if ( this._boundsTree ) {
 
-			let requiredChildren = 0;
-			if ( this._boundsTree ) {
+			this._boundsTree.traverse( ( depth, isLeaf, boundingData, offsetOrSplit, countOrIsUnfinished ) => {
 
-				const recurse = ( n, d ) => {
+				let isTerminal = isLeaf || countOrIsUnfinished;
 
-					let isLeaf = 'count' in n;
+				if ( depth >= this.depth ) return;
 
-					if ( d === this.depth ) return;
+				if ( depth === this.depth - 1 || isTerminal ) {
 
-					if ( d === this.depth - 1 || isLeaf ) {
+					let m = requiredChildren < this.children.length ? this.children[ requiredChildren ] : null;
+					if ( ! m ) {
 
-						let m = requiredChildren < this.children.length ? this.children[ requiredChildren ] : null;
-						if ( ! m ) {
-
-							m = new THREE.LineSegments( boxGeom, wiremat );
-							m.raycast = () => [];
-							this.add( m );
-
-						}
-						requiredChildren ++;
-						arrayToBox( n.boundingData, boundingBox );
-						boundingBox.getCenter( m.position );
-						m.scale.subVectors( boundingBox.max, boundingBox.min ).multiplyScalar( 0.5 );
-
-						if ( m.scale.x === 0 ) m.scale.x = Number.EPSILON;
-						if ( m.scale.y === 0 ) m.scale.y = Number.EPSILON;
-						if ( m.scale.z === 0 ) m.scale.z = Number.EPSILON;
+						m = new THREE.LineSegments( boxGeom, wiremat );
+						m.raycast = () => [];
+						this.add( m );
 
 					}
+					requiredChildren ++;
+					arrayToBox( boundingData, boundingBox );
+					boundingBox.getCenter( m.position );
+					m.scale.subVectors( boundingBox.max, boundingBox.min ).multiplyScalar( 0.5 );
 
-					if ( ! isLeaf ) {
+					if ( m.scale.x === 0 ) m.scale.x = Number.EPSILON;
+					if ( m.scale.y === 0 ) m.scale.y = Number.EPSILON;
+					if ( m.scale.z === 0 ) m.scale.z = Number.EPSILON;
 
-						recurse( n.left, d + 1 );
-						recurse( n.right, d + 1 );
+				}
 
-					}
-
-				};
-
-				recurse( this._boundsTree._roots[ this._group ], 0 );
-
-			}
-
-			while ( this.children.length > requiredChildren ) this.remove( this.children.pop() );
+			} );
 
 		}
+
+		while ( this.children.length > requiredChildren ) this.remove( this.children.pop() );
 
 	}
 
 }
 
-class MeshBVHVisualizer extends THREE.Object3D {
+class MeshBVHVisualizer extends THREE.Group {
 
 	constructor( mesh, depth = 10 ) {
 
