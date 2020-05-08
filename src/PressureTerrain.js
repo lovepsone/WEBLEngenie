@@ -13,12 +13,17 @@ import * as THREE from './../libs/three/Three.js';
 
 class PressureTerrain extends MouseMoveOnTerrain {
 
-	constructor(_viewObject, _terrain, _viewport) {
+	constructor(_viewObject/*, _terrain*/, _viewport) {
 
 		super(_viewport);
 
-		_mesh = _terrain;
+		//_mesh = _terrain;
 		_camera = _viewObject;
+	}
+
+	setTerrain(mesh) {
+
+		_mesh = mesh;
 	}
 
 	onDocumentMouseMove(event) {

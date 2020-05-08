@@ -22,6 +22,9 @@ class Terrain {
 
 		_scope = scope;
 		_biomes = new Biomes();
+		_road = new Road(_scope.camera, 'Window', _scope.scene);
+		_pressure = new PressureTerrain(_scope.camera, 'Window');
+		_scope.scene.add(_pressure.getBrush());
 	}
 
 	Create(size) {
@@ -31,7 +34,7 @@ class Terrain {
 			_scope.scene.remove(_mesh);
 			_mesh = null;
 			_pressure.DisposeEvents();
-			_pressure = null;
+			_road.DisposeEvents();
 			_max = 0.0;
 			_min = 0.0;
 		}
@@ -64,11 +67,10 @@ class Terrain {
 		_mesh.geometry.computeBoundsTree();
 		_scope.scene.add(_mesh);
 
-		_pressure = new PressureTerrain(_scope.camera, _mesh, 'Window');
-		_scope.scene.add(_pressure.getBrush());
+		_pressure.setTerrain(_mesh);
 		_pressure.AddEvents();
 
-		_road = new Road(_scope.camera, _mesh, 'Window', _scope.scene);
+		_road.setTerrain(_mesh);
 		_road.AddEvents();
 		_road.DisposeEvents();
 	}
@@ -96,7 +98,8 @@ class Terrain {
 			_mesh.geometry.attributes.position.array[i*3 + 1] += (DataHeight[i] / 255) * 50;
 			_mesh.geometry.attributes.position.needsUpdate = true;
 		}
-		//_mesh.geometry.computeBoundsTree();
+	
+		_mesh.geometry.computeBoundsTree();
 	}
 
 	getBiomes() {
