@@ -6,9 +6,9 @@ import {Terrain} from './Terrain.js';
 import {CameraControls} from './CameraControls.js';
 import * as THREE from './../libs/three/Three.js';
 
-import {BSPNode} from './../libs/CSG2/BSPNode.js';
-import {intersect, union, subtract, cutout} from './../libs/CSG2/boolean.js';
-import {convertGeometryToTriangles, transformBSP} from './../libs/CSG2/meshUtils.js';
+//import {BSPNode} from './../libs/CSG2/BSPNode.js';
+//import {intersect, union, subtract, cutout} from './../libs/CSG2/boolean.js';
+//import {convertGeometryToTriangles, transformBSP} from './../libs/CSG2/meshUtils.js';
 
 let _renderer, _camera, _scene; 
 let _controls = null, _terrain = null;
