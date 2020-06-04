@@ -12,21 +12,20 @@ let TypePixelsRevert = 0;
 let _moisture = [];
 
 let colors =  {
-    OCEAN:                      0x44447a,
-    BEACH:                      0xa09077,
-    SCORCHED:                   0x555555,
-    BARE:                       0x888888,
-    TUNDRA:                     0xbbbbaa,
-    SNOW:                       0xdddde4,
-    TEMPERATE_DESERT:           0xc9d29b,
-    SHRUBLAND:                  0x889977,
-    TAIGA:                      0x99aa77,
-	GRASSLAND :                 0x88aa55,
-	TEMPERATE_DECIDUOUS_FOREST: 0x679459,
-	TEMPERATE_RAIN_FOREST:      0x448855,
-	SUBTROPICAL_DESERT:         0xd2b98b,
-	TROPICAL_SEASONAL_FOREST:   0x559944,
-	TROPICAL_RAIN_FOREST:       0x337755
+    OCEAN:                      0x44447a, // вода
+    BEACH:                      0xa09077, // пляж
+    SCORCHED:                   0x555555, // выжженный(камни)
+    BARE:                       0x888888, // пустыня
+    TUNDRA:                     0xbbbbaa, // тундра (почти нет растительности)
+    SNOW:                       0xdddde4, // снег
+    TEMPERATE_DESERT:           0xc9d29b, // пустыня (засуха)
+    TAIGA:                      0x99aa77, // густой лес
+	GRASSLAND :                 0x88aa55, // трава
+	TEMPERATE_DECIDUOUS_FOREST: 0x679459, // лиственный лес
+	TEMPERATE_RAIN_FOREST:      0x448855, // лес с частыми дождями
+	SUBTROPICAL_DESERT:         0xd2b98b, // субтрапическая пустыня
+	TROPICAL_SEASONAL_FOREST:   0x559944, // тропический сезонный лес
+	TROPICAL_RAIN_FOREST:       0x337755  // ТРОПИЧЕСКИЙ ЛЕС
 };
 
 class Biomes extends DrawNoise {
@@ -63,7 +62,7 @@ class Biomes extends DrawNoise {
         if (height > 0.6) {
             
             if (moisture < 0.33) return colors.TEMPERATE_DESERT;
-            if (moisture < 0.66) return colors.SHRUBLAND;
+            if (moisture < 0.66) return colors.GRASSLAND;
             
             return colors.TAIGA;
         }
