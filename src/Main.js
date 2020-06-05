@@ -18,7 +18,7 @@ class MainEngenie {
 	constructor(c_fov, c_Width, c_Height) {
 
 		const canvas = document.createElement( 'canvas' );
-		const context = canvas.getContext('webgl2', {alpha: true, antialias: true});
+		const context = canvas.getContext('webgl2', {alpha: true, antialias: false});
 		// renderer settings
 		_renderer = new THREE.WebGLRenderer(/*{ antialias:true }*/{ canvas: canvas, context: context });
 		_renderer.setClearColor(0x808080);

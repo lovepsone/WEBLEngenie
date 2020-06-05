@@ -244,30 +244,12 @@ class GenerateTexture {
                 vec4 mix12 = mix(_subtropical_desert, mix11, test4.b);
                 vec4 mix13 = mix(_temperate_rain_forest, mix12, test5.r);
                 vec4 mix14 = mix(_temperate_rain_forest, mix13, test5.g);
-
-    
-                //vec4 mix1 = mix(_okean, vec4(0.0, 0.0, 0.0, 1.0), _mask1.r);
-                //vec4 mix2 = mix(_beach, mix1, _mask1.g);
-                //vec4 mix3 = mix(_scorched, mix2, _mask1.b);
-
-                //vec4 mix4 = mix(_bare, mix3, _mask2.r);
-                //vec4 mix5 = mix(_tundra, mix4, _mask2.g);
-                //vec4 mix6 = mix(_snow, mix5, _mask2.b);
-
-                //vec4 mix7 = mix(_temperate_desert, mix6, _mask3.r);
-                //vec4 mix8 = mix(_taiga, mix7, _mask3.g);
-                //vec4 mix9 = mix(_grassland, mix8, _mask3.b);
-
-                //vec4 mix10 = mix(_temperate_decidious_forest, mix9, _mask4.r);
-                //vec4 mix11 = mix(_temperate_rain_forest, mix10, _mask4.g);
-                //vec4 mix12 = mix(_subtropical_desert, mix8, _mask4.b);
                 out_FragColor = mix14;
             }
             `;
 
         let customUniforms = {
             diffuse:                    {value: _Texture2DArray},
-            //BUMP:                       {type: "t", value: _bumptexture},
             OCEAN:	                    {type: "t", value: _textures[0]},
             BEACH:	                    {type: "t", value: _textures[1]},
             SCORCHED:	                {type: "t", value: _textures[2]},
