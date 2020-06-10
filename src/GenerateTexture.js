@@ -8,6 +8,7 @@ let _colors = null;
 let _canvas = document.createElement('canvas'), _ctx = null;
 let _width = 128, _height = 128, _matrix = [];
 let _material = null;
+
 const _nameTextures =  {
     OCEAN:                      './texture/ocean_dirt_512.jpg', //0x44447a,
     BEACH:                      './texture/beach_512.jpg', //0xa09077,
@@ -24,6 +25,7 @@ const _nameTextures =  {
 	TROPICAL_SEASONAL_FOREST:   './texture/tropical_seasonal_forest_512.jpg',//0x559944,
 	TROPICAL_RAIN_FOREST:       './texture/tropical_rain_forest_512.jpg' //0x337755
 };
+
 const _datatextures = Object.entries(_nameTextures);
 let _textures = [], _bumptexture = null;
 
@@ -44,7 +46,7 @@ class GenerateTexture {
         _canvas.style.width = "256px";
         _canvas.style.height = "256px";
         _ctx = _canvas.getContext('2d');
-        document.getElementById(elemId).appendChild(_canvas);
+        //document.getElementById(elemId).appendChild(_canvas);
         this.setSize(128, 128);
 
         for (let i = 0; i < _datatextures.length; i++) {
