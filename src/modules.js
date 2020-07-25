@@ -40,25 +40,29 @@ function ControlPen(currentTab) {
 	switch(buf) {
 
 		case -1: //cancel all
-			Engenie.getControlsCamera().UpdateEvents()
-			Engenie.getTerrain().PressureDisposeEvents();
-			Engenie.getTerrain().RoadDisposeEvents();
+			Engenie.getControlsCamera().UpdateEvents();
+			Engenie.getTerrain().getOptions().pressure.DisposeEvents();
+			Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
+			Engenie.getTerrain().getOptions().road.DisposeEvents();
 			break;
 		
 		case 0:
-			Engenie.getTerrain().PressureUpdateEvents();
-			Engenie.getTerrain().RoadDisposeEvents();
+
+			Engenie.getTerrain().getOptions().pressure.AddEvents();
+			Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
+			Engenie.getTerrain().getOptions().road.DisposeEvents();
 			break;
 
 		case 1: // editor biomes
-			Engenie.getTerrain().PressureDisposeEvents();
-			Engenie.getTerrain().RoadDisposeEvents();
+			Engenie.getTerrain().getOptions().pressure.DisposeEvents();
+			Engenie.getTerrain().getOptions().biomeMap.AddEvents();
+			Engenie.getTerrain().getOptions().road.DisposeEvents();
 			break;
 
 		case 2:
-			Engenie.getTerrain().PressureDisposeEvents();
-			if (UI.getElement(DataHTML.Road.Options[0]).checked)
-				Engenie.getTerrain().RoadUpdateEvents();
+			Engenie.getTerrain().getOptions().pressure.DisposeEvents();
+			Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
+			if (UI.getElement(DataHTML.Road.Options[0]).checked) Engenie.getTerrain().getOptions().road.AddEvents();
 			break;
 	}
 }
@@ -148,18 +152,18 @@ for (let i = 0; i < DataHTML.RightBar.Buttons.length; i++) {
 
 // handlers Dialog Create Terrain
 UI.getElement(DataHTML.DialogCreateTerrain.Buttons[0]).addEventListener("click", function() {
-
+// баг, если находишься в другой вкладке
 	Engenie.getTerrain().Create(UI.getElement(DataHTML.DialogCreateTerrain.Options[0]).value);
 	Engenie.getTerrain().WireFrame(_UIFrame.CheckedWireframe());
 
 	if (_UIFrame.CheckedCamera()) {
 
 		Engenie.getControlsCamera().UpdateEvents();
-		Engenie.getTerrain().PressureDisposeEvents();
+		Engenie.getTerrain().getOptions().pressure.DisposeEvents();
 	} else {
 
 		Engenie.getControlsCamera().dispose();
-		Engenie.getTerrain().PressureUpdateEvents();
+		Engenie.getTerrain().getOptions().pressure.AddEvents();
 	}
 
 	UI.getElement(DataHTML.DialogCreateTerrain.widjet).close();
@@ -173,15 +177,13 @@ UI.getElement(DataHTML.DialogCreateTerrain.Buttons[1]).addEventListener("click",
 // handlers Pressuere Terrain
 UI.getElement(DataHTML.Pressuere.Options[0]).addEventListener("change", function(event) {
 
-	let terrain = Engenie.getTerrain();
-	terrain.setPressureRadius(event.srcElement.value);
+	Engenie.getTerrain().getOptions().pressure.UpdateRadius(event.srcElement.value);
 	UI.getElement(DataHTML.Pressuere.Values[0]).innerHTML = event.srcElement.value;
 }, false);
 
 UI.getElement(DataHTML.Pressuere.Options[1]).addEventListener("change", function(event) {
 
-	let terrain = Engenie.getTerrain();
-	terrain.setPressureStrength(event.srcElement.value);
+	Engenie.getTerrain().getOptions().pressure.UpdateStrength(event.srcElement.value);
 	UI.getElement(DataHTML.Pressuere.Values[1]).innerHTML = event.srcElement.value;
 }, false);
 
@@ -200,7 +202,7 @@ UI.getElement(DataHTML.Wireframe).addEventListener("change", function(event) {
 // handlers biomes
 UI.getElement(DataHTML.Biomes.Buttons[0]).addEventListener("click", function(event) {
 
-	Engenie.getTerrain().getBiomes().GenerateDataPixels();
+	Engenie.getTerrain().getOptions().biomes.GenerateDataPixels();
 }, false);
 
 // biomes Apply
@@ -214,16 +216,16 @@ UI.getElement(DataHTML.Road.Options[0]).addEventListener("change", function(even
 
 	if (UI.getElement(DataHTML.Road.Options[0]).checked) {
 
-		Engenie.getTerrain().RoadUpdateEvents();
+		Engenie.getTerrain().getOptions().road.AddEvents();
 	} else {
 
-		Engenie.getTerrain().RoadDisposeEvents();
+		Engenie.getTerrain().getOptions().road.DisposeEvents();
 	}
 }, false);
 
 UI.getElement(DataHTML.Road.Buttons[0]).addEventListener("click", function(event) {
 
-	Engenie.getTerrain().getRoad().Generate();
+	Engenie.getTerrain().getOptions().road.Generate();
 }, false);
 
 for (let i = 2; i < 16; i++) {

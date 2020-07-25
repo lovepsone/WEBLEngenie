@@ -3,7 +3,8 @@
 */
 let _mesh = null, _scope = null, _ImageLoader = null, _context = null;
 let _max = 0.0, _min = 0.0, _size = 64;
-let _pressure = null, _biomes = null, _road = null, _BiomeMap = null; //main processing classes
+
+let _Optons  = {pressure: null, biomes: null, biomeMap: null, road: null};
 
 import * as THREE from './../libs/three/Three.js';
 import {PressureTerrain} from './PressureTerrain.js';
@@ -22,10 +23,10 @@ class Terrain {
 
 		_scope = scope;
 
-		_biomes = new Biomes();
-		_road = new Road(_scope.camera, 'Window', _scope.scene);
-		_pressure = new PressureTerrain(_scope.camera, 'Window', _scope.scene);
-		_BiomeMap = new GenerateBiomeMap(_scope.camera, 'Window', _scope.scene);
+		_Optons.biomes = new Biomes();
+		_Optons.road = new Road(_scope.camera, 'Window', _scope.scene);
+		_Optons.pressure = new PressureTerrain(_scope.camera, 'Window', _scope.scene);
+		_Optons.biomeMap = new GenerateBiomeMap(_scope.camera, 'Window', _scope.scene);
 	}
 
 	Create(size) {
@@ -108,9 +109,9 @@ class Terrain {
 		_mesh.geometry.computeBoundsTree();
 	}
 
-	getBiomes() {
+	getOptions() {
 
-		return _biomes;
+		return _Optons;
 	}
 
 	getSize() {
@@ -118,7 +119,7 @@ class Terrain {
 		return _size;
 	}
 
-	ApplyBiomes() {
+	ApplyBiomes() { // перенести метод в биомы
 
 		if (_mesh instanceof THREE.Mesh && _max == 0) {
 
@@ -149,68 +150,11 @@ class Terrain {
 		_BiomeMap.setColorsDataBiomes(_mesh.geometry.attributes.color);
 	}
 
-	getRoad() {
-
-		if (_road instanceof Road) {
-
-			return _road;
-		}
-	}
-
 	WireFrame(value = true) {
 
 		if (_mesh instanceof THREE.Mesh) {
 
 			_mesh.material.wireframe = value;
-		}
-	}
-
-	setPressureRadius(r) {
-
-		if (_pressure instanceof PressureTerrain) {
-
-			_pressure.UpdateRadius(r);
-		}
-	}
-
-
-	setPressureStrength(s) {
-
-		if (_pressure instanceof PressureTerrain) {
-
-			_pressure.UpdateStrength(s);
-		}
-	}
-
-	PressureDisposeEvents() {
-
-		if (_pressure instanceof PressureTerrain) {
-
-			_pressure.DisposeEvents();
-		}
-	}
-
-	PressureUpdateEvents() {
-
-		if (_pressure instanceof PressureTerrain) {
-
-			_pressure.AddEvents();
-		}
-	}
-
-	RoadDisposeEvents() {
-
-		if (_road instanceof Road) {
-
-			_road.DisposeEvents();
-		}
-	}
-
-	RoadUpdateEvents() {
-
-		if (_road instanceof Road) {
-
-			_road.AddEvents();
 		}
 	}
 }
