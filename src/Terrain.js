@@ -141,13 +141,10 @@ class Terrain {
 				_mesh.geometry.attributes.color.array[i * 3 + 1] = color.g;
 				_mesh.geometry.attributes.color.array[i * 3 + 2] = color.b;
 				_mesh.geometry.attributes.color.needsUpdate = true;
-
 			}
 		}
 
-		/*----------------testing*/
 		_gBiomeMap.setColorsDataBiomes(_mesh.geometry.attributes.color);
-		//_gBiomeMap.genMaterial(_mesh, _scope.scene);
 	}
 
 	getRoad() {
