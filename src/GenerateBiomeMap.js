@@ -13,7 +13,7 @@ let _DiffuseCanvas = document.createElement('canvas');
 
 class GenerateBiomeMap {
 
-    constructor(elemId = 'test_img') {
+    constructor(elemId = 'TerrainMap') {
 
         _DiffuseCanvas.width = _width;
         _DiffuseCanvas.height = _height*5;
@@ -26,7 +26,7 @@ class GenerateBiomeMap {
         _canvas.style.width = "256px";
         _canvas.style.height = "256px";
         _ctx = _canvas.getContext('2d');
-        //document.getElementById(elemId).appendChild(_canvas);
+        document.getElementById(elemId).appendChild(_canvas);
         this.setSize(128, 128);
     }
 

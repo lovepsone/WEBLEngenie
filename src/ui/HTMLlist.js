@@ -152,6 +152,10 @@ var HTMLlist = [
 			{'tag': 'button', 'id': DataHTML.Biomes.Buttons[13], 'style':'text-align: center; width: 220px; background: #d2b98b;', 'text': txt.TabEditBiomes[16]},
 			{'tag': 'button', 'id': DataHTML.Biomes.Buttons[14], 'style':'text-align: center; width: 220px; background: #559944;', 'text': txt.TabEditBiomes[17]},
 			{'tag': 'button', 'id': DataHTML.Biomes.Buttons[15], 'style':'text-align: center; width: 220px; background: #337755;', 'text': txt.TabEditBiomes[18]},
+			{'tag': 'hr'},
+			{'tag': 'br'},
+			{'tag': 'div', 'text': 'Result Biomes Map'},
+			{'tag': 'div', 'id': 'TerrainMap'},
 		]},
 		{'tag': 'div', 'id': DataHTML.RightBar.Contents[2], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'children': [
 			{'tag': 'br'},
