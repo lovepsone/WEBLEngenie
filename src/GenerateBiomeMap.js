@@ -15,6 +15,7 @@ let _brushMesh = null, _camera = null, _scene = null, _mesh = null;
 let _mouseVector = new THREE.Vector2();
 let _raycaster = new THREE.Raycaster();
 let _MouseDown = false;
+let _ColorPen = new THREE.Color(0x44447a);
 
 class GenerateBiomeMap {
 
@@ -51,6 +52,27 @@ class GenerateBiomeMap {
 	setTerrain(mesh) {
 
 		_mesh = mesh;
+    }
+
+    setColor(string) {
+
+        switch(string) {
+
+            case '44447a': _ColorPen.set(0x44447a); break;
+            case 'a09077': _ColorPen.set(0xa09077); break;
+            case '555555': _ColorPen.set(0x555555); break;
+            case '888888': _ColorPen.set(0x888888); break;
+            case 'bbbbaa': _ColorPen.set(0xbbbbaa); break;
+            case 'dddde4': _ColorPen.set(0xdddde4); break;
+            case 'c9d29b': _ColorPen.set(0xc9d29b); break;
+            case '99aa77': _ColorPen.set(0x99aa77); break;
+            case '88aa55': _ColorPen.set(0x99aa77); break;
+            case '679459': _ColorPen.set(0x679459); break;
+            case '448855': _ColorPen.set(0x448855); break;
+            case 'd2b98b': _ColorPen.set(0xd2b98b); break;
+            case '559944': _ColorPen.set(0x559944); break;
+            case '337755': _ColorPen.set(0x337755); break;
+        }
     }
 
 	onDocumentMouseDown(event) {
@@ -106,9 +128,9 @@ class GenerateBiomeMap {
 				for (let i = 0, l = indices.length; i < l; i ++ ) {
 					
 					const index = indexAttr.getX(indices[i]);
-                    colorAttr.setX(index, 255);
-                    colorAttr.setY(index, 255);
-                    colorAttr.setZ(index, 255);
+                    colorAttr.setX(index, _ColorPen.r);
+                    colorAttr.setY(index, _ColorPen.g);
+                    colorAttr.setZ(index, _ColorPen.b);
 				}
 				colorAttr.needsUpdate = true;
 			}

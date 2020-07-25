@@ -246,6 +246,6 @@ for (let i = 2; i < 16; i++) {
 
 	UI.getElement(DataHTML.Biomes.Buttons[i]).addEventListener("click", function(event) {
 
-		console.log(event.target.className);
+		Engenie.getTerrain().getOptions().biomeMap.setColor(event.target.className);
 	}, false);
 }
