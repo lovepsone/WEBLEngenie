@@ -55,13 +55,15 @@ function ControlPen(currentTab) {
 
 		case 1: // editor biomes
 			Engenie.getTerrain().getOptions().pressure.DisposeEvents();
-			Engenie.getTerrain().getOptions().biomeMap.AddEvents();
+			Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
 			Engenie.getTerrain().getOptions().road.DisposeEvents();
+			if (UI.getElement(DataHTML.Biomes.Options[0]).checked) Engenie.getTerrain().getOptions().biomeMap.AddEvents();
 			break;
 
 		case 2:
 			Engenie.getTerrain().getOptions().pressure.DisposeEvents();
 			Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
+			Engenie.getTerrain().getOptions().road.DisposeEvents();
 			if (UI.getElement(DataHTML.Road.Options[0]).checked) Engenie.getTerrain().getOptions().road.AddEvents();
 			break;
 	}
@@ -226,6 +228,18 @@ UI.getElement(DataHTML.Road.Options[0]).addEventListener("change", function(even
 UI.getElement(DataHTML.Road.Buttons[0]).addEventListener("click", function(event) {
 
 	Engenie.getTerrain().getOptions().road.Generate();
+}, false);
+
+//handlers Edit Biomes
+UI.getElement(DataHTML.Biomes.Options[0]).addEventListener("change", function(event) {
+
+	if (UI.getElement(DataHTML.Biomes.Options[0]).checked) {
+
+		Engenie.getTerrain().getOptions().biomeMap.AddEvents();
+	} else {
+
+		Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
+	}
 }, false);
 
 for (let i = 2; i < 16; i++) {

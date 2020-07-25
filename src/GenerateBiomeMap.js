@@ -3,16 +3,18 @@
 */
 
 import * as THREE from '../libs/three/Three.js';
+import {sphereIntersectTriangle} from './../libs/BVH/Utils/MathUtilities.js';
 
 let _canvas = document.createElement('canvas'), _ctx = null;
 let _width = 128, _height = 128, _matrix = [];
 
 let _DiffuseCanvas = document.createElement('canvas');
 
-let bindMouseDown, bindMouseMove;
+let bindMouseDown, bindMouseUp, bindMouseMove;
 let _brushMesh = null, _camera = null, _scene = null, _mesh = null;
 let _mouseVector = new THREE.Vector2();
 let _raycaster = new THREE.Raycaster();
+let _MouseDown = false;
 
 class GenerateBiomeMap {
 
@@ -23,6 +25,7 @@ class GenerateBiomeMap {
 		this.element = document.getElementById(viewport);
 		bindMouseDown =  this.onDocumentMouseDown.bind(this);
 		bindMouseMove = this.onDocumentMouseMove.bind(this);
+        bindMouseUp = this.onDocumentMouseUp.bind(this);
 
 		_brushMesh = new THREE.Mesh(new THREE.SphereBufferGeometry(1, 50, 50), new THREE.MeshStandardMaterial({color: 0xEC407A, roughness: 0.75, metalness: 0, transparent: true, opacity: 0.5, premultipliedAlpha: true, emissive: 0xEC407A, emissiveIntensity: 0.5}));
         _brushMesh.name = "BrushRoad";
@@ -50,33 +53,82 @@ class GenerateBiomeMap {
 		_mesh = mesh;
     }
 
-    onDocumentMouseDown() {
+	onDocumentMouseDown(event) {
 
-        event.preventDefault();
+		event.preventDefault();
+		_MouseDown = true;
+	}
 
-        _mouseVector.x = (event.layerX / window.innerWidth) * 2 - 1;
-        _mouseVector.y = - (event.layerY / window.innerHeight) * 2 + 1;
-    }
+	onDocumentMouseUp(event) {
+
+		event.preventDefault();
+		_MouseDown = false;
+	}
 
     onDocumentMouseMove() {
 
+        const _radius = 2;
 		event.preventDefault();
 
 		_mouseVector.x = (event.layerX / window.innerWidth) * 2 - 1;
         _mouseVector.y = - (event.layerY / window.innerHeight) * 2 + 1;
+        _raycaster.setFromCamera(_mouseVector, _camera);
+		_raycaster.firstHitOnly = true;
+
+		let intersects = _raycaster.intersectObject(_mesh);
+		let bvh = _mesh.geometry.boundsTree;
+		_brushMesh.scale.setScalar(_radius);
+        _brushMesh.visible = false;
+
+		if (intersects.length > 0) {
+
+			_brushMesh.position.copy(intersects[0].point);
+            _brushMesh.visible = true;
+			if (_MouseDown) {
+
+				const indices = [];
+				const sphere = new THREE.Sphere(_brushMesh.position, _radius);
+				let colorAttr = _mesh.geometry.getAttribute('color');
+				const indexAttr =_mesh.geometry.index;
+
+				bvh.shapecast(_mesh, box => sphere.intersectsBox(box), (tri, a, b, c) => 
+				{
+					
+					if (sphereIntersectTriangle(sphere, tri)) {
+
+						indices.push(a, b, c);
+					}
+	
+					return false;
+	
+				});
+				
+				for (let i = 0, l = indices.length; i < l; i ++ ) {
+					
+					const index = indexAttr.getX(indices[i]);
+                    colorAttr.setX(index, 255);
+                    colorAttr.setY(index, 255);
+                    colorAttr.setZ(index, 255);
+				}
+				colorAttr.needsUpdate = true;
+			}
+		}
     }
 
 	AddEvents() {
 
+        _mesh.geometry.computeBoundsTree();
 		this.element.addEventListener("mousedown", bindMouseDown, false);
-		this.element.addEventListener("mousemove", bindMouseMove, false);
+        this.element.addEventListener("mousemove", bindMouseMove, false);
+        this.element.addEventListener("mouseup", bindMouseUp, false);
 		_brushMesh.visible = true;
 	}
 	
 	DisposeEvents() {
 
 		this.element.removeEventListener("mousedown", bindMouseDown, false);
-		this.element.removeEventListener("mousemove", bindMouseMove, false);
+        this.element.removeEventListener("mousemove", bindMouseMove, false);
+        this.element.removeEventListener("mouseup", bindMouseUp, false);
 		_brushMesh.visible = false;
     }
 

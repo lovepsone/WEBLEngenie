@@ -31,7 +31,7 @@ var DataHTML = {
 		'Values': ['EditRadiusVal', 'EditStrengthVal'],
 	},
 	'Biomes': {
-		'Options': [],
+		'Options': ['CheckBiomesPen'],
 		'Values': [],
 		'Buttons': ['bGenNoise', 'bNoiseApply',
 			'bOcean', 'bBeach', 'bScorched',
@@ -152,6 +152,9 @@ var HTMLlist = [
 			{'tag': 'button', 'id': DataHTML.Biomes.Buttons[13], 'class':'d2b98b','style':'text-align: center; width: 220px; background: #d2b98b;', 'text': txt.TabEditBiomes[16]},
 			{'tag': 'button', 'id': DataHTML.Biomes.Buttons[14], 'class':'559944','style':'text-align: center; width: 220px; background: #559944;', 'text': txt.TabEditBiomes[17]},
 			{'tag': 'button', 'id': DataHTML.Biomes.Buttons[15], 'class':'337755','style':'text-align: center; width: 220px; background: #337755;', 'text': txt.TabEditBiomes[18]},
+			{'tag': 'br'},
+			{'tag': 'label', 'for': DataHTML.Biomes.Options[0], 'style':"font-size: 14px;", 'text': "Pen"},
+			{'tag': 'input', 'id': DataHTML.Biomes.Options[0], 'type': 'checkbox'},
 			{'tag': 'hr'},
 			{'tag': 'br'},
 			{'tag': 'div', 'text': 'Result Biomes Map'},
