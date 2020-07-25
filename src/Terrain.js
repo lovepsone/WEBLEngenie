@@ -147,7 +147,7 @@ class Terrain {
 
 		/*----------------testing*/
 		_gBiomeMap.setColorsDataBiomes(_mesh.geometry.attributes.color);
-		_gBiomeMap.genMaterial(_mesh, _scope.scene);
+		//_gBiomeMap.genMaterial(_mesh, _scope.scene);
 	}
 
 	getRoad() {
