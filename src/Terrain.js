@@ -35,16 +35,16 @@ class Terrain {
 
 			_scope.scene.remove(_mesh);
 			_mesh = null;
-			_pressure.DisposeEvents();
-			_road.DisposeEvents();
+			_Optons.pressure.DisposeEvents();
+			_Optons.road.DisposeEvents();
 			_max = 0.0;
 			_min = 0.0;
 		}
 
 		_size = size;
 
-		_biomes.setSize(_size, _size);
-		_biomes.setTypePixels(0);
+		_Optons.biomes.setSize(_size, _size);
+		_Optons.biomes.setTypePixels(0);
 
 		let geometry = new THREE.PlaneBufferGeometry(_size, _size, _size - 1, _size - 1);
 		geometry.rotateX(-Math.PI / 2);
@@ -69,17 +69,17 @@ class Terrain {
 		_mesh.geometry.computeBoundsTree();
 		_scope.scene.add(_mesh);
 
-		_pressure.setTerrain(_mesh);
-		_pressure.AddEvents();
+		_Optons.pressure.setTerrain(_mesh);
+		_Optons.pressure.AddEvents();
 
-		_BiomeMap.setSize(_size, _size);
-		_BiomeMap.setTerrain(_mesh);
-		_BiomeMap.AddEvents();
-		_BiomeMap.DisposeEvents();
+		_Optons.biomeMap.setSize(_size, _size);
+		_Optons.biomeMap.setTerrain(_mesh);
+		_Optons.biomeMap.AddEvents();
+		_Optons.biomeMap.DisposeEvents();
 
-		_road.setTerrain(_mesh);
-		_road.AddEvents();
-		_road.DisposeEvents();
+		_Optons.road.setTerrain(_mesh);
+		_Optons.road.AddEvents();
+		_Optons.road.DisposeEvents();
 	}
 
 	LoadHeightMap(image) {
@@ -138,7 +138,7 @@ class Terrain {
 				let y = _mesh.geometry.attributes.position.array[i * 3 + 1];
 				let height = (y - _min) / (_max - _min);
 
-				let color = new THREE.Color(_biomes.get(height, i));
+				let color = new THREE.Color(_Optons.biomes.get(height, i));
 	
 				_mesh.geometry.attributes.color.array[i * 3] = color.r;
 				_mesh.geometry.attributes.color.array[i * 3 + 1] = color.g;
@@ -147,7 +147,7 @@ class Terrain {
 			}
 		}
 
-		_BiomeMap.setColorsDataBiomes(_mesh.geometry.attributes.color);
+		_Optons.biomeMap.setColorsDataBiomes(_mesh.geometry.attributes.color);
 	}
 
 	WireFrame(value = true) {
