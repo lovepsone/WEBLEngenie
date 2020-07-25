@@ -1,7 +1,7 @@
 /*
 * author lovepsone
 */
-let _mesh = null, _pressure = null, _biomes = null, _road = null, _scope = null, _ImageLoader = null, _gtexture = null;
+let _mesh = null, _pressure = null, _biomes = null, _road = null, _scope = null, _ImageLoader = null, _gBiomeMap = null;
 let _context;
 let _max = 0.0, _min = 0.0;
 let _size = 64;
@@ -9,7 +9,7 @@ let _size = 64;
 import * as THREE from './../libs/three/Three.js';
 import {PressureTerrain} from './PressureTerrain.js';
 import {Biomes} from './Biomes.js';
-import {GenerateTexture} from './GenerateTexture.js';
+import {GenerateBiomeMap} from './GenerateBiomeMap.js';
 import {Road} from './Road.js';
 import {acceleratedRaycast, computeBoundsTree, disposeBoundsTree} from './../libs/BVH/index.js';
 
@@ -26,7 +26,7 @@ class Terrain {
 		_road = new Road(_scope.camera, 'Window', _scope.scene);
 		_pressure = new PressureTerrain(_scope.camera, 'Window');
 		_scope.scene.add(_pressure.getBrush());
-		_gtexture = new GenerateTexture();
+		_gBiomeMap = new GenerateBiomeMap();
 	}
 
 	Create(size) {
@@ -76,7 +76,7 @@ class Terrain {
 		_road.AddEvents();
 		_road.DisposeEvents();
 
-		_gtexture.setSize(_size, _size);
+		_gBiomeMap.setSize(_size, _size);
 	}
 
 	LoadHeightMap(image) {
@@ -146,8 +146,8 @@ class Terrain {
 		}
 
 		/*----------------testing*/
-		_gtexture.setColorsDataBiomes(_mesh.geometry.attributes.color);
-		_gtexture.genMaterial(_mesh, _scope.scene);
+		_gBiomeMap.setColorsDataBiomes(_mesh.geometry.attributes.color);
+		_gBiomeMap.genMaterial(_mesh, _scope.scene);
 	}
 
 	getRoad() {

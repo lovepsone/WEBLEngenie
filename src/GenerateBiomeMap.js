@@ -2,7 +2,7 @@
 * author lovepsone
 */
 
-import * as THREE from './../libs/three/Three.js';
+import * as THREE from '../libs/three/Three.js';
 
 let _colors = null;
 let _canvas = document.createElement('canvas'), _ctx = null;
@@ -31,7 +31,8 @@ let _textures = [], _bumptexture = null;
 
 let _Texture2DArray = null;
 let _DiffuseCanvas = document.createElement('canvas');
-class GenerateTexture {
+
+class GenerateBiomeMap {
 
     constructor(elemId = 'test_img') {
 
@@ -279,4 +280,4 @@ class GenerateTexture {
     }
 }
 
-export {GenerateTexture};
+export {GenerateBiomeMap};
