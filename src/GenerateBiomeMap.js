@@ -4,16 +4,31 @@
 
 import * as THREE from '../libs/three/Three.js';
 
-let _colors = null;
 let _canvas = document.createElement('canvas'), _ctx = null;
 let _width = 128, _height = 128, _matrix = [];
-let _material = null;
 
 let _DiffuseCanvas = document.createElement('canvas');
 
+let bindMouseDown, bindMouseMove;
+let _brushMesh = null, _camera = null, _scene = null, _mesh = null;
+let _mouseVector = new THREE.Vector2();
+let _raycaster = new THREE.Raycaster();
+
 class GenerateBiomeMap {
 
-    constructor(elemId = 'TerrainMap') {
+    constructor(viewObject, viewport, scene, elemId = 'TerrainMap') {
+        _camera = viewObject;
+        _scene = scene;
+    
+		this.element = document.getElementById(viewport);
+		bindMouseDown =  this.onDocumentMouseDown.bind(this);
+		bindMouseMove = this.onDocumentMouseMove.bind(this);
+
+		_brushMesh = new THREE.Mesh(new THREE.SphereBufferGeometry(1, 50, 50), new THREE.MeshStandardMaterial({color: 0xEC407A, roughness: 0.75, metalness: 0, transparent: true, opacity: 0.5, premultipliedAlpha: true, emissive: 0xEC407A, emissiveIntensity: 0.5}));
+        _brushMesh.name = "BrushRoad";
+        _brushMesh.visible = false;
+
+        _scene.add(_brushMesh);
 
         _DiffuseCanvas.width = _width;
         _DiffuseCanvas.height = _height*5;
@@ -28,6 +43,41 @@ class GenerateBiomeMap {
         _ctx = _canvas.getContext('2d');
         document.getElementById(elemId).appendChild(_canvas);
         this.setSize(128, 128);
+    }
+
+	setTerrain(mesh) {
+
+		_mesh = mesh;
+    }
+
+    onDocumentMouseDown() {
+
+        event.preventDefault();
+
+        _mouseVector.x = (event.layerX / window.innerWidth) * 2 - 1;
+        _mouseVector.y = - (event.layerY / window.innerHeight) * 2 + 1;
+    }
+
+    onDocumentMouseMove() {
+
+		event.preventDefault();
+
+		_mouseVector.x = (event.layerX / window.innerWidth) * 2 - 1;
+        _mouseVector.y = - (event.layerY / window.innerHeight) * 2 + 1;
+    }
+
+	AddEvents() {
+
+		this.element.addEventListener("mousedown", bindMouseDown, false);
+		this.element.addEventListener("mousemove", bindMouseMove, false);
+		_brushMesh.visible = true;
+	}
+	
+	DisposeEvents() {
+
+		this.element.removeEventListener("mousedown", bindMouseDown, false);
+		this.element.removeEventListener("mousemove", bindMouseMove, false);
+		_brushMesh.visible = false;
     }
 
     setSize(width, height) {
@@ -88,7 +138,7 @@ class GenerateBiomeMap {
         buf += (colors == '679459') ? '00': 'ff'; //TEMPERATE_DECIDUOUS_FOREST
         buf += (colors == '448855') ? '00': 'ff'; //TEMPERATE_RAIN_FOREST
         buf += (colors == 'd2b98b') ? '00': 'ff'; //SUBTROPICAL_DESERT
-        _DiffuseCanvas.getContext('2d').fillStyle = buf;
+        _DiffuseCanvas.getContext('2d').fillStyle = buf;   
         _DiffuseCanvas.getContext('2d').fillRect(x, h*4 - (y + 1), 1, 1);
 
         buf = '#';

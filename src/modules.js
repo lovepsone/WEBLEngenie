@@ -225,3 +225,11 @@ UI.getElement(DataHTML.Road.Buttons[0]).addEventListener("click", function(event
 
 	Engenie.getTerrain().getRoad().Generate();
 }, false);
+
+for (let i = 2; i < 16; i++) {
+
+	UI.getElement(DataHTML.Biomes.Buttons[i]).addEventListener("click", function(event) {
+
+		console.log(event.target.className);
+	}, false);
+}
