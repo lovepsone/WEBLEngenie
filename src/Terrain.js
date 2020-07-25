@@ -24,8 +24,7 @@ class Terrain {
 
 		_biomes = new Biomes();
 		_road = new Road(_scope.camera, 'Window', _scope.scene);
-		_pressure = new PressureTerrain(_scope.camera, 'Window');
-		_scope.scene.add(_pressure.getBrush());
+		_pressure = new PressureTerrain(_scope.camera, 'Window', _scope.scene);
 		_BiomeMap = new GenerateBiomeMap(_scope.camera, 'Window', _scope.scene);
 	}
 
@@ -76,7 +75,7 @@ class Terrain {
 		_BiomeMap.setTerrain(_mesh);
 		_BiomeMap.AddEvents();
 		_BiomeMap.DisposeEvents();
-		
+
 		_road.setTerrain(_mesh);
 		_road.AddEvents();
 		_road.DisposeEvents();
