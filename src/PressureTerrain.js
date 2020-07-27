@@ -49,6 +49,12 @@ class PressureTerrain {
 
 		event.preventDefault();
 
+        if (!(_mesh instanceof THREE.Mesh)) {
+
+            console.warn('PressureTerrain.js: Create geometry before overlaying pen.');
+            return;
+		}
+
 		_mouseVector.x = (event.layerX / window.innerWidth ) * 2 - 1;
 		_mouseVector.y = - (event.layerY / window.innerHeight ) * 2 + 1;
 		_raycaster.setFromCamera(_mouseVector, _camera);
