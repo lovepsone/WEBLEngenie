@@ -147,7 +147,13 @@ class Terrain {
 			}
 		}
 
-		_Optons.biomeMap.setColorsDataBiomes(_mesh.geometry.attributes.color);
+		if (_mesh instanceof THREE.Mesh) {
+
+			_Optons.biomeMap.setColorsDataBiomes(_mesh.geometry.attributes.color);
+		} else {
+
+			console.warn('Terrain.js: Create geometry before overlaying biome.');
+		}
 	}
 
 	WireFrame(value = true) {
