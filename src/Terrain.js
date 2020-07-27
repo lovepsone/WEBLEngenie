@@ -121,6 +121,12 @@ class Terrain {
 
 	ApplyBiomes() { // перенести метод в биомы
 
+		if (!(_mesh instanceof THREE.Mesh)) {
+
+			console.warn('Terrain.js: Create geometry before overlaying biome.');
+			return;
+		}
+
 		if (_mesh instanceof THREE.Mesh && _max == 0) {
 
 			for (let i = 0; i < _mesh.geometry.attributes.position.count; i++) {
@@ -147,13 +153,7 @@ class Terrain {
 			}
 		}
 
-		if (_mesh instanceof THREE.Mesh) {
-
-			_Optons.biomeMap.setColorsDataBiomes(_mesh.geometry.attributes.color);
-		} else {
-
-			console.warn('Terrain.js: Create geometry before overlaying biome.');
-		}
+		_Optons.biomeMap.setColorsDataBiomes(_mesh.geometry.attributes.color);
 	}
 
 	WireFrame(value = true) {
