@@ -57,6 +57,10 @@ var lang = {
 			'Перо',
 			'Генерировать',
 		],
+		'TabEditTexture': [
+			'Редактор текстур',
+			'Перед текстурированием наложите все биомы, редактируйте атлас или примените стандартный.'
+		],
 	},
 
 	'en': {
@@ -111,6 +115,10 @@ var lang = {
 			'Editor Roads',
 			'Pen',
 			'Generate',
+		],
+		'TabEditTexture': [
+			'Texture editor',
+			'Before texturing, overlay all biomes, edit the atlas or apply a standard one.'
 		],
 	}
 }

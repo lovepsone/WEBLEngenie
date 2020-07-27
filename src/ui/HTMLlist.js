@@ -13,8 +13,8 @@ var txt = lang['ru'];
 var DataHTML = {
 	'MenuBar': {'CreateTerrain': 'CreateTerrain', 'SaveTerrain': 'SaveTerrain', 'LoadTerrain': 'LoadTerrain', 'LoadHeightMap': 'LoadHeightMap'},
 	'RightBar': {
-		'Buttons': ['ButtonEditTerrain', 'ButtonTexture', 'TabEditorRoad'],
-		'Contents': ['EditTerrainContent', 'TextureContent', 'EditorRoad'],
+		'Buttons': ['TabEditorTerrain', 'TabEditorBiomes', 'TabEditorRoads', 'TabEditorTextures'],
+		'Contents': ['EditorTerrainContent', 'EditorBiomesContent', 'EditorRoadsContent', 'EditorTexturesContent'],
 	},
 	'DialogCreateTerrain': {
 		'widjet': 'DialogCreateObject',
@@ -46,6 +46,11 @@ var DataHTML = {
 		'Options': ['CheckRoadPen'],
 		'Values': [],
 		'Buttons': ['RoadGenerate'],
+	},
+	'Texture': {
+		'Options': [],
+		'Values': [],
+		'Buttons': ['bTextureApply'],
 	},
 	'Camera': 'camera',
 	'Wireframe': 'wireframe',
@@ -111,6 +116,7 @@ var HTMLlist = [
 			{'tag': 'button', 'id': DataHTML.RightBar.Buttons[0], 'class': ' active', 'text': txt.TabEditTerrain[0], 'name': DataHTML.RightBar.Contents[0], 'value': 0},
 			{'tag': 'button', 'id': DataHTML.RightBar.Buttons[1], 'text': txt.TabEditBiomes[0], 'name': DataHTML.RightBar.Contents[1], 'value': 1},
 			{'tag': 'button', 'id': DataHTML.RightBar.Buttons[2], 'text': txt.TabEditRoads[0], 'name': DataHTML.RightBar.Contents[2], 'value': 2},
+			{'tag': 'button', 'id': DataHTML.RightBar.Buttons[3], 'text': txt.TabEditTexture[0], 'name': DataHTML.RightBar.Contents[3], 'value': 3},
 		]},
 		{'tag': 'div', 'id': DataHTML.RightBar.Contents[0], 'style': 'display: block;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'children': [
 			{'tag': 'br'},
@@ -166,6 +172,10 @@ var HTMLlist = [
 			{'tag': 'input', 'id': DataHTML.Road.Options[0], 'type': 'checkbox'},
 			{'tag': 'br'},
 			{'tag': 'button', 'id': DataHTML.Road.Buttons[0], 'style':'text-align: center; width: 120px;', 'text': txt.TabEditRoads[2]},
+		]},
+		{'tag': 'div', 'id': DataHTML.RightBar.Contents[3], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none; text-align: center;', 'children': [
+			{'tag': 'br'},
+			{'tag': 'div', 'text': txt.TabEditTexture[1]},
 		]},
 	]},
 	{'tag': 'div', 'style': "position: absolute;top: 36px; right: 310px;", 'children': [
