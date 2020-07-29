@@ -7,6 +7,7 @@ var lang = {
 	'ru': {
 		'Camera': 'Управление камерой:',
 		'Brush': 'Перо:',
+		'SizeBrush': 'Размер Пера:',
 		'MenuBar': [
 			'Файл',
 			'Создать',
@@ -29,7 +30,7 @@ var lang = {
 		'TabEditTerrain' : [
 			'Редактор Террейна',
 			'Вдавливание и выдавливание террейна',
-			'Радиус: ',
+			'',
 			'Сила: ',
 		],
 		'TabEditBiomes': [
@@ -67,6 +68,7 @@ var lang = {
 	'en': {
 		'Camera': 'Camera control:',
 		'Brush': 'Brush:',
+		'SizeBrush': 'Size Brush:',
 		'MenuBar': [
 			'File',
 			'Create',
@@ -89,7 +91,7 @@ var lang = {
 		'TabEditTerrain' : [
 			'Editor Terrain',
 			'Pressure and Extrusion terrain',
-			'Radius: ',
+			'',
 			'Strength: ',
 		],
 		'TabEditBiomes': [

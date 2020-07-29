@@ -88,6 +88,12 @@ UI.getElement(DataHTML.Brush).addEventListener("click", function() {
 	}
 	ControlBrush(_UIFrame.getCurrentTab());
 });
+UI.getElement(DataHTML.SizeBrush).addEventListener("change", function(event) {
+
+	Engenie.getTerrain().getOptions().pressure.UpdateRadius(event.srcElement.value);
+	Engenie.getTerrain().getOptions().biomeMap.UpdateRadius(event.srcElement.value);
+	UI.getElement(DataHTML.ValBrush).innerHTML = event.srcElement.value;
+}, false);
 
 // handlers Menu Bar
 UI.getElement(DataHTML.MenuBar.CreateTerrain).addEventListener("click", function() {
@@ -199,14 +205,8 @@ UI.getElement(DataHTML.DialogCreateTerrain.Buttons[1]).addEventListener("click",
 // handlers Pressuere Terrain
 UI.getElement(DataHTML.Pressuere.Options[0]).addEventListener("change", function(event) {
 
-	Engenie.getTerrain().getOptions().pressure.UpdateRadius(event.srcElement.value);
-	UI.getElement(DataHTML.Pressuere.Values[0]).innerHTML = event.srcElement.value;
-}, false);
-
-UI.getElement(DataHTML.Pressuere.Options[1]).addEventListener("change", function(event) {
-
 	Engenie.getTerrain().getOptions().pressure.UpdateStrength(event.srcElement.value);
-	UI.getElement(DataHTML.Pressuere.Values[1]).innerHTML = event.srcElement.value;
+	UI.getElement(DataHTML.Pressuere.Values[0]).innerHTML = event.srcElement.value;
 }, false);
 
 //handlers checked wareframe

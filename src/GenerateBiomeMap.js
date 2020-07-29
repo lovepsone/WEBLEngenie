@@ -16,6 +16,7 @@ let _mouseVector = new THREE.Vector2();
 let _raycaster = new THREE.Raycaster();
 let _MouseDown = false;
 let _ColorPen = new THREE.Color(0x44447a);
+let _radius = 0.1;
 
 class GenerateBiomeMap {
 
@@ -95,7 +96,6 @@ class GenerateBiomeMap {
             return;
         }
 
-        const _radius = 2;
 		event.preventDefault();
 
 		_mouseVector.x = (event.layerX / window.innerWidth) * 2 - 1;
@@ -141,6 +141,11 @@ class GenerateBiomeMap {
 				colorAttr.needsUpdate = true;
 			}
 		}
+    }
+
+	UpdateRadius(r) {
+
+		_radius  = r / 5.0;
     }
 
 	AddEvents() {

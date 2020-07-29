@@ -27,8 +27,8 @@ var DataHTML = {
 		'File': 'MapFile',
 	},
 	'Pressuere': {
-		'Options': ['EditRadius', 'EditStrength'],
-		'Values': ['EditRadiusVal', 'EditStrengthVal'],
+		'Options': ['EditStrength'],
+		'Values': ['EditStrengthVal'],
 	},
 	'Biomes': {
 		'Options': [],
@@ -54,6 +54,8 @@ var DataHTML = {
 	},
 	'Camera': 'camera',
 	'Brush': 'brush',
+	'SizeBrush': 'sizebrush',
+	'ValBrush': 'valbrush',
 	'Wireframe': 'wireframe',
 };
 
@@ -123,15 +125,10 @@ var HTMLlist = [
 			{'tag': 'br'},
 			{'tag': 'div', 'text': txt.TabEditTerrain[1]},
 			{'tag': 'br'},
-			{'tag': 'label', 'for': DataHTML.Pressuere.Options[0], 'text': txt.TabEditTerrain[2]},
+			{'tag': 'label', 'for': DataHTML.Pressuere.Options[0], 'text': txt.TabEditTerrain[3]},
 			{'tag': 'br'},
-			{'tag': 'input', 'id':DataHTML.Pressuere.Options[0], 'style':"font-size: 12px; border: 0px; margin: 5px;width: 270px;", 'type': 'range', 'value': 10, 'max': 50, 'min': 1},
-			{'tag': 'div', 'id': DataHTML.Pressuere.Values[0], 'text': 10, 'align': 'center'},
-			{'tag': 'br'},
-			{'tag': 'label', 'for': DataHTML.Pressuere.Options[1], 'text': txt.TabEditTerrain[3]},
-			{'tag': 'br'},
-			{'tag': 'input', 'id': DataHTML.Pressuere.Options[1],  'style':"font-size: 12px; border: 0px; margin: 5px;width: 270px;", 'type': 'range', 'value': 5, 'max': 100, 'min': -100},
-			{'tag': 'div', 'id': DataHTML.Pressuere.Values[1], 'text': 5, 'align': 'center'},
+			{'tag': 'input', 'id': DataHTML.Pressuere.Options[0],  'style':"font-size: 12px; border: 0px; margin: 5px;width: 270px;", 'type': 'range', 'value': 5, 'max': 100, 'min': -100},
+			{'tag': 'div', 'id': DataHTML.Pressuere.Values[0], 'text': 5, 'align': 'center'},
 		]},
 		{'tag': 'div', 'id': DataHTML.RightBar.Contents[1], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none; text-align: center;', 'children': [
 			{'tag': 'br'},
@@ -174,14 +171,19 @@ var HTMLlist = [
 		]},
 	]},
 	{'tag': 'div', 'style': "position: absolute;top: 36px; right: 310px;", 'children': [
-		{'tag': 'label', 'for': DataHTML.Camera, 'style':"font-size: 14px; color: #eee;", 'text': txt.Camera},
-		{'tag': 'input', 'id': DataHTML.Camera, 'type': 'checkbox'},
+		{'tag': 'label', 'for': DataHTML.SizeBrush, 'style':"font-size: 14px; color: #eee;", 'text': txt.SizeBrush},
+		{'tag': 'label', 'id': DataHTML.ValBrush, 'for': DataHTML.SizeBrush, 'style':"font-size: 14px; color: #eee;", 'text': '10'},
+		{'tag': 'input', 'id': DataHTML.SizeBrush, 'type': 'range', 'style':"width: 200px;",'value': 10, 'max': 100, 'min': 1},
 	]},
 	{'tag': 'div', 'style': "position: absolute;top: 60px; right: 310px;", 'children': [
 		{'tag': 'label', 'for': DataHTML.Brush, 'style':"font-size: 14px; color: #eee;", 'text': txt.Brush},
 		{'tag': 'input', 'id': DataHTML.Brush, 'type': 'checkbox'},
 	]},
 	{'tag': 'div', 'style': "position: absolute;top: 84px; right: 310px;", 'children': [
+		{'tag': 'label', 'for': DataHTML.Camera, 'style':"font-size: 14px; color: #eee;", 'text': txt.Camera},
+		{'tag': 'input', 'id': DataHTML.Camera, 'type': 'checkbox'},
+	]},
+	{'tag': 'div', 'style': "position: absolute;top: 108px; right: 310px;", 'children': [
 		{'tag': 'label', 'for': DataHTML.Wireframe, 'style':"font-size: 14px; color: #eee;", 'text': 'WireFrame'},
 		{'tag': 'input', 'id': DataHTML.Wireframe, 'type': 'checkbox'},
 	]},

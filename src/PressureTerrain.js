@@ -2,7 +2,7 @@
 * author lovepsone
 */
 
-let _radius = 0.5, _strength = 0.5; // options
+let _radius = 0.1, _strength = 0.5; // options
 let _mesh = null, _camera = null; // object3d
 
 let _mouseVector = new THREE.Vector2(), _raycaster = new THREE.Raycaster();
@@ -100,7 +100,7 @@ class PressureTerrain {
 
 	UpdateRadius(r) {
 
-		_radius  = r / 10.0;
+		_radius  =  r / 5.0;
 	}
 
 	UpdateStrength(s) {
