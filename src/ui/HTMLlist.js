@@ -31,7 +31,7 @@ var DataHTML = {
 		'Values': ['EditRadiusVal', 'EditStrengthVal'],
 	},
 	'Biomes': {
-		'Options': ['CheckBiomesPen'],
+		'Options': [],
 		'Values': [],
 		'Buttons': ['bGenNoise', 'bNoiseApply',
 			'bOcean', 'bBeach', 'bScorched',
@@ -43,7 +43,7 @@ var DataHTML = {
 		'Canvas': 'CanvasGenNoise',
 	},
 	'Road': {
-		'Options': ['CheckRoadPen'],
+		'Options': [],
 		'Values': [],
 		'Buttons': ['RoadGenerate'],
 	},
@@ -53,6 +53,7 @@ var DataHTML = {
 		'Buttons': ['bTextureApply'],
 	},
 	'Camera': 'camera',
+	'Brush': 'brush',
 	'Wireframe': 'wireframe',
 };
 
@@ -158,18 +159,12 @@ var HTMLlist = [
 			{'tag': 'button', 'id': DataHTML.Biomes.Buttons[13], 'class':'d2b98b','style':'text-align: center; width: 220px; background: #d2b98b;', 'text': txt.TabEditBiomes[16]},
 			{'tag': 'button', 'id': DataHTML.Biomes.Buttons[14], 'class':'559944','style':'text-align: center; width: 220px; background: #559944;', 'text': txt.TabEditBiomes[17]},
 			{'tag': 'button', 'id': DataHTML.Biomes.Buttons[15], 'class':'337755','style':'text-align: center; width: 220px; background: #337755;', 'text': txt.TabEditBiomes[18]},
-			{'tag': 'br'},
-			{'tag': 'label', 'for': DataHTML.Biomes.Options[0], 'style':"font-size: 14px;", 'text': "Pen"},
-			{'tag': 'input', 'id': DataHTML.Biomes.Options[0], 'type': 'checkbox'},
 			{'tag': 'hr'},
 			{'tag': 'br'},
 			{'tag': 'div', 'text': 'Result Biomes Map'},
 			{'tag': 'div', 'id': 'TerrainMap'},
 		]},
 		{'tag': 'div', 'id': DataHTML.RightBar.Contents[2], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'children': [
-			{'tag': 'br'},
-			{'tag': 'label', 'for': DataHTML.Road.Options[0], 'style':"font-size: 14px;", 'text':  txt.TabEditRoads[1]},
-			{'tag': 'input', 'id': DataHTML.Road.Options[0], 'type': 'checkbox'},
 			{'tag': 'br'},
 			{'tag': 'button', 'id': DataHTML.Road.Buttons[0], 'style':'text-align: center; width: 120px;', 'text': txt.TabEditRoads[2]},
 		]},
@@ -183,6 +178,10 @@ var HTMLlist = [
 		{'tag': 'input', 'id': DataHTML.Camera, 'type': 'checkbox'},
 	]},
 	{'tag': 'div', 'style': "position: absolute;top: 60px; right: 310px;", 'children': [
+		{'tag': 'label', 'for': DataHTML.Brush, 'style':"font-size: 14px; color: #eee;", 'text': txt.Brush},
+		{'tag': 'input', 'id': DataHTML.Brush, 'type': 'checkbox'},
+	]},
+	{'tag': 'div', 'style': "position: absolute;top: 84px; right: 310px;", 'children': [
 		{'tag': 'label', 'for': DataHTML.Wireframe, 'style':"font-size: 14px; color: #eee;", 'text': 'WireFrame'},
 		{'tag': 'input', 'id': DataHTML.Wireframe, 'type': 'checkbox'},
 	]},

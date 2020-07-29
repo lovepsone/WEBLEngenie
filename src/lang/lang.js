@@ -6,6 +6,7 @@ var lang = {
 
 	'ru': {
 		'Camera': 'Управление камерой:',
+		'Brush': 'Перо:',
 		'MenuBar': [
 			'Файл',
 			'Создать',
@@ -54,7 +55,7 @@ var lang = {
 		],
 		'TabEditRoads': [
 			'Редактор Дороги',
-			'Перо',
+			'',
 			'Генерировать',
 		],
 		'TabEditTexture': [
@@ -65,6 +66,7 @@ var lang = {
 
 	'en': {
 		'Camera': 'Camera control:',
+		'Brush': 'Brush:',
 		'MenuBar': [
 			'File',
 			'Create',

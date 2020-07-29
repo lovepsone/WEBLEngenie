@@ -25,29 +25,19 @@ var AnimationFrame = function() {
 
 AnimationFrame();
 
-function ControlPen(currentTab) {
-
-	let buf = currentTab;
+function ControlBrush(currentTab) {
 
 	if (UI.getElement(DataHTML.Camera).checked) {
 
-		buf = -1;
-	} else {
-
-		Engenie.getControlsCamera().dispose();
+		Engenie.getTerrain().getOptions().pressure.DisposeEvents();
+		Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
+		Engenie.getTerrain().getOptions().road.DisposeEvents();
+		return;
 	}
 
-	switch(buf) {
+	switch(currentTab) {
 
-		case -1: //cancel all
-			Engenie.getControlsCamera().UpdateEvents();
-			Engenie.getTerrain().getOptions().pressure.DisposeEvents();
-			Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
-			Engenie.getTerrain().getOptions().road.DisposeEvents();
-			break;
-		
 		case 0:
-
 			Engenie.getTerrain().getOptions().pressure.AddEvents();
 			Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
 			Engenie.getTerrain().getOptions().road.DisposeEvents();
@@ -55,19 +45,49 @@ function ControlPen(currentTab) {
 
 		case 1: // editor biomes
 			Engenie.getTerrain().getOptions().pressure.DisposeEvents();
-			Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
+			//Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
 			Engenie.getTerrain().getOptions().road.DisposeEvents();
-			if (UI.getElement(DataHTML.Biomes.Options[0]).checked) Engenie.getTerrain().getOptions().biomeMap.AddEvents();
+			Engenie.getTerrain().getOptions().biomeMap.AddEvents();
 			break;
 
 		case 2:
 			Engenie.getTerrain().getOptions().pressure.DisposeEvents();
 			Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
-			Engenie.getTerrain().getOptions().road.DisposeEvents();
-			if (UI.getElement(DataHTML.Road.Options[0]).checked) Engenie.getTerrain().getOptions().road.AddEvents();
+			Engenie.getTerrain().getOptions().road.AddEvents();
 			break;
 	}
 }
+
+// checked camera or brush
+UI.getElement(DataHTML.Camera).checked = true;
+Engenie.getControlsCamera().UpdateEvents();
+UI.getElement(DataHTML.Camera).addEventListener("click", function() {
+
+	if (UI.getElement(DataHTML.Camera).checked) {
+
+		UI.getElement(DataHTML.Brush).checked = false;
+		Engenie.getControlsCamera().UpdateEvents();
+	} else {
+
+		UI.getElement(DataHTML.Brush).checked = true;
+		Engenie.getControlsCamera().dispose();
+	}
+	ControlBrush(_UIFrame.getCurrentTab());
+});
+
+UI.getElement(DataHTML.Brush).addEventListener("click", function() {
+
+	if (UI.getElement(DataHTML.Brush).checked) {
+
+		UI.getElement(DataHTML.Camera).checked = false;
+		Engenie.getControlsCamera().dispose();
+	} else {
+
+		UI.getElement(DataHTML.Camera).checked = true;
+		Engenie.getControlsCamera().UpdateEvents();
+	}
+	ControlBrush(_UIFrame.getCurrentTab());
+});
 
 // handlers Menu Bar
 UI.getElement(DataHTML.MenuBar.CreateTerrain).addEventListener("click", function() {
@@ -148,7 +168,7 @@ for (let i = 0; i < DataHTML.RightBar.Buttons.length; i++) {
 		UI.getElement(event.srcElement.name).style.display = "block";
 		UI.getElement(event.srcElement.id).className += " active";
 		_UIFrame.setCurrentTab(event.srcElement.value);
-		ControlPen(_UIFrame.getCurrentTab());
+		ControlBrush(_UIFrame.getCurrentTab());
 	}, false);
 }
 
@@ -189,12 +209,6 @@ UI.getElement(DataHTML.Pressuere.Options[1]).addEventListener("change", function
 	UI.getElement(DataHTML.Pressuere.Values[1]).innerHTML = event.srcElement.value;
 }, false);
 
-// handlers cheked camera
-UI.getElement(DataHTML.Camera).addEventListener("change", function(event) {
-
-	ControlPen(_UIFrame.getCurrentTab());
-}, false);
-//
 //handlers checked wareframe
 UI.getElement(DataHTML.Wireframe).addEventListener("change", function(event) {
 
@@ -214,34 +228,12 @@ UI.getElement(DataHTML.Biomes.Buttons[1]).addEventListener("click", function(eve
 }, false);
 
 //handlers Edit Road
-UI.getElement(DataHTML.Road.Options[0]).addEventListener("change", function(event) {
-
-	if (UI.getElement(DataHTML.Road.Options[0]).checked) {
-
-		Engenie.getTerrain().getOptions().road.AddEvents();
-	} else {
-
-		Engenie.getTerrain().getOptions().road.DisposeEvents();
-	}
-}, false);
-
 UI.getElement(DataHTML.Road.Buttons[0]).addEventListener("click", function(event) {
 
 	Engenie.getTerrain().getOptions().road.Generate();
 }, false);
 
 //handlers Edit Biomes
-UI.getElement(DataHTML.Biomes.Options[0]).addEventListener("change", function(event) {
-
-	if (UI.getElement(DataHTML.Biomes.Options[0]).checked) {
-
-		Engenie.getTerrain().getOptions().biomeMap.AddEvents();
-	} else {
-
-		Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
-	}
-}, false);
-
 for (let i = 2; i < 16; i++) {
 
 	UI.getElement(DataHTML.Biomes.Buttons[i]).addEventListener("click", function(event) {
