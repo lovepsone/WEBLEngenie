@@ -43,6 +43,7 @@ class PressureTerrain {
 
 		event.preventDefault();
 		_MouseDown = false;
+		_mesh.geometry.computeBoundsTree();
 	}
 
 	onDocumentMouseMove(event) {
@@ -63,9 +64,11 @@ class PressureTerrain {
 		let intersects = _raycaster.intersectObject(_mesh);
 		let bvh = _mesh.geometry.boundsTree;
 		_brushMesh.scale.setScalar(_radius);
+		_brushMesh.visible = false;
 
 		if (intersects.length > 0) {
 
+			_brushMesh.visible = true;
 			_brushMesh.position.copy(intersects[0].point);
 
 			if (_MouseDown) {

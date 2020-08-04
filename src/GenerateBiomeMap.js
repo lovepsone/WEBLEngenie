@@ -153,7 +153,8 @@ class GenerateBiomeMap {
 		this.element.addEventListener("mousedown", bindMouseDown, false);
         this.element.addEventListener("mousemove", bindMouseMove, false);
         this.element.addEventListener("mouseup", bindMouseUp, false);
-		_brushMesh.visible = true;
+        _brushMesh.visible = true;
+        _mesh.geometry.computeBoundsTree();
 	}
 	
 	DisposeEvents() {
