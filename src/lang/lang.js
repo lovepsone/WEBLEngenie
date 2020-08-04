@@ -61,7 +61,8 @@ var lang = {
 		],
 		'TabEditTexture': [
 			'Редактор текстур',
-			'Перед текстурированием наложите все биомы, редактируйте атлас или примените стандартный.'
+			'Перед текстурированием наложите все биомы, редактируйте атлас или примените стандартный.',
+			'Применить',
 		],
 	},
 
@@ -122,7 +123,8 @@ var lang = {
 		],
 		'TabEditTexture': [
 			'Texture editor',
-			'Before texturing, overlay all biomes, edit the atlas or apply a standard one.'
+			'Before texturing, overlay all biomes, edit the atlas or apply a standard one.',
+			'Apply',
 		],
 	}
 }

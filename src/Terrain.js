@@ -4,7 +4,7 @@
 let _mesh = null, _scope = null, _ImageLoader = null, _context = null;
 let _max = 0.0, _min = 0.0, _size = 64;
 
-let _Optons  = {pressure: null, biomes: null, biomeMap: null, road: null};
+let _Optons  = {pressure: null, biomes: null, biomeMap: null, road: null, texture: null};
 
 import * as THREE from './../libs/three/Three.js';
 import {PressureTerrain} from './PressureTerrain.js';
@@ -12,6 +12,7 @@ import {Biomes} from './Biomes.js';
 import {GenerateBiomeMap} from './GenerateBiomeMap.js';
 import {Road} from './Road.js';
 import {acceleratedRaycast, computeBoundsTree, disposeBoundsTree} from './../libs/BVH/index.js';
+import {TextureAtlas} from './TextureAtlas.js';
 
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -27,6 +28,7 @@ class Terrain {
 		_Optons.road = new Road(_scope.camera, 'Window', _scope.scene);
 		_Optons.pressure = new PressureTerrain(_scope.camera, 'Window', _scope.scene);
 		_Optons.biomeMap = new GenerateBiomeMap(_scope.camera, 'Window', _scope.scene);
+		_Optons.texture = new TextureAtlas();
 	}
 
 	Create(size) {
@@ -80,6 +82,8 @@ class Terrain {
 		_Optons.road.setTerrain(_mesh);
 		_Optons.road.AddEvents();
 		_Optons.road.DisposeEvents();
+
+		_Optons.texture.setTerrain(_mesh);
 	}
 
 	LoadHeightMap(image) {

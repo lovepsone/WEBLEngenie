@@ -168,6 +168,9 @@ var HTMLlist = [
 		{'tag': 'div', 'id': DataHTML.RightBar.Contents[3], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none; text-align: center;', 'children': [
 			{'tag': 'br'},
 			{'tag': 'div', 'text': txt.TabEditTexture[1]},
+			{'tag': 'br'},
+			{'tag': 'button', 'id': DataHTML.Texture.Buttons[0], 'style':'text-align: center; width: 120px;', 'text': txt.TabEditTexture[2]},
+			
 		]},
 	]},
 	{'tag': 'div', 'style': "position: absolute;top: 36px; right: 310px;", 'children': [

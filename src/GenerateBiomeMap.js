@@ -153,7 +153,6 @@ class GenerateBiomeMap {
 		this.element.addEventListener("mousedown", bindMouseDown, false);
         this.element.addEventListener("mousemove", bindMouseMove, false);
         this.element.addEventListener("mouseup", bindMouseUp, false);
-        _brushMesh.visible = true;
         _mesh.geometry.computeBoundsTree();
 	}
 	
@@ -194,7 +193,7 @@ class GenerateBiomeMap {
         }
     }
 
-    generateBUMPs(colors, x, y) {
+    GenerateBump(colors, x, y) {
 
         let buf = '#';
         const w = Number.parseInt(_width), h = Number.parseInt(_height);
@@ -234,6 +233,11 @@ class GenerateBiomeMap {
         _DiffuseCanvas.getContext('2d').fillRect(x, h*5 - (y + 1), 1, 1);
     }
 
+    getBump() {
+
+        return {bump:_DiffuseCanvas, w: _width, h:_height};
+    }
+
     setColorsDataBiomes(array) {
 
         let x = 0, y = 0;
@@ -253,7 +257,7 @@ class GenerateBiomeMap {
             }
     
             _matrix[y][x] = color.getHexString();
-            this.generateBUMPs(_matrix[y][x], x, y);
+            this.GenerateBump(_matrix[y][x], x, y);
             _ctx.fillStyle = '#' + _matrix[y][x];
             _ctx.fillRect(x, y, 1, 1);         
             x++;

@@ -21,8 +21,10 @@ const _nameTextures =  {
 };
 
 const _datatextures = Object.entries(_nameTextures);
-let _Texture2DArray = null;
-let  _textures = [];
+let _Texture2DArray = null, _textures = [];
+let _mesh = null;
+
+import * as THREE from './../libs/three/Three.js';
 
 class TextureAtlas {
 
@@ -36,15 +38,23 @@ class TextureAtlas {
         }
     }
 
-    setBiomeMap(img) {
+	setTerrain(mesh) {
 
-        _Texture2DArray = new THREE.DataTexture2DArray(_DiffuseCanvas.getContext('2d').getImageData(0, 0, _width, _height*5).data, _width, _height, 5);
+		_mesh = mesh;
+    }
+
+    /*
+    * data = { bump, w, h }
+    */
+    setBiomeMap(data) {
+
+        _Texture2DArray = new THREE.DataTexture2DArray(data.bump.getContext('2d').getImageData(0, 0, data.w, data.h * 5).data, data.w, data.h, 5);
         _Texture2DArray.format = THREE.RGBAFormat;
         _Texture2DArray.type = THREE.UnsignedByteType;
         _Texture2DArray.anisotropy = 2;
     }
 
-    generateMaterial(terrain) {
+    GenerateMaterial() {
 
         let vShader = `
             #version 300 es
@@ -152,14 +162,14 @@ class TextureAtlas {
             TROPICAL_RAIN_FOREST:	    {type: "t", value: _textures[13]},
         };
 
-        _material = new THREE.ShaderMaterial({
+        const _material = new THREE.ShaderMaterial({
             uniforms:customUniforms,
             vertexShader: vShader,
             fragmentShader: fShader
         });
 
-        terrain.material = _material;
-        terrain.material.needsUpdate = true;
+        _mesh.material = _material;
+        _mesh.material.needsUpdate = true;
     }
 }
 
