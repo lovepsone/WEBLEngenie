@@ -21,3 +21,6 @@ export const BASENAMETEXTURES =  {
 };
 
 export const BASEDATATEXTURES = Object.entries(BASENAMETEXTURES);
+
+export const CLASSTULLTIP = 'ToolTip';
+export const TOOLTIPWIND = 'ToolTipW';

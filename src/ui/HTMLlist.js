@@ -7,6 +7,7 @@
 */
 
 import {lang} 			from './../lang/lang.js';
+import {CLASSTULLTIP, TOOLTIPWIND}	from './../CONST.js';
 
 var txt = lang['ru'];
 
@@ -67,7 +68,7 @@ var DataHTML = {
 	'Wireframe': 'wireframe',
 };
 const StyleIconLoadTexture = "outline:0;opacity:0;pointer-events:none;user-select:none";
-const StyleIconLabelTexture = "width:80px;height:80px;font-size: 10px;color:white;display:inline-block;cursor:pointer;text-align:center;";//background-image: url(./texture/tropical_rain_forest_512.jpg)
+const StyleIconLabelTexture = "position:static;width:80px;height:80px;font-size: 10px;color:white;display:inline-block;cursor:pointer;text-align:center;background-size:100%;";
 
 let HTMLlist = [
 	// widjets
@@ -179,47 +180,61 @@ let HTMLlist = [
 			{'tag': 'br'},
 			{'tag': 'div', 'text': txt.TabEditTexture[1]},
 			{'tag': 'br'},
-			{'tag': 'label', 'id': DataHTML.Texture.Values[0], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[2], 'children': [
+			{'tag': 'label', 'id': DataHTML.Texture.Values[0], 'class': CLASSTULLTIP, 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[2], 'children': [
 				{'tag': 'input', 'id': DataHTML.Texture.Options[0], 'type':'file', 'style': StyleIconLoadTexture},
+				{'tag': 'span', 'class': TOOLTIPWIND, text: txt.TabEditTexture[2]},
 			]},
-			{'tag': 'label', 'id': DataHTML.Texture.Values[1], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[3], 'children': [
+			{'tag': 'label', 'id': DataHTML.Texture.Values[1], 'class': CLASSTULLTIP, 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[3], 'children': [
 				{'tag': 'input', 'id': DataHTML.Texture.Options[1], 'type':'file', 'style': StyleIconLoadTexture},
+				{'tag': 'span', 'class': TOOLTIPWIND, text: txt.TabEditTexture[3]},
 			]},
-			{'tag': 'label', 'id': DataHTML.Texture.Values[2], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[4], 'children': [
+			{'tag': 'label', 'id': DataHTML.Texture.Values[2], 'class': CLASSTULLTIP, 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[4], 'children': [
 				{'tag': 'input', 'id': DataHTML.Texture.Options[2], 'type':'file', 'style': StyleIconLoadTexture},
+				{'tag': 'span', 'class': TOOLTIPWIND, text: txt.TabEditTexture[4]},
 			]},
-			{'tag': 'label', 'id': DataHTML.Texture.Values[3], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[5], 'children': [
+			{'tag': 'label', 'id': DataHTML.Texture.Values[3], 'class': CLASSTULLTIP, 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[5], 'children': [
 				{'tag': 'input', 'id': DataHTML.Texture.Options[3], 'type':'file', 'style': StyleIconLoadTexture},
+				{'tag': 'span', 'class': TOOLTIPWIND, text: txt.TabEditTexture[5]},
 			]},
-			{'tag': 'label', 'id': DataHTML.Texture.Values[4], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[6], 'children': [
+			{'tag': 'label', 'id': DataHTML.Texture.Values[4], 'class': CLASSTULLTIP, 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[6], 'children': [
 				{'tag': 'input', 'id': DataHTML.Texture.Options[4], 'type':'file', 'style': StyleIconLoadTexture},
+				{'tag': 'span', 'class': TOOLTIPWIND, text: txt.TabEditTexture[6]},
 			]},
-			{'tag': 'label', 'id': DataHTML.Texture.Values[5], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[7], 'children': [
+			{'tag': 'label', 'id': DataHTML.Texture.Values[5], 'class': CLASSTULLTIP, 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[7], 'children': [
 				{'tag': 'input', 'id': DataHTML.Texture.Options[5], 'type':'file', 'style': StyleIconLoadTexture},
+				{'tag': 'span', 'class': TOOLTIPWIND, text: txt.TabEditTexture[7]},
 			]},
-			{'tag': 'label', 'id': DataHTML.Texture.Values[6], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[8], 'children': [
+			{'tag': 'label', 'id': DataHTML.Texture.Values[6], 'class': CLASSTULLTIP, 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[8], 'children': [
 				{'tag': 'input', 'id': DataHTML.Texture.Options[6], 'type':'file', 'style': StyleIconLoadTexture},
+				{'tag': 'span', 'class': TOOLTIPWIND, text: txt.TabEditTexture[8]},
 			]},
-			{'tag': 'label', 'id': DataHTML.Texture.Values[7], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[9], 'children': [
+			{'tag': 'label', 'id': DataHTML.Texture.Values[7], 'class': CLASSTULLTIP, 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[9], 'children': [
 				{'tag': 'input', 'id': DataHTML.Texture.Options[7], 'type':'file', 'style': StyleIconLoadTexture},
+				{'tag': 'span', 'class': TOOLTIPWIND, text: txt.TabEditTexture[9]},
 			]},
-			{'tag': 'label', 'id': DataHTML.Texture.Values[8], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[10], 'children': [
+			{'tag': 'label', 'id': DataHTML.Texture.Values[8], 'class': CLASSTULLTIP, 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[10], 'children': [
 				{'tag': 'input', 'id': DataHTML.Texture.Options[8], 'type':'file', 'style': StyleIconLoadTexture},
+				{'tag': 'span', 'class': TOOLTIPWIND, text: txt.TabEditTexture[10]},
 			]},
-			{'tag': 'label', 'id': DataHTML.Texture.Values[9], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[11], 'children': [
+			{'tag': 'label', 'id': DataHTML.Texture.Values[9], 'class': CLASSTULLTIP, 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[11], 'children': [
 				{'tag': 'input', 'id': DataHTML.Texture.Options[9], 'type':'file', 'style': StyleIconLoadTexture},
+				{'tag': 'span', 'class': TOOLTIPWIND, text: txt.TabEditTexture[11]},
 			]},
-			{'tag': 'label', 'id': DataHTML.Texture.Values[10], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[12], 'children': [
+			{'tag': 'label', 'id': DataHTML.Texture.Values[10], 'class': CLASSTULLTIP, 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[12], 'children': [
 				{'tag': 'input', 'id': DataHTML.Texture.Options[10], 'type':'file', 'style': StyleIconLoadTexture},
+				{'tag': 'span', 'class': TOOLTIPWIND, text: txt.TabEditTexture[12]},
 			]},
-			{'tag': 'label', 'id': DataHTML.Texture.Values[11], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[13], 'children': [
+			{'tag': 'label', 'id': DataHTML.Texture.Values[11], 'class': CLASSTULLTIP, 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[13], 'children': [
 				{'tag': 'input', 'id': DataHTML.Texture.Options[11], 'type':'file', 'style': StyleIconLoadTexture},
+				{'tag': 'span', 'class': TOOLTIPWIND, text: txt.TabEditTexture[13]},
 			]},
-			{'tag': 'label', 'id': DataHTML.Texture.Values[12], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[14], 'children': [
+			{'tag': 'label', 'id': DataHTML.Texture.Values[12], 'class': CLASSTULLTIP, 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[14], 'children': [
 				{'tag': 'input', 'id': DataHTML.Texture.Options[12], 'type':'file', 'style': StyleIconLoadTexture},
+				{'tag': 'span', 'class': TOOLTIPWIND, text: txt.TabEditTexture[14]},
 			]},
-			{'tag': 'label', 'id': DataHTML.Texture.Values[13], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[15], 'children': [
+			{'tag': 'label', 'id': DataHTML.Texture.Values[13], 'class': CLASSTULLTIP, 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[15], 'children': [
 				{'tag': 'input', 'id': DataHTML.Texture.Options[13], 'type':'file', 'style': StyleIconLoadTexture},
+				{'tag': 'span', 'class': TOOLTIPWIND, text: txt.TabEditTexture[15]},
 			]},
 			{'tag': 'br'},
 			{'tag': 'br'},
