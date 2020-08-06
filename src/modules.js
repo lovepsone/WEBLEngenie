@@ -8,7 +8,8 @@ import {HTMLlist, DataHTML}			from './ui/HTMLlist.js';
 import {UI, UIFrame}				from './ui/UI.js';
 import {lang} 						from './lang/lang.js';
 import {BASEDATATEXTURES}			from './CONST.js';
-let Language = 'ru';
+
+const Language = 'ru';
 
 new LoaderHTML5(HTMLlist);
 let _UIFrame = new UIFrame(DataHTML.Camera, DataHTML.Wireframe);
@@ -16,7 +17,6 @@ let Frame = UI.getElement('Window');
 let Engenie = new MainEngenie(60, window.innerWidth, window.innerHeight);
 
 Frame.appendChild(Engenie.getRender().domElement);
-
 var AnimationFrame = function() {
 
 	requestAnimationFrame(AnimationFrame);
@@ -259,3 +259,24 @@ for (let i = 0; i < DataHTML.Texture.Values.length; i++) {
 
 	UI.getElement(DataHTML.Texture.Values[i]).style.backgroundImage  =  `url(${BASEDATATEXTURES[i][1]})`;
 }
+
+for (let i = 0; i < DataHTML.Texture.Options.length; i++) {
+
+	UI.getElement(DataHTML.Texture.Options[i]).addEventListener("change", function () {
+
+		if (this.files[0]) {
+
+			let fr = new FileReader();
+			
+			fr.addEventListener("load", function() {
+				
+				UI.getElement(DataHTML.Texture.Values[i]).style.backgroundImage  = `url(${fr.result})`;
+			  }, false);
+		  
+			  fr.readAsDataURL(this.files[0]);
+		}
+	}, false);
+}
+
+// start ToolTips
+UI.ToolTip.Int();
