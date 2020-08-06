@@ -249,7 +249,8 @@ UI.getElement(DataHTML.Texture.Buttons[0]).addEventListener("click", function(ev
 	Engenie.getTerrain().getOptions().texture.GenerateMaterial();
 }, false);
 
+//pre-load icon texture
 for (let i = 0; i < DataHTML.Texture.Values.length; i++) {
 
-	UI.getElement(DataHTML.Texture.Values[i]).style.backgroundImage  = "url(" + BASEDATATEXTURES[i][1] + ")";
+	UI.getElement(DataHTML.Texture.Values[i]).style.backgroundImage  =  `url(${BASEDATATEXTURES[i][1]})`;
 }
