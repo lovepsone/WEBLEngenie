@@ -46,7 +46,6 @@ class UIFrame {
 	}
 }
 
-//let _html = "<span style = ''></span>";
 let _ToolTips = null;
 
 class ToolTip {
@@ -119,6 +118,14 @@ class ToolTip {
 
 	addImage(id, img) {
 
+	}
+
+	UpdateStyle() {
+
+		for (let i = 0; i < _ToolTips.length; i++) {
+
+			_ToolTips[i].style.backgroundImage = UI.getElement(_ToolTips[i].parentNode.id).style.backgroundImage;
+		}
 	}
 };
 

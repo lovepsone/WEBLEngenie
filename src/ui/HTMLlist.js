@@ -39,7 +39,7 @@ var DataHTML = {
 			'bBare', 'bTundra', 'bSnow',
 			'bTemperateDesert', 'bTaiga', 'bGrassLand',
 			'bTemperateDeciduousForest', 'bTemperateRainForest', 'bSubtropicalDesert',
-			'bTropicalSeasonalForest', 'bTropicalRainForest' 
+			'bTropicalSeasonalForest', 'bTropicalRainForest'
 		],
 		'Canvas': 'CanvasGenNoise',
 	},
@@ -259,8 +259,6 @@ let HTMLlist = [
 		{'tag': 'label', 'for': DataHTML.Wireframe, 'style':"font-size: 14px; color: #eee;", 'text': 'WireFrame'},
 		{'tag': 'input', 'id': DataHTML.Wireframe, 'type': 'checkbox'},
 	]},
-	
 ];
-
 
 export {HTMLlist, DataHTML};

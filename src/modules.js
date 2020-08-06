@@ -271,6 +271,7 @@ for (let i = 0; i < DataHTML.Texture.Options.length; i++) {
 			fr.addEventListener("load", function() {
 				
 				UI.getElement(DataHTML.Texture.Values[i]).style.backgroundImage  = `url(${fr.result})`;
+				UI.ToolTip.UpdateStyle();
 			  }, false);
 		  
 			  fr.readAsDataURL(this.files[0]);
