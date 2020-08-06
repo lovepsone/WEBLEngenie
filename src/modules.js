@@ -45,7 +45,6 @@ function ControlBrush(currentTab) {
 
 		case 1: // editor biomes
 			Engenie.getTerrain().getOptions().pressure.DisposeEvents();
-			//Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
 			Engenie.getTerrain().getOptions().road.DisposeEvents();
 			Engenie.getTerrain().getOptions().biomeMap.AddEvents();
 			break;
@@ -54,6 +53,12 @@ function ControlBrush(currentTab) {
 			Engenie.getTerrain().getOptions().pressure.DisposeEvents();
 			Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
 			Engenie.getTerrain().getOptions().road.AddEvents();
+			break;
+
+		case 3:
+			Engenie.getTerrain().getOptions().pressure.DisposeEvents();
+			Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
+			Engenie.getTerrain().getOptions().road.DisposeEvents();
 			break;
 	}
 }
