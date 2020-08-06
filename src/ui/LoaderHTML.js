@@ -3,22 +3,12 @@
 */
 
 class LoaderHTML5 {
+
 	constructor(json) {
 
 		this.ReadJSON(json);
 	}
-	
-	ReadJSON(json) {
 
-		if (json instanceof Array == true && typeof json[0]['tag'] !== "undefined") {
-
-			this.ReadBlock(json);
-		} else {
-			console.error('Error in the code block json!!!');
-		}
-
-	}
-	
 	ReadJSON(json) {
 
 		if (json instanceof Array == true && typeof json[0]['tag'] !== "undefined") {
@@ -32,7 +22,7 @@ class LoaderHTML5 {
 	
 	ReadBlock(block) {
 	
-		for (var i = 0; i < block.length; i++) {
+		for (let i = 0; i < block.length; i++) {
 			this.ReadElems(block[i], 'body');
 		}
 	}
@@ -42,47 +32,49 @@ class LoaderHTML5 {
 		var element = document.createElement(elems['tag']),
 		_id = this.getID(elems['id']);
 		element.id = _id;
-		//Универсальные атрибуты
+		//
 		if (this.getAttr(elems['class'])) 		element.setAttribute('class',elems['class']);
-		if (this.getAttr(elems['contextmenu'])) 	element.setAttribute('contextmenu', elems['contextmenu']);
+		if (this.getAttr(elems['contextmenu'])) element.setAttribute('contextmenu', elems['contextmenu']);
 		if (this.getAttr(elems['dir'])) 		element.setAttribute('dir', elems['dir']);
-		if (this.getAttr(elems['accesskey'])) 		element.setAttribute('accesskey', elems['accesskey']);
-		if (this.getAttr(elems['contenteditable'])) 	element.setAttribute('contenteditable', elems['contenteditable']);
+		if (this.getAttr(elems['accesskey'])) 	element.setAttribute('accesskey', elems['accesskey']);
+		if (this.getAttr(elems['contenteditable'])) element.setAttribute('contenteditable', elems['contenteditable']);
 		// hidden 
 		if (this.getAttr(elems['lang'])) 		element.setAttribute('lang', elems['lang']);
-		if (this.getAttr(elems['spellcheck'])) 		element.setAttribute('spellcheck', elems['spellcheck']);
+		if (this.getAttr(elems['spellcheck'])) 	element.setAttribute('spellcheck', elems['spellcheck']);
 		if (this.getAttr(elems['style']))		element.style.cssText = elems['style'];
-		if (this.getAttr(elems['tabindex'])) 		element.setAttribute('tabindex', elems['tabindex']);
+		if (this.getAttr(elems['tabindex'])) 	element.setAttribute('tabindex', elems['tabindex']);
 		if (this.getAttr(elems['title'])) 		element.setAttribute('title', elems['title']);
 		if (this.getAttr(elems['text']))		element.innerHTML = elems['text'];
 		if (this.getAttr(elems['align']))		element.setAttribute('align', elems['align']);
 		// form
-		//accept-charset Устанавливает кодировку, в которой сервер может принимать и обрабатывать данные.
-		//autocomplete Включает автозаполнение полей формы.
+		//accept-charset
+		//autocomplete
 		if (this.getAttr(elems['enctype']))		element.setAttribute('enctype', elems['enctype']);
 		if (this.getAttr(elems['method']))		element.setAttribute('method', elems['method']);
 		if (this.getAttr(elems['name']))		element.setAttribute('name', elems['name']);
 		if (this.getAttr(elems['action']))		element.setAttribute('action', elems['action']);
 		// input
-		//checked Предварительно активированный переключатель или флажок.
+		//checked
 		if (this.getAttr(elems['checked']))		element.setAttribute('checked', elems['checked']);
-		//disabled Блокирует доступ и изменение элемента.
-		//form Связывает поле с формой по её идентификатору.
-		//autofocus Устанавливает фокус в поле формы.
-		//formaction Определяет адрес обработчика формы.
+		//disabled 
+		//form
+		//autofocus 
+		//formaction
 		if (this.getAttr(elems['max']))			element.setAttribute('max', elems['max']);
 		if (this.getAttr(elems['min']))			element.setAttribute('min', elems['min']);
 		if (this.getAttr(elems['type']))		element.setAttribute('type', elems['type']);
 		if (this.getAttr(elems['size']))		element.setAttribute('size', elems['size']);
 		if (this.getAttr(elems['value']))		element.setAttribute('value', elems['value']);
 		// label
-		if (this.getAttr(elems['for']))		element.setAttribute('for', elems['for']);
-			
-		var preElement = this.setElement(pre_id);
+		if (this.getAttr(elems['for']))			element.setAttribute('for', elems['for']);
+		if (this.getAttr(elems['data-tooltip'])) element.setAttribute('data-tooltip', elems['data-tooltip']);
+ 
+		let preElement = this.setElement(pre_id);
 		preElement.appendChild(element);
 
 		if (typeof elems.children !== "undefined" && elems.children.length > 0) {
-			for (var i = 0; i < elems.children.length; i++) {
+
+			for (let i = 0; i < elems.children.length; i++) {
 
 				this.ReadElems(elems.children[i], _id);
 			}
@@ -105,7 +97,7 @@ class LoaderHTML5 {
 			return id;
 		}
 
-		var buf = 'non-', b = "abcdefghijklmnopqrstuvwxyz";
+		let buf = 'non-', b = "abcdefghijklmnopqrstuvwxyz";
 		
 		while (buf.length < 10) {
 
@@ -116,6 +108,7 @@ class LoaderHTML5 {
 	}
 
 	getAttr(attr) {
+
 		if (typeof attr !== "undefined") {
 			return true;
 		}
