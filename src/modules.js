@@ -257,7 +257,7 @@ UI.getElement(DataHTML.Texture.Buttons[0]).addEventListener("click", function(ev
 //pre-load icon texture
 for (let i = 0; i < DataHTML.Texture.Values.length; i++) {
 
-	UI.getElement(DataHTML.Texture.Values[i]).style.backgroundImage  =  `url(${BASEDATATEXTURES[i][1]})`;
+	UI.getElement(DataHTML.Texture.Values[i]).style.background  =  `url(${BASEDATATEXTURES[i][1]})`;
 }
 
 for (let i = 0; i < DataHTML.Texture.Options.length; i++) {
@@ -270,7 +270,7 @@ for (let i = 0; i < DataHTML.Texture.Options.length; i++) {
 			
 			fr.addEventListener("load", function() {
 				
-				UI.getElement(DataHTML.Texture.Values[i]).style.backgroundImage  = `url(${fr.result})`;
+				UI.getElement(DataHTML.Texture.Values[i]).style.background  = `url(${fr.result})`;
 				UI.ToolTip.UpdateStyle();
 			  }, false);
 		  
