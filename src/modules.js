@@ -7,7 +7,7 @@ import {LoaderHTML5} 				from './ui/LoaderHTML.js';
 import {HTMLlist, DataHTML}			from './ui/HTMLlist.js';
 import {UI, UIFrame}				from './ui/UI.js';
 import {lang} 						from './lang/lang.js';
-
+import {BASEDATATEXTURES}			from './CONST.js';
 let Language = 'ru';
 
 new LoaderHTML5(HTMLlist);
@@ -248,3 +248,8 @@ UI.getElement(DataHTML.Texture.Buttons[0]).addEventListener("click", function(ev
 	Engenie.getTerrain().getOptions().texture.setBiomeMap(Engenie.getTerrain().getOptions().biomeMap.getBump());
 	Engenie.getTerrain().getOptions().texture.GenerateMaterial();
 }, false);
+
+for (let i = 0; i < DataHTML.Texture.Values.length; i++) {
+
+	UI.getElement(DataHTML.Texture.Values[i]).style.backgroundImage  = "url(" + BASEDATATEXTURES[i][1] + ")";
+}

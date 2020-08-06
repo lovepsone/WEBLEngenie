@@ -48,8 +48,16 @@ var DataHTML = {
 		'Buttons': ['RoadGenerate'],
 	},
 	'Texture': {
-		'Options': [],
-		'Values': [],
+		'Options': ['sOcean', 'sBeach', 'sScorched',
+			'sBare', 'sTundra', 'sSnow',
+			'sTemperateDesert', 'sTaiga', 'sGrassLand',
+			'sTemperateDeciduousForest', 'sTemperateRainForest', 'sSubtropicalDesert',
+			'sTropicalSeasonalForest', 'sTropicalRainForest'],
+		'Values': ['vOcean', 'vBeach', 'vScorched',
+			'vBare', 'vTundra', 'vsSnow',
+			'vTemperateDesert', 'vTaiga', 'vGrassLand',
+			'vTemperateDeciduousForest', 'vTemperateRainForest', 'vSubtropicalDesert',
+			'vTropicalSeasonalForest', 'vTropicalRainForest'],
 		'Buttons': ['bTextureApply'],
 	},
 	'Camera': 'camera',
@@ -58,8 +66,10 @@ var DataHTML = {
 	'ValBrush': 'valbrush',
 	'Wireframe': 'wireframe',
 };
+const StyleIconLoadTexture = "outline:0;opacity:0;pointer-events:none;user-select:none";
+const StyleIconLabelTexture = "width:80px;height:80px;font-size: 10px;color:white;display:inline-block;cursor:pointer;text-align:center;";//background-image: url(./texture/tropical_rain_forest_512.jpg)
 
-var HTMLlist = [
+let HTMLlist = [
 	// widjets
 	{'tag': 'dialog', 'id':DataHTML.DialogCreateTerrain.widjet, 'children': [
 		{'tag': 'form', 'id': 'f_createObject', 'method': 'dialog', 'children': [
@@ -169,7 +179,51 @@ var HTMLlist = [
 			{'tag': 'br'},
 			{'tag': 'div', 'text': txt.TabEditTexture[1]},
 			{'tag': 'br'},
-			{'tag': 'button', 'id': DataHTML.Texture.Buttons[0], 'style':'text-align: center; width: 120px;', 'text': txt.TabEditTexture[2]},
+			{'tag': 'label', 'id': DataHTML.Texture.Values[0], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[2], 'children': [
+				{'tag': 'input', 'id': DataHTML.Texture.Options[0], 'type':'file', 'style': StyleIconLoadTexture},
+			]},
+			{'tag': 'label', 'id': DataHTML.Texture.Values[1], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[3], 'children': [
+				{'tag': 'input', 'id': DataHTML.Texture.Options[1], 'type':'file', 'style': StyleIconLoadTexture},
+			]},
+			{'tag': 'label', 'id': DataHTML.Texture.Values[2], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[4], 'children': [
+				{'tag': 'input', 'id': DataHTML.Texture.Options[2], 'type':'file', 'style': StyleIconLoadTexture},
+			]},
+			{'tag': 'label', 'id': DataHTML.Texture.Values[3], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[5], 'children': [
+				{'tag': 'input', 'id': DataHTML.Texture.Options[3], 'type':'file', 'style': StyleIconLoadTexture},
+			]},
+			{'tag': 'label', 'id': DataHTML.Texture.Values[4], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[6], 'children': [
+				{'tag': 'input', 'id': DataHTML.Texture.Options[4], 'type':'file', 'style': StyleIconLoadTexture},
+			]},
+			{'tag': 'label', 'id': DataHTML.Texture.Values[5], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[7], 'children': [
+				{'tag': 'input', 'id': DataHTML.Texture.Options[5], 'type':'file', 'style': StyleIconLoadTexture},
+			]},
+			{'tag': 'label', 'id': DataHTML.Texture.Values[6], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[8], 'children': [
+				{'tag': 'input', 'id': DataHTML.Texture.Options[6], 'type':'file', 'style': StyleIconLoadTexture},
+			]},
+			{'tag': 'label', 'id': DataHTML.Texture.Values[7], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[9], 'children': [
+				{'tag': 'input', 'id': DataHTML.Texture.Options[7], 'type':'file', 'style': StyleIconLoadTexture},
+			]},
+			{'tag': 'label', 'id': DataHTML.Texture.Values[8], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[10], 'children': [
+				{'tag': 'input', 'id': DataHTML.Texture.Options[8], 'type':'file', 'style': StyleIconLoadTexture},
+			]},
+			{'tag': 'label', 'id': DataHTML.Texture.Values[9], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[11], 'children': [
+				{'tag': 'input', 'id': DataHTML.Texture.Options[9], 'type':'file', 'style': StyleIconLoadTexture},
+			]},
+			{'tag': 'label', 'id': DataHTML.Texture.Values[10], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[12], 'children': [
+				{'tag': 'input', 'id': DataHTML.Texture.Options[10], 'type':'file', 'style': StyleIconLoadTexture},
+			]},
+			{'tag': 'label', 'id': DataHTML.Texture.Values[11], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[13], 'children': [
+				{'tag': 'input', 'id': DataHTML.Texture.Options[11], 'type':'file', 'style': StyleIconLoadTexture},
+			]},
+			{'tag': 'label', 'id': DataHTML.Texture.Values[12], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[14], 'children': [
+				{'tag': 'input', 'id': DataHTML.Texture.Options[12], 'type':'file', 'style': StyleIconLoadTexture},
+			]},
+			{'tag': 'label', 'id': DataHTML.Texture.Values[13], 'style': StyleIconLabelTexture, 'text': txt.TabEditTexture[15], 'children': [
+				{'tag': 'input', 'id': DataHTML.Texture.Options[13], 'type':'file', 'style': StyleIconLoadTexture},
+			]},
+			{'tag': 'br'},
+			{'tag': 'br'},
+			{'tag': 'button', 'id': DataHTML.Texture.Buttons[0], 'style':'text-align: center; width: 120px;', 'text': txt.TabEditTexture[16]},
 			
 		]},
 	]},
