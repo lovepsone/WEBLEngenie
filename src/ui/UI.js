@@ -46,10 +46,6 @@ class UIFrame {
 	}
 }
 
-/*
-* Tooltip parameters are stored in the data-tooltip attribute.
-* Param : width:val, height:val, fontsize:val, color:val, background:val, parentbackground:false, border:val
-*/
 let _ToolTips = null;
 
 class ToolTip {
@@ -65,39 +61,12 @@ class ToolTip {
 
 		for (let i = 0; i < _ToolTips.length; i++) {
 
-			let data = _ToolTips[i].getAttribute('data-tooltip').replace(/\s+/g, '').split(',');
-
-			_ToolTips[i].setAttribute('style', '');
+			// требуется проверить аттрибут data-tooltip-css на существование
+			_ToolTips[i].style.cssText = _ToolTips[i].getAttribute('data-tooltip-css');
 			_ToolTips[i].style.position = 'fixed';
 			_ToolTips[i].style.zIndex = '999px';
 			_ToolTips[i].style.opacity = '0.1';
 			_ToolTips[i].style.display = 'none';
-
-			for (let j = 0; j < data.length; j++) {
-
-				const tmp = data[j].split(':');
-
-				switch(tmp[0]) {
-					case 'width':
-						_ToolTips[i].style.width = tmp[1];
-						break;
-					case 'height':
-						_ToolTips[i].style.height = tmp[1];
-						break;
-					case 'fontsize':
-						_ToolTips[i].style.fontSize = tmp[1];
-						break;
-					case 'color':
-						_ToolTips[i].style.color = tmp[1];
-						break;
-					case 'background':
-						_ToolTips[i].style.background = tmp[1];
-						break;
-					case 'parentbackground':
-						if (tmp[1] == 'true') _ToolTips[i].style.background = UI.getElement(_ToolTips[i].parentNode.id).style.background;
-						break;
-				}
-			}
 
 			UI.getElement(_ToolTips[i].parentNode.id).addEventListener("mouseover", function() {
 

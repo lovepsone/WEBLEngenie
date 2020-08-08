@@ -67,7 +67,7 @@ class LoaderHTML5 {
 		if (this.getAttr(elems['value']))		element.setAttribute('value', elems['value']);
 		// label
 		if (this.getAttr(elems['for']))			element.setAttribute('for', elems['for']);
-		if (this.getAttr(elems['data-tooltip'])) element.setAttribute('data-tooltip', elems['data-tooltip']);
+		if (this.getAttr(elems['data-tooltip-css'])) element.setAttribute('data-tooltip-css', elems['data-tooltip-css']);
  
 		let preElement = this.setElement(pre_id);
 		preElement.appendChild(element);
