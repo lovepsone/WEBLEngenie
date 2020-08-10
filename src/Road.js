@@ -3,7 +3,7 @@
 */
 
 import * as THREE from './../libs/three/Three.js';
-import {CSG} from './../libs/CSG/CSG.js';
+
 let test_point = [];
 
 let _CounterBox = 0
@@ -46,8 +46,8 @@ class Road {
 
         event.preventDefault();
 
-        _mouseVector.x = (event.layerX / window.innerWidth ) * 2 - 1;
-        _mouseVector.y = - (event.layerY / window.innerHeight ) * 2 + 1;
+        _mouseVector.x = (event.layerX / window.innerWidth) * 2 - 1;
+        _mouseVector.y = - (event.layerY / window.innerHeight) * 2 + 1;
 
         _raycaster.setFromCamera(_mouseVector, _camera);
 
@@ -77,8 +77,8 @@ class Road {
 
 		event.preventDefault();
 
-		_mouseVector.x = (event.layerX / window.innerWidth ) * 2 - 1;
-        _mouseVector.y = - (event.layerY / window.innerHeight ) * 2 + 1;
+		_mouseVector.x = (event.layerX / window.innerWidth) * 2 - 1;
+        _mouseVector.y = - (event.layerY / window.innerHeight) * 2 + 1;
         
 		_raycaster.setFromCamera(_mouseVector, _camera);
 		_raycaster.firstHitOnly = true;
@@ -114,6 +114,8 @@ class Road {
 	WorkerOnMessage(e) {
 
 		let data = e.data;
+		const asphalt = new THREE.Color(0xc0c0c0);
+		const test = new THREE.Color(0x44447a);
 
 		if (data.cmd === 'generated') {
 
@@ -126,47 +128,23 @@ class Road {
 				position.array[buff.index[i]*3+1] = buff.vertex[i].y;
 				position.needsUpdate = true;
 
-				/*if (buff.color[i] === 0) {
+				if (buff.color[i] === 0) {
 
-					color.array[buff.index[i]*3] = 0;
-					color.array[buff.index[i]*3 + 1] = 0;
-					color.array[buff.index[i]*3 + 2] = 0;
+					color.array[buff.index[i]*3] = asphalt.r;
+					color.array[buff.index[i]*3 + 1] = asphalt.g;
+					color.array[buff.index[i]*3 + 2] = asphalt.b;
 					color.needsUpdate = true;
 				} else {
 
-					color.array[buff.index[i]*3] = 1;
-					color.array[buff.index[i]*3 + 1] = 1;
-					color.array[buff.index[i]*3 + 2] = 1;
+					color.array[buff.index[i]*3] = test.r;
+					color.array[buff.index[i]*3 + 1] = test.g;
+					color.array[buff.index[i]*3 + 2] = test.b;
 					color.needsUpdate = true;
-				}*/
+				}
 			}
-console.log('50%');
+
 			_worker.terminate();
 			_worker = null;
-
-			let shape = new THREE.Shape();
-			shape.moveTo(0, 0);
-			shape.lineTo(0, 5);
-			shape.moveTo(0, 5);
-			shape.lineTo(5, 5);
-			shape.moveTo(5, 5);
-			shape.lineTo(5, 0);
-			shape.moveTo(5, 0);
-			let extrudeSettings = {steps: 25 * test_point.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(test_point, false)};
-			let extrudeGeometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
-		
-		
-			let meshB = new THREE.Mesh(extrudeGeometry, new THREE.MeshBasicMaterial({color: 0xff0000,  wireframe:true}));
-
-			let a = CSG.fromMesh(_mesh);
-			let b = CSG.fromMesh(meshB);
-			console.log('60%');
-			let c = a.cutout(b);
-			console.log('90%');
-			let r = CSG.toMesh(c, _mesh.matrix);
-			console.log('100%');
-			_scene.add(r);
-			_mesh.visible = false;
 		}
 	}
 
@@ -185,16 +163,6 @@ console.log('50%');
 				_scene.remove(_lines[i]);
 		}
 
-		let shape = new THREE.Shape();
-		shape.moveTo(0, 0);
-		shape.lineTo(0, 5);
-		let extrudeSettings = {steps: 25 * points.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false)};
-		let extrudeGeometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
-	
-	
-		let mesh = new THREE.Mesh(extrudeGeometry, new THREE.MeshBasicMaterial({color: 0xff00ff,  wireframe:true}));
-		_scene.add(mesh);	
-
 		_worker = new Worker('./src/WorkerRoad.js', {type: 'module'});
 		_worker.onmessage = this.WorkerOnMessage;
 		_worker.postMessage({'cmd': 'generate', 'points': _mesh.geometry.getAttribute('position'), 'ExtrudePoints':points});
@@ -202,7 +170,6 @@ console.log('50%');
 		_boxes.length = 0;
 		_lines.length = 0;
 		_CounterBox = 0;
-		console.log(_scene);
 	}
 }
 
