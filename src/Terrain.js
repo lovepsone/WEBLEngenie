@@ -113,6 +113,11 @@ class Terrain {
 		_mesh.geometry.computeBoundsTree();
 	}
 
+	UpdateDataColors() {
+
+		_Optons.biomeMap.setColorsDataBiomes(_mesh.geometry.attributes.color);
+	}
+
 	getOptions() {
 
 		return _Optons;
@@ -157,7 +162,7 @@ class Terrain {
 			}
 		}
 
-		_Optons.biomeMap.setColorsDataBiomes(_mesh.geometry.attributes.color);
+		this.UpdateDataColors();
 	}
 
 	WireFrame(value = true) {
