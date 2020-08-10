@@ -44,7 +44,6 @@ class TextureAtlas {
             return;
 		}
         let vShader = `
-            #version 300 es
             out vec2 vUv;
 
             void main() {
@@ -54,8 +53,6 @@ class TextureAtlas {
         `;
 
         let fShader = `
-            #version 300 es
-
             precision highp sampler2DArray;
             precision highp float;
             precision highp int;
@@ -76,9 +73,6 @@ class TextureAtlas {
             uniform sampler2D TROPICAL_RAIN_FOREST;
             in vec2 vUv;
             uniform sampler2DArray diffuse;
-
-            out vec4 out_FragColor;
-
 
             float getCoord(int layer, int count) {
 
@@ -127,7 +121,7 @@ class TextureAtlas {
                 vec4 mix12 = mix(_subtropical_desert, mix11, test4.b);
                 vec4 mix13 = mix(_temperate_rain_forest, mix12, test5.r);
                 vec4 mix14 = mix(_temperate_rain_forest, mix13, test5.g);
-                out_FragColor = mix14;
+                gl_FragColor = mix14;
             }
             `;
 
