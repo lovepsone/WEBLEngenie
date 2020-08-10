@@ -38,6 +38,11 @@ class TextureAtlas {
 
     GenerateMaterial() {
 
+        if (!(_mesh instanceof THREE.Mesh)) {
+
+            console.warn('TextureAtlas.js: Create geometry before overlaying pen.');
+            return;
+		}
         let vShader = `
             #version 300 es
             out vec2 vUv;
