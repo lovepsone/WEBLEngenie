@@ -116,7 +116,7 @@ class GenerateBiomeMap {
 
 				const indices = [];
 				const sphere = new THREE.Sphere(_brushMesh.position, _radius);
-				let colorAttr = _mesh.geometry.getAttribute('color');
+                let colorAttr = _mesh.geometry.getAttribute('color');
 				const indexAttr =_mesh.geometry.index;
 
 				bvh.shapecast(_mesh, box => sphere.intersectsBox(box), (tri, a, b, c) => 
@@ -132,11 +132,15 @@ class GenerateBiomeMap {
 				});
 				
 				for (let i = 0, l = indices.length; i < l; i ++ ) {
-					
-					const index = indexAttr.getX(indices[i]);
+
+                    const index = indexAttr.getX(indices[i]);
                     colorAttr.setX(index, _ColorPen.r);
                     colorAttr.setY(index, _ColorPen.g);
                     colorAttr.setZ(index, _ColorPen.b);
+                    const x = index % _width;
+                    const y = Math.floor(index/_width);
+                    _ctx.fillStyle = '#' + _ColorPen.getHexString();
+                    _ctx.fillRect(x, y, 1, 1);    
 				}
 				colorAttr.needsUpdate = true;
 			}
