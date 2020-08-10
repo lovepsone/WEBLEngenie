@@ -239,7 +239,7 @@ UI.getElement(DataHTML.Road.Buttons[0]).addEventListener("click", function(event
 }, false);
 
 //handlers Edit Biomes
-for (let i = 2; i < 16; i++) {
+for (let i = 2; i < 17; i++) {
 
 	UI.getElement(DataHTML.Biomes.Buttons[i]).addEventListener("click", function(event) {
 

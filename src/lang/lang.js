@@ -53,6 +53,7 @@ var lang = {
 			'Субтропическая пустыня',
 			'Тропический лес',
 			'Тропический дождливый лес',
+			'Асфаль тип 1',
 		],
 		'TabEditRoads': [
 			'Редактор Дороги',
@@ -76,6 +77,7 @@ var lang = {
 			'Субтропическая пустыня',
 			'Тропический лес',
 			'Тропический дождливый лес',
+			'Асфаль тип 1',
 			'Применить',
 		],
 	},
@@ -129,6 +131,7 @@ var lang = {
 			'Subtropical Desert',
 			'Tropical Seasonal Forest',
 			'Tropical Rain Forest',
+			'Asphalt type 1',
 		],
 		'TabEditRoads': [
 			'Editor Roads',
@@ -152,6 +155,7 @@ var lang = {
 			'Subtropical Desert',
 			'Tropical Seasonal Forest',
 			'Tropical Rain Forest',
+			'Asphalt type 1',
 			'Apply',
 		],
 	}
