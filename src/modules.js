@@ -273,6 +273,7 @@ for (let i = 0; i < DataHTML.Texture.Options.length; i++) {
 				
 				UI.getElement(DataHTML.Texture.Values[i]).style.background  = `url(${fr.result})`;
 				UI.ToolTip.UpdateStyle();
+				Engenie.getTerrain().getOptions().texture.ReLoadTexrure(i, fr.result);
 			  }, false);
 		  
 			  fr.readAsDataURL(this.files[0]);

@@ -20,6 +20,12 @@ class TextureAtlas {
         }
     }
 
+    ReLoadTexrure(id, url) {
+
+        _textures[id] = new THREE.TextureLoader().load(url);
+        _textures[id].wrapS =_textures[id].wrapT = THREE.RepeatWrapping;
+    }
+
 	setTerrain(mesh) {
 
 		_mesh = mesh;
