@@ -4,97 +4,106 @@
 
 import * as THREE from './../libs/three/Three.js';
 
+let _PostData = {
+    vertex: [],
+    index: []
+}
 
-function GenerateRoad(points, ExtrudePoints) {
+class CalculateRoad {
 
-    let buff = {
-        vertex: [],
-        index: [],
-        color: []
-    };
+    constructor(size = 5) {
 
-    let _ExtrudePoints = [];
+        this.ShapeTop = new THREE.Shape();
+        this.ShapeTop.moveTo(0, 0);
+        this.ShapeTop.lineTo(0, size);
 
-    for (let i = 0; i < ExtrudePoints.length; i++) {
+        this.ShapeLeft = new THREE.Shape();
+		this.ShapeLeft.moveTo(0, 0);
+        this.ShapeLeft.lineTo(20, 0);
 
-        _ExtrudePoints.push(new THREE.Vector3(ExtrudePoints[i].x, ExtrudePoints[i].y, ExtrudePoints[i].z));
+        this.ShapeRight = new THREE.Shape();
+        this.ShapeRight.moveTo(0, size);
+		this.ShapeRight.lineTo(20, size);
+
+        this.ExtrudePoints = [];
     }
 
-    let shape = new THREE.Shape();
-    shape.moveTo(0, 0);
-    shape.lineTo(0, 5);
+    BuildTop(points, positions) {
 
-    let _ray = new THREE.Raycaster();
-    let _origin = new THREE.Vector3();
-    let _direction = [new THREE.Vector3(0, 1, 0), new THREE.Vector3(0,-1, 0)];
+        for (let i = 0; i < positions.length; i++) {
 
-    let extrudeSettings = {steps: 25 * ExtrudePoints.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(_ExtrudePoints, false)};
-    let extrudeGeometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
-
-
-    let mesh = new THREE.Mesh(extrudeGeometry, new THREE.MeshBasicMaterial({color: 0xff0000}));
-
-    for (let i = 0; i < points.count; i++) {
-
-        _origin.set(points.array[i*3], points.array[i*3+1], points.array[i*3+2]);
-
-        for (let j = 0; j < _direction.length; j++) {
-
-            _ray.set(_origin, _direction[j].normalize());
-            let intersect = _ray.intersectObject(mesh);
-
-            if (intersect.length > 0) {
-
-                buff.vertex.push(intersect[0].point);
-                buff.index.push(i);
-                buff.color.push(0);
-            }
+            this.ExtrudePoints.push(new THREE.Vector3(positions[i].x, positions[i].y, positions[i].z));
         }
-    }
 
-    for (let i = 0; i < points.count; i++) {
+        const ray = new THREE.Raycaster();
+        const origin = new THREE.Vector3();
+        const direction = [new THREE.Vector3(0, 1, 0), new THREE.Vector3(0,-1, 0)];
 
-        for (let j = 0; j < buff.vertex.length; j++) {
+        const mesh = new THREE.Mesh(
+            new THREE.ExtrudeBufferGeometry(
+                this.ShapeTop,
+                {steps: 25 * this.ExtrudePoints.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(this.ExtrudePoints, false)}
+            ),
+            new THREE.MeshBasicMaterial({color: 0xff0000})
+        );
 
-            let tmp1 = new THREE.Vector2(points.array[i*3], points.array[i*3+2]);
-            let tmp2 = new THREE.Vector2(buff.vertex[j].x, buff.vertex[j].z);
+        for (let i = 0; i < points.count; i++) {
 
-            if (tmp1.distanceTo(tmp2) < 3.5) {
+            origin.set(points.array[i * 3], points.array[i * 3 + 1], points.array[i * 3 + 2]);
     
-                if (RepeatIndexCheck(buff.index, i) === false) {
-
-                        buff.index.push(i);
-                        buff.vertex.push(buff.vertex[j]);
-                        buff.color.push(1);
+            for (let j = 0; j < direction.length; j++) {
+    
+                ray.set(origin, direction[j].normalize());
+                const intersect = ray.intersectObject(mesh);
+    
+                if (intersect.length > 0) {
+    
+                    _PostData.vertex.push(intersect[0].point);
+                    _PostData.index.push(i);
                 }
             }
         }
+
+        for (let i = 0; i < points.count; i++) {
+
+            for (let j = 0; j < _PostData.vertex.length; j++) {
+
+                const tmp1 = new THREE.Vector2(points.array[i*3], points.array[i*3+2]);
+                const tmp2 = new THREE.Vector2(_PostData.vertex[j].x, _PostData.vertex[j].z);
+                
+                if (tmp1.distanceTo(tmp2) < 3.5) {
+                    
+                    if (this.RepeatIndexCheck(_PostData.index, i) === false) {
+
+                        _PostData.index.push(i);
+                        _PostData.vertex.push(_PostData.vertex[j]);
+                    }
+                }
+            }
+        }
+        return _PostData;
     }
+    
+    RepeatIndexCheck(Indexes, index) {
 
-    return buff;
-}
-
-function RepeatIndexCheck(Indexes, index) {
-
-    for (let i = 0; i < Indexes.length; i++) {
-
-        if (Indexes[i] === index)
-            return true;
+        for (let i = 0; i < Indexes.length; i++) {
+    
+            if (Indexes[i] === index)
+                return true;
+        }
+        return false;
     }
-
-    return false;
 }
 
 self.onmessage = function(e) {
 
-    let data = e.data;
-
     let result = null;
+    const BRoad = new CalculateRoad(5);
 
-    switch(data.cmd) {
+    switch(e.data.cmd) {
 
         case 'generate':
-            result = GenerateRoad(data.points, data.ExtrudePoints);
+            result = BRoad.BuildTop(e.data.points, e.data.ExtrudePoints);
             self.postMessage({'cmd':'generated', 'dataRoad': result});
             break;
     }

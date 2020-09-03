@@ -18,7 +18,6 @@ export const BASENAMETEXTURES =  {
 	SUBTROPICAL_DESERT:         './texture/subtropical_desert_512.jpg',//0xd2b98b,
 	TROPICAL_SEASONAL_FOREST:   './texture/tropical_seasonal_forest_512.jpg',//0x559944,
     TROPICAL_RAIN_FOREST:       './texture/tropical_rain_forest_512.jpg', //0x337755
-    ASPHALT1:                   './texture/asphalt1_512.jpg', //0xc0c0c0
 };
 
 export const BASEDATATEXTURES = Object.entries(BASENAMETEXTURES);

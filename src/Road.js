@@ -4,8 +4,6 @@
 
 import * as THREE from './../libs/three/Three.js';
 
-let test_point = [];
-
 let _CounterBox = 0
 let _boxes = [];
 let _lines = [];
@@ -19,6 +17,62 @@ let bindMouseDown, bindMouseMove;
 let _brushMesh = null;
 
 let _worker = null
+const WorldUVGenerator = {
+	
+	generateTopUV: function (geometry, vertices, indexA, indexB, indexC) {
+
+		const a_x = vertices[indexA * 3 ];
+		const a_y = vertices[indexA * 3 + 1 ];
+		const b_x = vertices[indexB * 3 ];
+		const b_y = vertices[indexB * 3 + 1 ];
+		const c_x = vertices[indexC * 3 ];
+		const c_y = vertices[indexC * 3 + 1 ];
+
+		return [
+			new THREE.Vector2( a_x, a_y ),
+			new THREE.Vector2( b_x, b_y ),
+			new THREE.Vector2( c_x, c_y )
+		];
+
+	},
+
+	generateSideWallUV: function (geometry, vertices, indexA, indexB, indexC, indexD) {
+
+		const a_x = vertices[indexA * 3 ];
+		const a_y = vertices[indexA * 3 + 1 ];
+		const a_z = vertices[indexA * 3 + 2 ];
+		const b_x = vertices[indexB * 3 ];
+		const b_y = vertices[indexB * 3 + 1 ];
+		const b_z = vertices[indexB * 3 + 2 ];
+		const c_x = vertices[indexC * 3 ];
+		const c_y = vertices[indexC * 3 + 1 ];
+		const c_z = vertices[indexC * 3 + 2 ];
+		const d_x = vertices[indexD * 3 ];
+		const d_y = vertices[indexD * 3 + 1 ];
+		const d_z = vertices[indexD * 3 + 2 ];
+
+		if ( Math.abs(a_y - b_y) < 0.01 ) {
+
+			return [
+				new THREE.Vector2( a_x, 1 - a_z ),
+				new THREE.Vector2( b_x, 1 - b_z ),
+				new THREE.Vector2( c_x, 1 - c_z ),
+				new THREE.Vector2( d_x, 1 - d_z )
+			];
+
+		} else {
+
+			return [
+				new THREE.Vector2( a_y, 1 - a_z ),
+				new THREE.Vector2( b_y, 1 - b_z ),
+				new THREE.Vector2( c_y, 1 - c_z ),
+				new THREE.Vector2( d_y, 1 - d_z )
+			];
+
+		}
+
+	}
+};
 
 class Road {
 
@@ -62,8 +116,8 @@ class Road {
 
 			if (_CounterBox > 1) {
 
-				let v1 = new THREE.Vector3().copy(_boxes[_CounterBox - 2].position);
-				let v2 = new THREE.Vector3().copy(_boxes[_CounterBox - 1].position);
+				const v1 = new THREE.Vector3().copy(_boxes[_CounterBox - 2].position);
+				const v2 = new THREE.Vector3().copy(_boxes[_CounterBox - 1].position);
 				let geometry = new THREE.BufferGeometry().setFromPoints(new THREE.LineCurve3(v1, v2).getPoints(50));
 				let material = new THREE.LineBasicMaterial({color : 0x00ff00});
 				let line = new THREE.Line(geometry, material);
@@ -125,22 +179,12 @@ class Road {
 
 			for (let i = 0; i < buff.vertex.length; i++) {
 
-				position.array[buff.index[i]*3+1] = buff.vertex[i].y;
+				position.array[buff.index[i] * 3 + 1] = buff.vertex[i].y;
 				position.needsUpdate = true;
-
-				if (buff.color[i] === 0) {
-
-					color.array[buff.index[i]*3] = asphalt.r;
-					color.array[buff.index[i]*3 + 1] = asphalt.g;
-					color.array[buff.index[i]*3 + 2] = asphalt.b;
-					color.needsUpdate = true;
-				} else {
-
-					color.array[buff.index[i]*3] = test.r;
-					color.array[buff.index[i]*3 + 1] = test.g;
-					color.array[buff.index[i]*3 + 2] = test.b;
-					color.needsUpdate = true;
-				}
+				color.array[buff.index[i]*3] = test.r;
+				color.array[buff.index[i]*3 + 1] = test.g;
+				color.array[buff.index[i]*3 + 2] = test.b;
+				color.needsUpdate = true;
 			}
 
 			_worker.terminate();
@@ -155,8 +199,7 @@ class Road {
 	
 		for (let i = 0; i < _boxes.length; i++) {
 
-			points.push(new THREE.Vector3().copy(_boxes[i].position));
-			test_point.push(new THREE.Vector3().copy(_boxes[i].position));
+			points.push(new THREE.Vector3().copy(_boxes[i].position)/*_boxes[i].position*/);
 			_scene.remove(_boxes[i]);
 
 			if (i < _lines.length)
@@ -166,6 +209,23 @@ class Road {
 		_worker = new Worker('./src/WorkerRoad.js', {type: 'module'});
 		_worker.onmessage = this.WorkerOnMessage;
 		_worker.postMessage({'cmd': 'generate', 'points': _mesh.geometry.getAttribute('position'), 'ExtrudePoints':points});
+
+		let shape = new THREE.Shape();
+		shape.moveTo(0, 0);
+		shape.lineTo(0, 5);
+		shape.moveTo(0, 5);
+		shape.lineTo(0.5, 5);
+		shape.moveTo(0.5, 5);
+		shape.lineTo(0.5, 0);
+
+		let extrudeSettings = {steps: 10 * points.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false), UVGenerator: WorldUVGenerator};
+		let extrudeGeometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
+	
+		let texture = new THREE.TextureLoader().load("texture/asphalt1_512.jpg");
+		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+		let mesh = new THREE.Mesh(extrudeGeometry, new THREE.MeshBasicMaterial({map: texture, wireframe: false}));
+		_scene.add(mesh);
+		mesh.position.y += 0.05;
 
 		_boxes.length = 0;
 		_lines.length = 0;

@@ -77,7 +77,6 @@ class TextureAtlas {
             uniform sampler2D SUBTROPICAL_DESERT;
             uniform sampler2D TROPICAL_SEASONAL_FOREST;
             uniform sampler2D TROPICAL_RAIN_FOREST;
-            uniform sampler2D ASPHALT1;
 
             in vec2 vUv;
             uniform sampler2DArray diffuse;
@@ -113,8 +112,6 @@ class TextureAtlas {
 
                 vec4 _tropical_seasonal_forest = texture2D(TROPICAL_SEASONAL_FOREST, vUv* 10.0);
                 vec4 _tropical_rain_forest = texture2D(TROPICAL_RAIN_FOREST, vUv* 10.0);
-                vec4 _asphalt1 = texture2D(ASPHALT1, vUv* 10.0);
-
 
                 vec4 mix1 = mix(_okean, vec4(0.0, 0.0, 0.0, 1.0), test.r);
                 vec4 mix2 = mix(_beach, mix1, test.g);
@@ -130,8 +127,7 @@ class TextureAtlas {
                 vec4 mix12 = mix(_subtropical_desert, mix11, test4.b);
                 vec4 mix13 = mix(_tropical_seasonal_forest, mix12, test5.r);
                 vec4 mix14 = mix(_tropical_rain_forest, mix13, test5.g);
-                vec4 mix15 = mix(_asphalt1, mix14, test5.b);
-                gl_FragColor = mix15;
+                gl_FragColor = mix14;
             }
             `;
 
@@ -151,7 +147,6 @@ class TextureAtlas {
             SUBTROPICAL_DESERT:	        {type: "t", value: _textures[11]},
             TROPICAL_SEASONAL_FOREST:	{type: "t", value: _textures[12]},
             TROPICAL_RAIN_FOREST:	    {type: "t", value: _textures[13]},
-            ASPHALT1:	                {type: "t", value: _textures[14]},
         };
 
         const _material = new THREE.ShaderMaterial({

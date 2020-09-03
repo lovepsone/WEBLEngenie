@@ -73,7 +73,6 @@ class GenerateBiomeMap {
             case 'd2b98b': _ColorPen.set(0xd2b98b); break;
             case '559944': _ColorPen.set(0x559944); break;
             case '337755': _ColorPen.set(0x337755); break;
-            case 'c0c0c0': _ColorPen.set(0xc0c0c0); break;
         }
     }
 
@@ -233,7 +232,7 @@ class GenerateBiomeMap {
         buf = '#';
         buf += (colors == '559944') ? '00': 'ff'; //TROPICAL_SEASONAL_FOREST
         buf += (colors == '337755') ? '00': 'ff'; //TROPICAL_RAIN_FOREST
-        buf += (colors == 'c0c0c0') ? '00': 'ff'; //ASPHALT1
+        buf += 'ff'; // none
         _DiffuseCanvas.getContext('2d').fillStyle = buf;
         _DiffuseCanvas.getContext('2d').fillRect(x, h*5 - (y + 1), 1, 1);
     }
