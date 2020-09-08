@@ -38,6 +38,7 @@ class CalculateRoad {
         const ray = new THREE.Raycaster();
         const origin = new THREE.Vector3();
         const direction = [new THREE.Vector3(0, 1, 0), new THREE.Vector3(0,-1, 0)];
+        const size = Math.sqrt(points.count);
 
         const mesh = new THREE.Mesh(
             new THREE.ExtrudeBufferGeometry(
@@ -64,23 +65,8 @@ class CalculateRoad {
             }
         }
 
-        for (let i = 0; i < points.count; i++) {
+        for (let i = 0; i < 3; i++) this.addBoard(_PostData, size);
 
-            for (let j = 0; j < _PostData.vertex.length; j++) {
-
-                const tmp1 = new THREE.Vector2(points.array[i*3], points.array[i*3+2]);
-                const tmp2 = new THREE.Vector2(_PostData.vertex[j].x, _PostData.vertex[j].z);
-                
-                if (tmp1.distanceTo(tmp2) < 3.5) {
-                    
-                    if (this.RepeatIndexCheck(_PostData.index, i) === false) {
-
-                        _PostData.index.push(i);
-                        _PostData.vertex.push(_PostData.vertex[j]);
-                    }
-                }
-            }
-        }
         return _PostData;
     }
     
@@ -88,10 +74,55 @@ class CalculateRoad {
 
         for (let i = 0; i < Indexes.length; i++) {
     
-            if (Indexes[i] === index)
-                return true;
+            if (Indexes[i] === index) return true;
         }
         return false;
+    }
+
+    NeighborSearch(index, size, Indexes) {
+
+        let a, b, c, d, result = [];
+
+        //    b
+        // a --- c
+        //    d
+        if (index > 0) {
+
+            a = index - 1;
+            b = index - size;
+            c = index + 1;
+            d = index + size;
+        }
+
+        if (a < 0 || this.RepeatIndexCheck(Indexes, a) === true) a = null;
+        if (b < 0 || this.RepeatIndexCheck(Indexes, b) === true) b = null;
+        if (c > (size * size) || this.RepeatIndexCheck(Indexes, c) === true) c = null;
+        if (d > (size * size) || this.RepeatIndexCheck(Indexes, d) === true) d = null;
+
+        if (a != null) result.push(a);
+        if (b != null) result.push(b);
+        if (c != null) result.push(c);
+        if (d != null) result.push(d);
+
+        return result;
+    }
+
+    addBoard(data, size) {
+
+        let bufIndex = [], bufVertex = [];
+
+        for (let i = 0; i < data.index.length; i++) {
+
+            const neighbor = this.NeighborSearch(data.index[i], size, data.index)
+
+            for (let j = 0; j < neighbor.length; j++) {
+
+                bufIndex.push(neighbor[j]);
+                bufVertex.push(data.vertex[i]);
+            }
+        }
+        data.index.push(...bufIndex);
+        data.vertex.push(...bufVertex);
     }
 }
 

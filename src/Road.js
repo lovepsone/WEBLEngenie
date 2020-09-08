@@ -168,7 +168,6 @@ class Road {
 	WorkerOnMessage(e) {
 
 		let data = e.data;
-		const asphalt = new THREE.Color(0xc0c0c0);
 		const test = new THREE.Color(0x44447a);
 
 		if (data.cmd === 'generated') {
@@ -218,7 +217,7 @@ class Road {
 		shape.moveTo(0.5, 5);
 		shape.lineTo(0.5, 0);
 
-		let extrudeSettings = {steps: 10 * points.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false), UVGenerator: WorldUVGenerator};
+		let extrudeSettings = {steps: 10 * points.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false)/*, UVGenerator: WorldUVGenerator*/};
 		let extrudeGeometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
 	
 		let texture = new THREE.TextureLoader().load("texture/asphalt1_512.jpg");
