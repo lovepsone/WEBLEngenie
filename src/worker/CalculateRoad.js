@@ -4,10 +4,7 @@
 
 import * as THREE from './../../libs/three/Three.js';
 
-let _PostData = {
-    vertex: [],
-    index: []
-}
+let _PostData = {vertex: [], index: []};
 
 class CalculateRoad {
 
@@ -123,6 +120,11 @@ class CalculateRoad {
         }
         data.index.push(...bufIndex);
         data.vertex.push(...bufVertex);
+    }
+
+    clearData() {
+
+        _PostData = {vertex: [], index: []};
     }
 }
 
