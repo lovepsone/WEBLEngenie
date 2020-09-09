@@ -32,15 +32,8 @@ class Biomes extends DrawNoise {
 
 	constructor() {
 
-        super( 128, 128, 'CanvasGenNoise');
+        super(128, 128, 'CanvasGenNoise');
         _scope = this;
-        _worker = new Worker('./src/WorkerNoisePerlin.js');
-        _worker.onmessage = this.WorkerOnMessage;
-    }
-
-    GenerateDataPixels() {
-
-        _worker.postMessage({'cmd': 'start', 'size': this.getSize()});
     }
 
     get(height, val) {
@@ -83,29 +76,22 @@ class Biomes extends DrawNoise {
         return colors.TROPICAL_RAIN_FOREST;
     }
 
-    WorkerOnMessage(e) {
+    Draw(colors) {
 
-        let data = e.data;
+        for (let i = 0; i < colors.length; i++) {
 
-        switch(data.cmd) {
+            for (let j = 0; j < colors[i].length; j++) {
 
-            case 'draw':
-
-                for (let i = 0; i < data.colors.length; i++) {
-
-                    for (let j = 0; j < data.colors[i].length; j++) {
-        
-                        _scope.setMatrix(i, j, data.colors[i][j]);
-                    }
-                }
-
-                let pixel = _scope.getContext().getImageData(0, 0, _scope.getSize().width, _scope.getSize().height);
-                _worker.postMessage({'cmd': 'pixels', 'data': pixel});
-                break;
-            case 'complete':
-                    _moisture = data.result;
-                break;
+                _scope.setMatrix(i, j, colors[i][j]);
+            }
         }
+
+        return _scope.getContext().getImageData(0, 0, _scope.getSize().width, _scope.getSize().height);
+    }
+
+    setMoisture(val) {
+
+        _moisture = val;
     }
 
     setTypePixels(val = 0) {

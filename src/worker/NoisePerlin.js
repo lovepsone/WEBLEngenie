@@ -103,7 +103,7 @@ class NoisePerlin {
 		return result / max;
 	}
 
-	generate() {
+	Generate() {
 	
 		_table = [];
 		for(let i = 0; i< 1024; i++) {
@@ -157,20 +157,4 @@ class NoisePerlin {
 	}
 }
 
-let perlin = new NoisePerlin(128, 128);
-
-self.onmessage = function(e) {
-
-    let data = e.data;
-
-    switch(data.cmd) {
-
-        case 'start':
-				perlin.setSize(data.size.width, data.size.height);
-				self.postMessage({'cmd': 'draw', 'colors':  perlin.generate()});
-            break;
-        case 'pixels':
-				self.postMessage({'cmd': 'complete', 'result': perlin.RevertPixels(data.data)});
-            break;
-    }
-};
+export {NoisePerlin};
