@@ -37,7 +37,7 @@ function ControlBrush(currentTab) {
 
 	switch(currentTab) {
 
-		case 0:
+		case 0: // editor terrain
 			Engenie.getTerrain().getOptions().pressure.AddEvents();
 			Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
 			Engenie.getTerrain().getOptions().road.DisposeEvents();
@@ -49,13 +49,13 @@ function ControlBrush(currentTab) {
 			Engenie.getTerrain().getOptions().biomeMap.AddEvents();
 			break;
 
-		case 2:
+		case 2: // editor roads
 			Engenie.getTerrain().getOptions().pressure.DisposeEvents();
 			Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
 			Engenie.getTerrain().getOptions().road.AddEvents();
 			break;
 
-		case 3:
+		case 3: // editor texture
 			Engenie.getTerrain().getOptions().pressure.DisposeEvents();
 			Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
 			Engenie.getTerrain().getOptions().road.DisposeEvents();
@@ -223,7 +223,7 @@ UI.getElement(DataHTML.Wireframe).addEventListener("change", function(event) {
 // handlers biomes
 UI.getElement(DataHTML.Biomes.Buttons[0]).addEventListener("click", function(event) {
 
-	Engenie.getTerrain().getOptions().biomes.GenerateDataPixels();
+	Engenie.BiomeGenerateDataPixels();
 }, false);
 
 // biomes Apply
@@ -235,7 +235,7 @@ UI.getElement(DataHTML.Biomes.Buttons[1]).addEventListener("click", function(eve
 //handlers Edit Road
 UI.getElement(DataHTML.Road.Buttons[0]).addEventListener("click", function(event) {
 
-	Engenie.getTerrain().getOptions().road.Generate();
+	Engenie.RoadGenerate();
 }, false);
 
 //handlers Edit Biomes

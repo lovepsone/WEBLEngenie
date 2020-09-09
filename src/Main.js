@@ -84,7 +84,6 @@ class MainEngenie {
 				break;
 			case 'RoadComplete':
 				_terrain.getOptions().road.Draw(event.data.dataRoad);
-				console.log(1);
 				break;
         }
 	}
