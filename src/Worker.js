@@ -3,10 +3,14 @@
 */
 
 import {NoisePerlin} from './worker/NoisePerlin.js';
+import {CalculateRoad} from './worker/CalculateRoad.js';
 
 let _NoisePerlin = new NoisePerlin(128, 128);
+let _CalculateRoad = new CalculateRoad(5);
 
 self.onmessage = function(event) {
+
+    let tmp = null;
 
     switch(event.data.cmd) {
 
@@ -17,6 +21,12 @@ self.onmessage = function(event) {
 
         case 'BiomePixels':
 			self.postMessage({'cmd': 'BiomeComplete', 'result': _NoisePerlin.RevertPixels(event.data.data)});
+            break;
+
+        case 'RoadGenerate':
+            tmp = _CalculateRoad.BuildTop(event.data.points, event.data.ExtrudePoints);
+            self.postMessage({'cmd':'RoadComplete', 'dataRoad': tmp});
+            tmp = null;
             break;
     }
 }

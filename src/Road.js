@@ -16,7 +16,6 @@ let _raycaster = new THREE.Raycaster();
 let bindMouseDown, bindMouseMove;
 let _brushMesh = null;
 
-let _worker = null
 const WorldUVGenerator = {
 	
 	generateTopUV: function (geometry, vertices, indexA, indexB, indexC) {
@@ -165,32 +164,24 @@ class Road {
 		_brushMesh.visible = false;
 	}
 
-	WorkerOnMessage(e) {
+	Draw(dataRoad) {
 
-		let data = e.data;
 		const test = new THREE.Color(0x44447a);
 
-		if (data.cmd === 'generated') {
+		const buff = dataRoad;
+		let position = _mesh.geometry.getAttribute('position');
+		let color = _mesh.geometry.getAttribute('color');
 
-			let buff = data.dataRoad;
-			let position = _mesh.geometry.getAttribute('position');
-			let color = _mesh.geometry.getAttribute('color');
+		for (let i = 0; i < buff.vertex.length; i++) {
 
-			for (let i = 0; i < buff.vertex.length; i++) {
-
-				position.array[buff.index[i] * 3 + 1] = buff.vertex[i].y;
-				position.needsUpdate = true;
-				color.array[buff.index[i]*3] = test.r;
-				color.array[buff.index[i]*3 + 1] = test.g;
-				color.array[buff.index[i]*3 + 2] = test.b;
-				color.needsUpdate = true;
-			}
-
-			_worker.terminate();
-			_worker = null;
+			position.array[buff.index[i] * 3 + 1] = buff.vertex[i].y;
+			position.needsUpdate = true;
+			color.array[buff.index[i]*3] = test.r;
+			color.array[buff.index[i]*3 + 1] = test.g;
+			color.array[buff.index[i]*3 + 2] = test.b;
+			color.needsUpdate = true;
 		}
 	}
-
 
 	Generate() {
 
@@ -204,10 +195,6 @@ class Road {
 			if (i < _lines.length)
 				_scene.remove(_lines[i]);
 		}
-
-		_worker = new Worker('./src/WorkerRoad.js', {type: 'module'});
-		_worker.onmessage = this.WorkerOnMessage;
-		_worker.postMessage({'cmd': 'generate', 'points': _mesh.geometry.getAttribute('position'), 'ExtrudePoints':points});
 
 		let shape = new THREE.Shape();
 		shape.moveTo(0, 0);
@@ -229,6 +216,8 @@ class Road {
 		_boxes.length = 0;
 		_lines.length = 0;
 		_CounterBox = 0;
+
+		return {'points': _mesh.geometry.getAttribute('position'), 'ExtrudePoints': points};
 	}
 }
 

@@ -66,6 +66,12 @@ class MainEngenie {
 		_worker.postMessage({'cmd': 'BiomeStart', 'size': _terrain.getOptions().biomes.getSize()});
 	}
 
+	RoadGenerate() {
+
+		const buf = _terrain.getOptions().road.Generate();
+		_worker.postMessage({'cmd': 'RoadGenerate', 'points': buf.points, 'ExtrudePoints': buf.ExtrudePoints});
+	}
+
 	WorkerOnMessage(event) {
 
         switch(event.data.cmd) {
@@ -75,7 +81,11 @@ class MainEngenie {
                 break;
             case 'BiomeComplete':
 				_terrain.getOptions().biomes.setMoisture(event.data.result);
-                break;
+				break;
+			case 'RoadComplete':
+				_terrain.getOptions().road.Draw(event.data.dataRoad);
+				console.log(1);
+				break;
         }
 	}
 }
