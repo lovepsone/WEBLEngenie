@@ -25,7 +25,19 @@ var AnimationFrame = function() {
 
 AnimationFrame();
 
+
 function ControlBrush(currentTab) {
+
+	// controls material terrain
+	if (currentTab == 1) {
+
+		Engenie.getTerrain().setDefaultMaterial(UI.getElement(DataHTML.Wireframe).checked);
+	} else {
+
+		Engenie.getTerrain().UpdateDataColors();
+		Engenie.getTerrain().getOptions().texture.setBiomeMap(Engenie.getTerrain().getOptions().biomeMap.getBump());
+		Engenie.getTerrain().getOptions().texture.GenerateMaterial(UI.getElement(DataHTML.Wireframe).checked);
+	}
 
 	if (UI.getElement(DataHTML.Camera).checked) {
 

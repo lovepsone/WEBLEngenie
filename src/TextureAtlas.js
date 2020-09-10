@@ -3,7 +3,7 @@
 */
 
 let _Texture2DArray = null, _textures = [];
-let _mesh = null;
+let _mesh = null, _material = null;
 
 import * as THREE from './../libs/three/Three.js';
 import {BASEDATATEXTURES} from './CONST.js';
@@ -149,8 +149,8 @@ class TextureAtlas {
             TROPICAL_RAIN_FOREST:	    {type: "t", value: _textures[13]},
         };
 
-        const _material = new THREE.ShaderMaterial({
-            uniforms:customUniforms,
+        _material = new THREE.ShaderMaterial({
+            uniforms: customUniforms,
             vertexShader: vShader,
             fragmentShader: fShader,
             wireframe: wireframe
