@@ -42,7 +42,7 @@ class TextureAtlas {
         _Texture2DArray.anisotropy = 2;
     }
 
-    GenerateMaterial() {
+    GenerateMaterial(wireframe) {
 
         if (!(_mesh instanceof THREE.Mesh)) {
 
@@ -88,11 +88,11 @@ class TextureAtlas {
 
             void main() {
 
-                vec4 test = texture(diffuse, vec3(vUv, 0.0));//getCoord(0, 5)
-                vec4 test2 = texture(diffuse, vec3(vUv, 1.0));
-                vec4 test3 = texture(diffuse, vec3(vUv, 2.0));
-                vec4 test4 = texture(diffuse, vec3(vUv, 3.0));
-                vec4 test5 = texture(diffuse, vec3(vUv, 4.0));
+                vec4 diff_1 = texture(diffuse, vec3(vUv, 0.0));//getCoord(0, 5)
+                vec4 diff_2 = texture(diffuse, vec3(vUv, 1.0));
+                vec4 diff_3 = texture(diffuse, vec3(vUv, 2.0));
+                vec4 diff_4 = texture(diffuse, vec3(vUv, 3.0));
+                vec4 diff_5 = texture(diffuse, vec3(vUv, 4.0));
 
                 vec4 _okean = texture2D(OCEAN, vUv*10.0);
                 vec4 _beach = texture2D(BEACH, vUv* 10.0);
@@ -113,20 +113,20 @@ class TextureAtlas {
                 vec4 _tropical_seasonal_forest = texture2D(TROPICAL_SEASONAL_FOREST, vUv* 10.0);
                 vec4 _tropical_rain_forest = texture2D(TROPICAL_RAIN_FOREST, vUv* 10.0);
 
-                vec4 mix1 = mix(_okean, vec4(0.0, 0.0, 0.0, 1.0), test.r);
-                vec4 mix2 = mix(_beach, mix1, test.g);
-                vec4 mix3 = mix(_scorched, mix2, test.b);
-                vec4 mix4 = mix(_bare, mix3, test2.r);
-                vec4 mix5 = mix(_tundra, mix4, test2.g);
-                vec4 mix6 = mix(_snow, mix5, test2.b);
-                vec4 mix7 = mix(_temperate_desert, mix6, test3.r);
-                vec4 mix8 = mix(_taiga, mix7, test3.g);
-                vec4 mix9 = mix(_grassland, mix8, test3.b);
-                vec4 mix10 = mix(_temperate_decidious_forest, mix9,test4.r);
-                vec4 mix11 = mix(_temperate_rain_forest, mix10, test4.g);
-                vec4 mix12 = mix(_subtropical_desert, mix11, test4.b);
-                vec4 mix13 = mix(_tropical_seasonal_forest, mix12, test5.r);
-                vec4 mix14 = mix(_tropical_rain_forest, mix13, test5.g);
+                vec4 mix1 = mix(_okean, vec4(0.0, 0.0, 0.0, 1.0), diff_1.r);
+                vec4 mix2 = mix(_beach, mix1, diff_1.g);
+                vec4 mix3 = mix(_scorched, mix2, diff_1.b);
+                vec4 mix4 = mix(_bare, mix3, diff_2.r);
+                vec4 mix5 = mix(_tundra, mix4, diff_2.g);
+                vec4 mix6 = mix(_snow, mix5, diff_2.b);
+                vec4 mix7 = mix(_temperate_desert, mix6, diff_3.r);
+                vec4 mix8 = mix(_taiga, mix7, diff_3.g);
+                vec4 mix9 = mix(_grassland, mix8, diff_3.b);
+                vec4 mix10 = mix(_temperate_decidious_forest, mix9, diff_4.r);
+                vec4 mix11 = mix(_temperate_rain_forest, mix10, diff_4.g);
+                vec4 mix12 = mix(_subtropical_desert, mix11, diff_4.b);
+                vec4 mix13 = mix(_tropical_seasonal_forest, mix12, diff_5.r);
+                vec4 mix14 = mix(_tropical_rain_forest, mix13, diff_5.g);
                 gl_FragColor = mix14;
             }
             `;
@@ -152,7 +152,8 @@ class TextureAtlas {
         const _material = new THREE.ShaderMaterial({
             uniforms:customUniforms,
             vertexShader: vShader,
-            fragmentShader: fShader
+            fragmentShader: fShader,
+            wireframe: wireframe
         });
 
         _mesh.material = _material;

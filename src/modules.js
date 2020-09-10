@@ -252,7 +252,7 @@ UI.getElement(DataHTML.Texture.Buttons[0]).addEventListener("click", function(ev
 
 	Engenie.getTerrain().UpdateDataColors();
 	Engenie.getTerrain().getOptions().texture.setBiomeMap(Engenie.getTerrain().getOptions().biomeMap.getBump());
-	Engenie.getTerrain().getOptions().texture.GenerateMaterial();
+	Engenie.getTerrain().getOptions().texture.GenerateMaterial(UI.getElement(DataHTML.Wireframe).checked);
 }, false);
 
 //pre-load icon texture
