@@ -172,6 +172,15 @@ class Terrain {
 			_mesh.material.wireframe = value;
 		}
 	}
+
+	setDefaultMaterial(wireframe) {
+
+		if (_mesh instanceof THREE.Mesh) {
+
+			_mesh.material = new THREE.MeshBasicMaterial({side: THREE.DoubleSide, vertexColors: THREE.VertexColors, wireframe: wireframe});
+			_mesh.material.needsUpdate = true;
+		}
+	}
 }
 
 export {Terrain};
