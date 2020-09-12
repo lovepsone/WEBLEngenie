@@ -112,6 +112,7 @@ class GenerateBiomeMap {
 
 			_brushMesh.position.copy(intersects[0].point);
             _brushMesh.visible = true;
+
 			if (_MouseDown) {
 
 				const indices = [];

@@ -4,6 +4,7 @@
 
 let _Texture2DArray = null, _textures = [];
 let _mesh = null, _material = null;
+let _ChangeBiomes = false;
 
 import * as THREE from './../libs/three/Three.js';
 import {BASEDATATEXTURES} from './CONST.js';
@@ -40,6 +41,11 @@ class TextureAtlas {
         _Texture2DArray.format = THREE.RGBAFormat;
         _Texture2DArray.type = THREE.UnsignedByteType;
         _Texture2DArray.anisotropy = 2;
+    }
+
+    ChangeBiomes() {
+
+        _ChangeBiomes = true;
     }
 
     GenerateMaterial(wireframe) {
@@ -149,15 +155,24 @@ class TextureAtlas {
             TROPICAL_RAIN_FOREST:	    {type: "t", value: _textures[13]},
         };
 
-        _material = new THREE.ShaderMaterial({
-            uniforms: customUniforms,
-            vertexShader: vShader,
-            fragmentShader: fShader,
-            wireframe: wireframe
-        });
+        if (_ChangeBiomes) {
 
-        _mesh.material = _material;
-        _mesh.material.needsUpdate = true;
+            _material = new THREE.ShaderMaterial({
+                uniforms: customUniforms,
+                vertexShader: vShader,
+                fragmentShader: fShader,
+                wireframe: wireframe
+            });
+    
+        }
+
+        if ( _material != null) {
+
+            _mesh.material = _material;
+            _mesh.material.needsUpdate = true;
+        }
+
+        _ChangeBiomes = false;
     }
 }
 

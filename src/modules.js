@@ -242,6 +242,7 @@ UI.getElement(DataHTML.Biomes.Buttons[0]).addEventListener("click", function(eve
 UI.getElement(DataHTML.Biomes.Buttons[1]).addEventListener("click", function(event) {
 
 	Engenie.getTerrain().ApplyBiomes();
+	Engenie.getTerrain().getOptions().texture.ChangeBiomes();
 }, false);
 
 //handlers Edit Road
@@ -256,6 +257,7 @@ for (let i = 2; i < 16; i++) {
 	UI.getElement(DataHTML.Biomes.Buttons[i]).addEventListener("click", function(event) {
 
 		Engenie.getTerrain().getOptions().biomeMap.setColor(event.target.className);
+		Engenie.getTerrain().getOptions().texture.ChangeBiomes();
 	}, false);
 }
 
