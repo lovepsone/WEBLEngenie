@@ -48,6 +48,12 @@ class TextureAtlas {
         _ChangeBiomes = true;
     }
 
+    getChangeBiomes() {
+
+        if (_ChangeBiomes) return true;
+        return false;
+    }
+
     GenerateMaterial(wireframe) {
 
         if (!(_mesh instanceof THREE.Mesh)) {

@@ -34,8 +34,11 @@ function ControlBrush(currentTab) {
 		Engenie.getTerrain().setDefaultMaterial(UI.getElement(DataHTML.Wireframe).checked);
 	} else {
 
-		Engenie.getTerrain().UpdateDataColors();
-		Engenie.getTerrain().getOptions().texture.setBiomeMap(Engenie.getTerrain().getOptions().biomeMap.getBump());
+		if (Engenie.getTerrain().getOptions().texture.getChangeBiomes()) {
+
+			Engenie.getTerrain().UpdateDataColors();
+			Engenie.getTerrain().getOptions().texture.setBiomeMap(Engenie.getTerrain().getOptions().biomeMap.getBump());
+		}
 		Engenie.getTerrain().getOptions().texture.GenerateMaterial(UI.getElement(DataHTML.Wireframe).checked);
 	}
 
