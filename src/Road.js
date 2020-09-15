@@ -196,6 +196,11 @@ class Road {
 				_scene.remove(_lines[i]);
 		}
 
+		if (points.length == 0) {
+
+			console.warn('Road.js: No direction points.');
+			return;
+		}
 		let shape = new THREE.Shape();
 		shape.moveTo(0, 0);
 		shape.lineTo(0, 5);

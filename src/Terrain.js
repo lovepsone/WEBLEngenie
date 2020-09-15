@@ -115,6 +115,11 @@ class Terrain {
 
 	UpdateDataColors() {
 
+		if (!(_mesh instanceof THREE.Mesh)) {
+
+			console.warn('Terrain.js: UpdateDataColors().');
+			return;
+		}
 		_Optons.biomeMap.setColorsDataBiomes(_mesh.geometry.attributes.color);
 	}
 
