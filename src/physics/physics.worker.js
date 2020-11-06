@@ -1,7 +1,7 @@
 /*
 * author lovepsone
 */
-const Module = {TOTAL_MEMORY: 256*1024*1024}, VERSION = 0.03;
+const Module = {TOTAL_MEMORY: 256*1024*1024}, VERSION = 0.07;
 
 importScripts('./ammo.wasm.js');
 
@@ -59,7 +59,6 @@ Ammo(configAmmo).then(function(Ammo) {
         addRigidBody: function(option) {
 
             let shape = null;
-            const _vec3 = new Ammo.btVector3(); //destroy ?
 
             option.mass = option.mass == undefined ? 0 : option.mass;
             option.size = option.size == undefined ? [1, 1, 1] : option.size;
@@ -72,8 +71,7 @@ Ammo(configAmmo).then(function(Ammo) {
             switch(option.type)
             {
                 case 'Plane':
-                    _vec3.setValue(0, 1, 0);
-                    shape = new Ammo.btStaticPlaneShape(_vec3, 0);
+                    shape = new Ammo.btStaticPlaneShape(new Ammo.btVector3(0, 1, 0), 0);
                     break;
     
                 case 'Sphere':
@@ -82,8 +80,15 @@ Ammo(configAmmo).then(function(Ammo) {
                     break;
     
                 case 'Box':
-                    _vec3.setValue(option.size[0] * 0.5, option.size[1] * 0.5, option.size[2] * 0.5);
-                    shape =  new Ammo.btCylinderShape(_vec3);
+                    shape =  new Ammo.btCylinderShape(new Ammo.btVector3(option.size[0] * 0.5, option.size[1] * 0.5, option.size[2] * 0.5));
+                    break;
+
+                case 'Cylinder':
+                    shape = new Ammo.btCylinderShape(new Ammo.btVector3(option.radius, option.size[0] * 0.5, option.radius));
+                    break;
+
+                case 'Cone':
+                    shape = new Ammo.btConeShape(option.radius, option.size[0]);
                     break;
 
                 case 'mesh':

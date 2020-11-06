@@ -147,8 +147,30 @@ export class Physics {
                 option.size = [geometry.parameters.width, geometry.parameters.height, geometry.parameters.depth];
                 this.send('add', option);
                 break;
+
+            case "CylinderBufferGeometry":
+                mesh = new THREE.Mesh(geometry, material);
+                mesh.position.fromArray(option.position);
+                mesh.quaternion.fromArray(option.quat);
+                option.type = 'Cylinder';
+                option.size = [geometry.parameters.height];
+                option.radius = geometry.parameters.radiusTop;
+                this.send('add', option);
+                break;
+
+            case "ConeBufferGeometry":
+                mesh = new THREE.Mesh(geometry, material);
+                mesh.position.fromArray(option.position);
+                mesh.quaternion.fromArray(option.quat);
+                option.type = 'Cone';
+                option.size = [geometry.parameters.height];
+                option.radius = geometry.parameters.radius;
+                this.send('add', option);
+                break;
+
         }
 
+        console.log(new THREE.ConeBufferGeometry( 5, 20, 32 ))
         if (option.mass) _SoftBody.add(mesh, option);
 
         return mesh;
