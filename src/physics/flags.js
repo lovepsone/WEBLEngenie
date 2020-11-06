@@ -1,0 +1,43 @@
+/*
+* author lovepsone
+*/
+
+export const STATE = {
+
+    ACTIVE: 1,
+    ISLAND_SLEEPING: 2,
+    WANTS_DEACTIVATION: 3,
+    DISABLE_DEACTIVATION: 4,
+    DISABLE_SIMULATION: 5,
+};
+
+export const FLAG = {
+
+    RIGIDBODY: 0,
+    STATIC_OBJECT: 1,
+    KINEMATIC_OBJECT: 2,
+    NO_CONTACT_RESPONSE: 4,
+    CUSTOM_MATERIAL_CALLBACK: 8,
+    CHARACTER_OBJECT: 16,
+    DISABLE_VISUALIZE_OBJECT: 32,
+    DISABLE_SPU_COLLISION_PROCESSING: 64
+};
+
+export const GROUP = {
+
+    ALL: -1,
+    DEFAULT: 1,
+    STATIC: 2,
+    KINEMATIC: 4,
+    DEBRIS: 8,
+    SENSORTRIGGER: 16,
+    NOCOLLISION: 32,
+    GROUP0: 64,
+    GROUP1: 128,
+    GROUP2: 256,
+    GROUP3: 512,
+    GROUP4: 1024,
+    GROUP5: 2048,
+    GROUP6: 4096,
+    GROUP7 : 8192
+};

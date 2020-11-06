@@ -4,6 +4,7 @@
 
 import * as THREE from './../../libs/three/Three.js';
 import {SoftBody} from './SoftBody.js';
+import {STATE, FLAG, GROUP} from './flags.js';
 
 const clock = new THREE.Clock();
 let _worker = null, _scope = null;

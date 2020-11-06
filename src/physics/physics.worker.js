@@ -1,7 +1,7 @@
 /*
 * author lovepsone
 */
-const Module = {TOTAL_MEMORY: 256*1024*1024}, VERSION = 0.01;
+const Module = {TOTAL_MEMORY: 256*1024*1024}, VERSION = 0.02;
 
 importScripts('./ammo.wasm.js');
 
@@ -101,21 +101,23 @@ Ammo(configAmmo).then(function(Ammo) {
             const motionState = new Ammo.btDefaultMotionState(transform);
     
             let rbInfo = new Ammo.btRigidBodyConstructionInfo(option.mass, motionState, shape, localInertia);
-            //rbInfo.set_m_friction(option.friction || 0.5);
-            //rbInfo.set_m_restitution(option.restitution || 0.1);
+            rbInfo.set_m_friction(option.friction || 0.5);
+            rbInfo.set_m_restitution(option.restitution || 0.1);
             let body = new Ammo.btRigidBody(rbInfo);
     
-            _configWorld.world.addRigidBody(body);
+            //_configWorld.world.addRigidBody(body); //don't add static objects?
 
-            if (option.mass !== 0) {
-    
-                body.setCollisionFlags(0);
-                //body.setActivationState(1);
-                _bodyes.Rigids.push(body);
+            if (option.mass === 0) {
+
+                body.setCollisionFlags(option.flag || 1); 
+                _configWorld.world.addCollisionObject(body, option.group || 2, /*mask?*/-1);
+
             } else {
     
-                body.setCollisionFlags(1); 
-                _configWorld.world.addCollisionObject(body, 1, -1);
+                body.setCollisionFlags(option.flag || 0);
+                body.setActivationState(option.state || 1);
+                _bodyes.Rigids.push(body);
+                _configWorld.world.addRigidBody(body);
             }
     
             Ammo.destroy(rbInfo);
