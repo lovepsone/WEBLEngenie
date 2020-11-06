@@ -1,7 +1,7 @@
 /*
 * author lovepsone
 */
-const Module = {TOTAL_MEMORY: 256*1024*1024}, VERSION = 0.02;
+const Module = {TOTAL_MEMORY: 256*1024*1024}, VERSION = 0.03;
 
 importScripts('./ammo.wasm.js');
 
@@ -132,18 +132,21 @@ Ammo(configAmmo).then(function(Ammo) {
             _bodyes.Rigids.forEach(function(b, id) {
     
                 const n = N + (id * 8);
-                
-                let _transformW = new Ammo.btTransform();
+                const transform = new Ammo.btTransform();
                 AR[n] = b.getLinearVelocity().length() * 9.8;//b.isActive() ? 1 : 0;
 
                 if (AR[n] > 0) {
                     
-                    b.getMotionState().getWorldTransform(_transformW);
-                    let origin = _transformW.getOrigin();
-                    AR[n + 1] = origin.x();
-                    AR[n + 2] = origin.y();
-                    AR[n + 3] = origin.z();
-                    //_transformW.toArray(AR, n + 1);
+                    b.getMotionState().getWorldTransform(transform);
+                    //let origin = _transformW.getOrigin();
+                    AR[n + 1] = transform.getOrigin().x();
+                    AR[n + 2] = transform.getOrigin().y();
+                    AR[n + 3] = transform.getOrigin().z();
+                    AR[n + 4] = transform.getRotation().x();
+                    AR[n + 4] = transform.getRotation().y();
+                    AR[n + 4] = transform.getRotation().z();
+                    AR[n + 4] = transform.getRotation().w();
+                    Ammo.destroy(transform);
                 }
             });
         },
