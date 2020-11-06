@@ -59,10 +59,11 @@ Ammo(configAmmo).then(function(Ammo) {
         addRigidBody: function(option) {
 
             let shape = null;
-            let _vec3 = new Ammo.btVector3();
+            const _vec3 = new Ammo.btVector3(); //destroy ?
 
             option.mass = option.mass == undefined ? 0 : option.mass;
             option.size = option.size == undefined ? [1, 1, 1] : option.size;
+            option.radius = option.radius == undefined ? [1, 1, 1] : option.radius;
             option.position = option.position == undefined ? [0, 0, 0] : option.position;
             option.quat = option.quat == undefined ? [0, 0, 0, 1] : option.quat;
             option.friction = option.friction == undefined ? 0.5 : option.friction;
@@ -80,9 +81,11 @@ Ammo(configAmmo).then(function(Ammo) {
                     shape.setMargin(0.05);
                     break;
     
-                case 'box':
-    
+                case 'Box':
+                    _vec3.setValue(option.size[0] * 0.5, option.size[1] * 0.5, option.size[2] * 0.5);
+                    shape =  new Ammo.btCylinderShape(_vec3);
                     break;
+
                 case 'mesh':
                     break;
                 case 'convex':
@@ -143,9 +146,9 @@ Ammo(configAmmo).then(function(Ammo) {
                     AR[n + 2] = transform.getOrigin().y();
                     AR[n + 3] = transform.getOrigin().z();
                     AR[n + 4] = transform.getRotation().x();
-                    AR[n + 4] = transform.getRotation().y();
-                    AR[n + 4] = transform.getRotation().z();
-                    AR[n + 4] = transform.getRotation().w();
+                    AR[n + 5] = transform.getRotation().y();
+                    AR[n + 6] = transform.getRotation().z();
+                    AR[n + 7] = transform.getRotation().w();
                     Ammo.destroy(transform);
                 }
             });

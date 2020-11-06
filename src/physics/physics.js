@@ -117,19 +117,34 @@ export class Physics {
         option = option || {};
         option.mass = option.mass || 0;
         option.position = option.position || [0, 0, 0];
+        option.quat = option.quat || [0, 0, 0, 1];
 
         switch(geometry.type) {
 
             case "PlaneBufferGeometry":
+                geometry.rotateX(-Math.PI / 2);
                 mesh = new THREE.Mesh(geometry, material);
+                mesh.position.fromArray(option.position);
+                mesh.quaternion.fromArray(option.quat);
                 option.type = 'Plane';
                 this.send('add', option);
                 break;
 
             case "SphereBufferGeometry":
                 mesh = new THREE.Mesh(geometry, material);
+                mesh.position.fromArray(option.position);
+                mesh.quaternion.fromArray(option.quat);
                 option.type = 'Sphere';
                 option.radius = geometry.parameters.radius;
+                this.send('add', option);
+                break;
+
+            case "BoxBufferGeometry":
+                mesh = new THREE.Mesh(geometry, material);
+                mesh.position.fromArray(option.position);
+                mesh.quaternion.fromArray(option.quat);
+                option.type = 'Box';
+                option.size = [geometry.parameters.width, geometry.parameters.height, geometry.parameters.depth];
                 this.send('add', option);
                 break;
         }
