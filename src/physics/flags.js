@@ -41,3 +41,51 @@ export const GROUP = {
     GROUP6: 4096,
     GROUP7 : 8192
 };
+
+/*
+* function https://github.com/lo-th/Ammo.lab/blob/gh-pages/src/shot/Geometry.js
+*/
+
+export function GeometryInfo(geometry) {
+
+	let tmpGeometry = new THREE.Geometry().fromBufferGeometry(geometry);
+    tmpGeometry.mergeVertices();
+
+    const totalVertices = geometry.attributes.position.array.length / 3;
+	const numVertices = tmpGeometry.vertices.length;
+    const numFaces = tmpGeometry.faces.length;
+
+    geometry.realVertices = new Float32Array(numVertices * 3);
+    geometry.realIndices = new (numFaces * 3 > 65535 ? Uint32Array : Uint16Array)(numFaces * 3);
+    
+	let i = numVertices;
+	while (i--) {
+
+		geometry.realVertices[i * 3] = tmpGeometry.vertices[i].x;
+		geometry.realVertices[i * 3 + 1] = tmpGeometry.vertices[i].y;
+		geometry.realVertices[i * 3 + 2] = tmpGeometry.vertices[i].z;
+    }
+
+	i = numFaces;
+	while (i--) {
+
+		geometry.realIndices[i * 3] = tmpGeometry.faces[i].a;
+		geometry.realIndices[i * 3 + 1] = tmpGeometry.faces[i].b;
+		geometry.realIndices[i * 3 + 2] = tmpGeometry.faces[i].c;
+	}
+
+    tmpGeometry.dispose();
+
+    let faces = [];
+    i = geometry.realIndices.length;
+
+    while (i--) {
+
+        const p = geometry.realIndices[i] * 3;
+        faces[i * 3] = geometry.realVertices[p];
+        faces[i * 3 + 1] = geometry.realVertices[p + 1];
+        faces[i * 3 + 2] = geometry.realVertices[p + 2];
+    }
+
+    return faces;
+}
