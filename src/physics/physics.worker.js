@@ -1,7 +1,7 @@
 /*
 * author lovepsone
 */
-const Module = {TOTAL_MEMORY: 256*1024*1024}, VERSION = 0.07;
+const Module = {TOTAL_MEMORY: 256*1024*1024}, VERSION = 0.10;
 
 importScripts('./ammo.wasm.js');
 
@@ -60,6 +60,10 @@ Ammo(configAmmo).then(function(Ammo) {
 
             let shape = null;
 
+            const p1 = new Ammo.btVector3();
+            const p2 = new Ammo.btVector3();
+            const p3 = new Ammo.btVector3();
+
             option.mass = option.mass == undefined ? 0 : option.mass;
             option.size = option.size == undefined ? [1, 1, 1] : option.size;
             option.radius = option.radius == undefined ? [1, 1, 1] : option.radius;
@@ -67,7 +71,8 @@ Ammo(configAmmo).then(function(Ammo) {
             option.quat = option.quat == undefined ? [0, 0, 0, 1] : option.quat;
             option.friction = option.friction == undefined ? 0.5 : option.friction;
             option.restitution = option.restitution == undefined ? 0 : option.restitution;
-        
+            option.scale =  option.scale == undefined ? [1, 1, 1] : option.scale;
+
             switch(option.type)
             {
                 case 'Plane':
@@ -91,10 +96,27 @@ Ammo(configAmmo).then(function(Ammo) {
                     shape = new Ammo.btConeShape(option.radius, option.size[0]);
                     break;
 
-                case 'mesh':
+                case 'ThriMesh': {
+                    const mTriMesh = new Ammo.btTriangleMesh(/*true, false*/);
+                    const vx = option.v;
+                    for (let i = 0, fMax = vx.length; i < fMax; i += 9 ) {
+
+                        const p1 = new Ammo.btVector3(vx[i + 0] * option.scale[0], vx[i + 1] * option.scale[1], vx[i + 2] * option.scale[2]);
+                        const p2 = new Ammo.btVector3(vx[i + 3] * option.scale[0], vx[i + 4] * option.scale[1], vx[i + 5] * option.scale[2]);
+                        const p3 = new Ammo.btVector3(vx[i + 6] * option.scale[0], vx[i + 7] * option.scale[1], vx[i + 8] * option.scale[2]);
+                        mTriMesh.addTriangle(p1, p2, p3, true);
+    
+                    }
+                    if (option.mass === 0) {
+
+                        // btScaledBvhTriangleMeshShape -- if scaled instances
+                        shape = new Ammo.btBvhTriangleMeshShape(mTriMesh, true, true);
+                    } else {
+
+                        shape = new Ammo.btConvexTriangleMeshShape(mTriMesh, true);
+                    }
                     break;
-                case 'convex':
-                    break;
+                }
             }
     
     
@@ -129,6 +151,9 @@ Ammo(configAmmo).then(function(Ammo) {
             }
     
             Ammo.destroy(rbInfo);
+            Ammo.destroy(p1);
+            Ammo.destroy(p2);
+            Ammo.destroy(p3);
             self.postMessage({msg: 'start'});
             //console.log('physics.worker: add RigidBody ' + option.type);
         },

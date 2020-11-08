@@ -4,7 +4,7 @@
 
 import * as THREE from './../../libs/three/Three.js';
 import {SoftBody} from './SoftBody.js';
-import {STATE, FLAG, GROUP} from './flags.js';
+import {STATE, FLAG, GROUP, GeometryInfo} from './flags.js';
 
 const clock = new THREE.Clock();
 let _worker = null, _scope = null;
@@ -109,23 +109,31 @@ export class Physics {
         _option.isNeedUpdate = true;
     };
 
-    // option: mass, position, rotation, type
+    // option: mass, position, rotation, scale, type
     Mesh(geometry, material, option) {
 
-        let mesh = null;
+        let mesh, isMesh = false, type = null;
 
         option = option || {};
         option.mass = option.mass || 0;
         option.position = option.position || [0, 0, 0];
         option.quat = option.quat || [0, 0, 0, 1];
+        option.scale = option.scale || [1, 1, 1];
 
-        switch(geometry.type) {
+        if (geometry.type == 'Mesh') {
+
+            isMesh = true;
+            type = geometry.geometry.type;
+        } else type = geometry.type;
+
+        switch(type) {
 
             case "PlaneBufferGeometry":
                 geometry.rotateX(-Math.PI / 2);
                 mesh = new THREE.Mesh(geometry, material);
                 mesh.position.fromArray(option.position);
                 mesh.quaternion.fromArray(option.quat);
+                //mesh.scale.fromArray(option.scale);
                 option.type = 'Plane';
                 this.send('add', option);
                 break;
@@ -134,6 +142,7 @@ export class Physics {
                 mesh = new THREE.Mesh(geometry, material);
                 mesh.position.fromArray(option.position);
                 mesh.quaternion.fromArray(option.quat);
+                mesh.scale.fromArray(option.scale);
                 option.type = 'Sphere';
                 option.radius = geometry.parameters.radius;
                 this.send('add', option);
@@ -143,6 +152,7 @@ export class Physics {
                 mesh = new THREE.Mesh(geometry, material);
                 mesh.position.fromArray(option.position);
                 mesh.quaternion.fromArray(option.quat);
+                mesh.scale.fromArray(option.scale);
                 option.type = 'Box';
                 option.size = [geometry.parameters.width, geometry.parameters.height, geometry.parameters.depth];
                 this.send('add', option);
@@ -152,6 +162,7 @@ export class Physics {
                 mesh = new THREE.Mesh(geometry, material);
                 mesh.position.fromArray(option.position);
                 mesh.quaternion.fromArray(option.quat);
+                mesh.scale.fromArray(option.scale);
                 option.type = 'Cylinder';
                 option.size = [geometry.parameters.height];
                 option.radius = geometry.parameters.radiusTop;
@@ -162,15 +173,27 @@ export class Physics {
                 mesh = new THREE.Mesh(geometry, material);
                 mesh.position.fromArray(option.position);
                 mesh.quaternion.fromArray(option.quat);
+                mesh.scale.fromArray(option.scale);
                 option.type = 'Cone';
                 option.size = [geometry.parameters.height];
                 option.radius = geometry.parameters.radius;
                 this.send('add', option);
                 break;
 
+            case "BufferGeometry":
+                if (isMesh) {
+
+                    mesh = geometry;
+                    geometry.position.fromArray(option.position);
+                    geometry.quaternion.fromArray(option.quat);
+                    geometry.scale.fromArray(option.scale);
+                    option.type = 'ThriMesh';
+                    option.v = GeometryInfo(geometry.geometry);
+                }
+                this.send('add', option);
+                break;
         }
 
-        console.log(new THREE.ConeBufferGeometry( 5, 20, 32 ))
         if (option.mass) _SoftBody.add(mesh, option);
 
         return mesh;
