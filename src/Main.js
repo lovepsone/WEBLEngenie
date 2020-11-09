@@ -46,6 +46,9 @@ class MainEngenie {
 		_worker = new Worker('./src/Worker.js', {type: 'module'});
 		_worker.onmessage = this.WorkerOnMessage;
 
+		document.getElementById('Window').addEventListener('resize', this.onRenderResize(), false);
+		console.log(document.getElementById('Window'));
+
 		////////////////////////////
 		//_phisics = new Phisics(false, './../../libs/ammo.js', true);
 		/*_phisics = new Physics();
@@ -164,6 +167,13 @@ class MainEngenie {
 				_terrain.getOptions().road.Draw(event.data.dataRoad);
 				break;
         }
+	}
+
+	onRenderResize() {
+
+		_camera.aspect =  window.innerWidth / window.innerHeight;
+		_camera.updateProjectionMatrix();
+		_renderer.setSize( window.innerWidth, window.innerHeight);
 	}
 }
 

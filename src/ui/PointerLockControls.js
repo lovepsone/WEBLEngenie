@@ -20,7 +20,7 @@ export class PointerLockControls {
     constructor(camera, viewport/*'Window'*/) {
 
         _camera = camera;
-        _camera.rotation.set(0, 0, 0);
+        //_camera.rotation.set(0, 0, 0);
         this.element = document.getElementById(viewport);
 
         _bindPointerLockChange = this.pointerLockChange.bind(this);
@@ -41,7 +41,6 @@ export class PointerLockControls {
 			document.addEventListener('pointerlockerror', _bindPointerLockError, false);
 			document.addEventListener('mozpointerlockerror', _bindPointerLockError, false);
             document.addEventListener('webkitpointerlockerror', _bindPointerLockError, false);
-
             this.element.addEventListener('click', _bindPointerLockClick, false);
         }
     }
@@ -67,7 +66,6 @@ export class PointerLockControls {
             document.addEventListener('keydown', _bindKeyDown, false);
             document.addEventListener('keyup', _bindKeyUp, false);
         } else {
-
 
             document.removeEventListener('mousemove', _bindMouseMove, false);
             document.removeEventListener('keydown', _bindKeyDown, false);
