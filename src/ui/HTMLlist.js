@@ -12,7 +12,12 @@ import {CLASSTULLTIP, TOOLTIPWIND}	from './../CONST.js';
 var txt = lang['ru'];
 
 var DataHTML = {
-	'MenuBar': {'CreateTerrain': 'CreateTerrain', 'SaveTerrain': 'SaveTerrain', 'LoadTerrain': 'LoadTerrain', 'LoadHeightMap': 'LoadHeightMap'},
+	'MenuBar': {'CreateTerrain': 'CreateTerrain',
+			'SaveTerrain': 'SaveTerrain',
+			'LoadTerrain': 'LoadTerrain',
+			'LoadHeightMap': 'LoadHeightMap',
+			'PlaySimulation': 'PlaySimulation',
+		},
 	'RightBar': {
 		'Buttons': ['TabEditorTerrain', 'TabEditorBiomes', 'TabEditorRoads', 'TabEditorTextures'],
 		'Contents': ['EditorTerrainContent', 'EditorBiomesContent', 'EditorRoadsContent', 'EditorTexturesContent'],
@@ -121,6 +126,13 @@ let HTMLlist = [
 				{'tag': 'div', 'id': DataHTML.MenuBar.LoadTerrain, 'class': 'option', 'text': txt.MenuBar[3]},
 				{'tag': 'hr'},
 				{'tag': 'div', 'id': DataHTML.MenuBar.LoadHeightMap, 'class': 'option', 'text': txt.MenuBar[4]},
+			]},
+		]},
+		//simulate
+		{'tag': 'div', 'class': 'menu', 'children': [
+			{'tag': 'div', 'class': 'title', 'text': "simulation"},
+			{'tag': 'div', 'class': 'options', 'children': [
+				{'tag': 'div', 'id': DataHTML.MenuBar.PlaySimulation, 'class': 'option', 'text': "Play"},
 			]},
 		]},
 	

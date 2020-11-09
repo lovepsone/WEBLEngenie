@@ -121,6 +121,21 @@ UI.getElement(DataHTML.MenuBar.CreateTerrain).addEventListener("click", function
 	UI.getElement(DataHTML.DialogCreateTerrain.widjet).showModal();
 }, false);
 
+//play simulatuon
+UI.getElement(DataHTML.MenuBar.PlaySimulation).addEventListener("click", function() {
+
+	Engenie.getControlsCamera().dispose();
+	Engenie.getPointerLockControls().start();
+	UI.getElement(DataHTML.Camera).checked = false;
+	Engenie.getControlsCamera().UpdateEvents();
+}, false);
+
+// exit simulation
+UI.getElement("Window").addEventListener("ExitPointerLock", function() {
+
+	Engenie.getPointerLockControls().dispose();
+	UI.getElement(DataHTML.Camera).checked = true;
+}, false);
 
 UI.getElement(DataHTML.MenuBar.SaveTerrain).addEventListener("click", function() {
 
