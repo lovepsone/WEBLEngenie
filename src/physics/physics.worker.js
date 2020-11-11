@@ -1,7 +1,7 @@
 /*
 * author lovepsone
 */
-const Module = {TOTAL_MEMORY: 256*1024*1024}, VERSION = 0.10;
+const Module = {TOTAL_MEMORY: 256*1024*1024}, VERSION = 0.11;
 
 importScripts('./ammo.wasm.js');
 
@@ -10,202 +10,167 @@ configAmmo  =  {
     locateFile:()  =>  './ammo.wasm.wasm'
 };
 
-function initARRAY(max) {
+let ROOT = {
 
-    let tmp = new ArrayBuffer(max * Float32Array.BYTES_PER_ELEMENT);
-    return new Float32Array(tmp);
-}
+    Ar: null,
+    ArPos: null,
+
+    world: null,
+    gravity: null,
+
+    post: null,
+};
+
+let _RigidBody;
 
 Ammo(configAmmo).then(function(Ammo) {
 
-    let _arr = {ArLng: null, ArPos: null, ArMax: null, Ar: null};
-    let _configWorld = {solver: null, collision: null, dispatcher: null, broadphase: null, world: null};
-    let _bodyes = {Rigids: [], Character: []};
+    importScripts('./WorkerRigidBody.js');
+
+    let _solver, _collision, _dispatcher, _broadphase;
+    let _bodyes = {Rigids: [], Character: []}, _controller = null;
     let timeStep;
+    let _walkSpeed = 0.3, _angleInc = 0.1;
 
     console.log(`physics.worker: succesful load ammo.js. VERSION = ${VERSION}`);
     self.postMessage({msg: 'int'});
 
-    let AmmoPhysics = {
+    class AmmoPhysics {
 
-        init: function(option) {
+        init(option) {
 
-            //if(option.timeStep !== undefined) timeStep = option.timeStep;
+            ROOT.gravity = option.gravity || [0, -10, 0];
+            ROOT.ArLng = option.settings[0];
+            ROOT.ArPos = option.settings[1];
+            ROOT.ArMax = option.settings[2];
+            ROOT.Ar = new Float32Array(new ArrayBuffer(ROOT.ArMax * Float32Array.BYTES_PER_ELEMENT));
 
-            option.gravity = option.gravity || [0, -10, 0];
-            _arr.ArLng = option.settings[0];
-            _arr.ArPos = option.settings[1];
-            _arr.ArMax = option.settings[2];
-            _arr.Ar = initARRAY(_arr.ArMax);
+            _collision = new Ammo.btDefaultCollisionConfiguration();
+            _dispatcher = new Ammo.btCollisionDispatcher(_collision);
+            _broadphase = new Ammo.btDbvtBroadphase();
+            _solver = new Ammo.btSequentialImpulseConstraintSolver();
 
-            _configWorld.collision = new Ammo.btDefaultCollisionConfiguration();
-            _configWorld.dispatcher = new Ammo.btCollisionDispatcher(_configWorld.collision);
-            _configWorld.broadphase = new Ammo.btDbvtBroadphase();
-            _configWorld.solver = new Ammo.btSequentialImpulseConstraintSolver();
+            ROOT.world = new Ammo.btDiscreteDynamicsWorld(_dispatcher, _broadphase, _solver, _collision);
+            ROOT.world.setGravity(new Ammo.btVector3(ROOT.gravity[0], ROOT.gravity[1], ROOT.gravity[2]));
+            ROOT.post = this.post;
 
-            _configWorld.world = new Ammo.btDiscreteDynamicsWorld(
-                _configWorld.dispatcher,
-                _configWorld.broadphase,
-                _configWorld.solver,
-                _configWorld.collision
-            );
-            _configWorld.world.setGravity(new Ammo.btVector3(option.gravity[0], option.gravity[1], option.gravity[2]));
-
-            let dInfo = _configWorld.world.getDispatchInfo();
+            let dInfo = ROOT.world.getDispatchInfo();
             dInfo.set_m_allowedCcdPenetration(0.001);
             //self.postMessage({msg: 'start'});
-        },
 
-        addRigidBody: function(option) {
+            _RigidBody = new RigidBody(ROOT);
+        }
 
-            let shape = null;
+        post(msg) {
 
-            const p1 = new Ammo.btVector3();
-            const p2 = new Ammo.btVector3();
-            const p3 = new Ammo.btVector3();
+            self.postMessage(msg);
+        }
 
-            option.mass = option.mass == undefined ? 0 : option.mass;
-            option.size = option.size == undefined ? [1, 1, 1] : option.size;
-            option.radius = option.radius == undefined ? [1, 1, 1] : option.radius;
+        add(option) {
+
+            _RigidBody.add(option);
+
+        }
+ 
+
+        /*
+        *
+        * Character
+        *
+        */
+        addCharacter(option) {
+
+            const ID = 0;
+            option.size = option.size == undefined ? [1, 2] : option.size;
             option.position = option.position == undefined ? [0, 0, 0] : option.position;
             option.quat = option.quat == undefined ? [0, 0, 0, 1] : option.quat;
-            option.friction = option.friction == undefined ? 0.5 : option.friction;
-            option.restitution = option.restitution == undefined ? 0 : option.restitution;
-            option.scale =  option.scale == undefined ? [1, 1, 1] : option.scale;
 
-            switch(option.type)
-            {
-                case 'Plane':
-                    shape = new Ammo.btStaticPlaneShape(new Ammo.btVector3(0, 1, 0), 0);
-                    break;
+            const shape = new Ammo.btCapsuleShape(option.size[0], option.size[1] * 0.5);
+            const body = new Ammo.btPairCachingGhostObject();
     
-                case 'Sphere':
-                    shape = new Ammo.btSphereShape(option.radius);
-                    shape.setMargin(0.05);
-                    break;
-    
-                case 'Box':
-                    shape =  new Ammo.btCylinderShape(new Ammo.btVector3(option.size[0] * 0.5, option.size[1] * 0.5, option.size[2] * 0.5));
-                    break;
-
-                case 'Cylinder':
-                    shape = new Ammo.btCylinderShape(new Ammo.btVector3(option.radius, option.size[0] * 0.5, option.radius));
-                    break;
-
-                case 'Cone':
-                    shape = new Ammo.btConeShape(option.radius, option.size[0]);
-                    break;
-
-                case 'ThriMesh': {
-                    const mTriMesh = new Ammo.btTriangleMesh(/*true, false*/);
-                    const vx = option.v;
-                    for (let i = 0, fMax = vx.length; i < fMax; i += 9 ) {
-
-                        const p1 = new Ammo.btVector3(vx[i + 0] * option.scale[0], vx[i + 1] * option.scale[1], vx[i + 2] * option.scale[2]);
-                        const p2 = new Ammo.btVector3(vx[i + 3] * option.scale[0], vx[i + 4] * option.scale[1], vx[i + 5] * option.scale[2]);
-                        const p3 = new Ammo.btVector3(vx[i + 6] * option.scale[0], vx[i + 7] * option.scale[1], vx[i + 8] * option.scale[2]);
-                        mTriMesh.addTriangle(p1, p2, p3, true);
-    
-                    }
-                    if (option.mass === 0) {
-
-                        // btScaledBvhTriangleMeshShape -- if scaled instances
-                        shape = new Ammo.btBvhTriangleMeshShape(mTriMesh, true, true);
-                    } else {
-
-                        shape = new Ammo.btConvexTriangleMeshShape(mTriMesh, true);
-                    }
-                    break;
-                }
-            }
-    
-    
-            const localInertia = new Ammo.btVector3(0, 0, 0);
-            if (option.mass !== 0 ) shape.calculateLocalInertia(option.mass, localInertia);
-    
-            const transform = new Ammo.btTransform();
+            const transform = new Ammo.btTransform(); 
             transform.setIdentity();
-            transform.setOrigin(new Ammo.btVector3(option.position[0],  option.position[1],  option.position[2]));
+            transform.setOrigin(new Ammo.btVector3(option.position[0], option.position[1], option.position[2]));
             transform.setRotation(new Ammo.btQuaternion(option.quat[0],  option.quat[1],  option.quat[2],  option.quat[3]));
-            
-            const motionState = new Ammo.btDefaultMotionState(transform);
-    
-            let rbInfo = new Ammo.btRigidBodyConstructionInfo(option.mass, motionState, shape, localInertia);
-            rbInfo.set_m_friction(option.friction || 0.5);
-            rbInfo.set_m_restitution(option.restitution || 0.1);
-            let body = new Ammo.btRigidBody(rbInfo);
-    
-            //_configWorld.world.addRigidBody(body); //don't add static objects?
 
-            if (option.mass === 0) {
+            body.setWorldTransform(transform);
+            body.setCollisionShape(shape);
+            body.setCollisionFlags(16); //FLAGS.CHARACTER_OBJECT
+            body.setFriction(option.friction || 0.1 );
+            body.setRestitution(option.restitution || 0);
+            body.setActivationState(4); // STATE.DISABLE_DEACTIVATION
+            body.activate();
 
-                body.setCollisionFlags(option.flag || 1); 
-                _configWorld.world.addCollisionObject(body, option.group || 2, /*mask?*/-1);
+            _controller = new Ammo.btKinematicCharacterController(body, shape, option.stepH || 0.35, option.upAxis || 1);
+            _controller.setUseGhostSweepTest(shape);
+            _controller.setVelocityForTimeInterval(new Ammo.btVector3(0, 0, 0), 1);
+            _bodyes.Character.push(body);
 
-            } else {
-    
-                body.setCollisionFlags(option.flag || 0);
-                body.setActivationState(option.state || 1);
-                _bodyes.Rigids.push(body);
-                _configWorld.world.addRigidBody(body);
-            }
-    
-            Ammo.destroy(rbInfo);
-            Ammo.destroy(p1);
-            Ammo.destroy(p2);
-            Ammo.destroy(p3);
-            self.postMessage({msg: 'start'});
-            //console.log('physics.worker: add RigidBody ' + option.type);
-        },
+            //options
+            if (option.gravity !== undefined) _controller.setGravity(option.gravity);
+            if (option.upAxis !== undefined) _controller.setUpAxis(option.upAxis);
+            if (option.canJump !== undefined) _controller.canJump(option.canJump);
+            if (option.maxJumpHeight !== undefined) _controller.setMaxJumpHeight(option.maxJumpHeight);//0.01
+            if (option.jumpSpeed !== undefined) _controller.setJumpSpeed(option.jumpSpeed);//0.1
+            if (option.fallSpeed !== undefined) _controller.setFallSpeed(option.fallSpeed);//55
+            if (option.slopeRadians !== undefined) _controller.setMaxSlope(option.slopeRadians);//45
+            if (option.angle !== undefined) this.setAngle(option.angle, ID);
+        }
+  
+        setAngle(angle, id) {
 
-        stepRigidBody: function(AR, N) {
+        }
 
-            if(_bodyes.length === 0) return;
+        ControlCharacter(id, t, key) {
 
-            _bodyes.Rigids.forEach(function(b, id) {
-    
+        }
+
+        stepCharacter(AR, N) {
+        
+            if(!_bodyes.Character.length) return;
+        
+            _bodyes.Character.forEach(function(b, id) {
+
                 const n = N + (id * 8);
-                const transform = new Ammo.btTransform();
-                AR[n] = b.getLinearVelocity().length() * 9.8;//b.isActive() ? 1 : 0;
-
-                if (AR[n] > 0) {
-                    
-                    b.getMotionState().getWorldTransform(transform);
-                    //let origin = _transformW.getOrigin();
-                    AR[n + 1] = transform.getOrigin().x();
-                    AR[n + 2] = transform.getOrigin().y();
-                    AR[n + 3] = transform.getOrigin().z();
-                    AR[n + 4] = transform.getRotation().x();
-                    AR[n + 5] = transform.getRotation().y();
-                    AR[n + 6] = transform.getRotation().z();
-                    AR[n + 7] = transform.getRotation().w();
-                    Ammo.destroy(transform);
-                }
+                
+                AR[n] = b.speed;
+        
+                const transform = b.getGhostObject().getWorldTransform();
+        
+                AR[n + 1] = transform.getOrigin().x();
+                AR[n + 2] = transform.getOrigin().y();
+                AR[n + 3] = transform.getOrigin().z();
+                AR[n + 4] = transform.getRotation().x();
+                AR[n + 5] = transform.getRotation().y();
+                AR[n + 6] = transform.getRotation().z();
+                AR[n + 7] = transform.getRotation().w();
             });
-        },
-    
-        stepSimulation: function(option) {
+        }
+
+        stepSimulation(option) {
     
             let delta = option.delta;
-            _configWorld.world.stepSimulation(option.delta, 2);
-            
-            //if (data.key != null) {
-            //key = data.key;
-            //}
-            //ControlCharacter(0, data.angle);
-            //stepCharacter(Ar, ArPos[0]);
-            this.stepRigidBody(_arr.Ar, _arr.ArPos[2]);
-            self.postMessage({msg: 'step', Ar: _arr.Ar});
+            let key = option.key == undefined ? null : option.key;
+            ROOT.world.stepSimulation(option.delta, 2);
+
+            //this.ControlCharacter(0, option.angle, key);
+            //this.stepCharacter(_arr.Ar, _arr.ArPos[0]);
+            _RigidBody.step(ROOT.Ar, ROOT.ArPos[2]);
+            self.postMessage({msg: 'step', Ar: ROOT.Ar});
         }
     };
+
+    let physics = new AmmoPhysics();
 
     self.onmessage = function(event) {
 
         switch(event.data.msg) {
     
-            case 'int': AmmoPhysics.init(event.data.opt); break;
-            case 'add': AmmoPhysics.addRigidBody(event.data.opt); break;
-            case 'step': AmmoPhysics.stepSimulation(event.data.opt); break;
+            case 'int': physics.init(event.data.opt); break;
+            case 'add': physics.add(event.data.opt); break;
+            case 'step': physics.stepSimulation(event.data.opt); break;
+            case 'character': physics.addCharacter(event.data.opt); break;
+            case 'characterRotation': physics.setCharacterRotation(event.data.opt.id, event.data.angle); break;
         }
     }
 });
