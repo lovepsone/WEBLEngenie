@@ -1,7 +1,7 @@
 /*
 * author lovepsone
 */
-const Module = {TOTAL_MEMORY: 256*1024*1024}, VERSION = 0.11;
+const Module = {TOTAL_MEMORY: 256*1024*1024}, VERSION = 0.15;
 
 importScripts('./ammo.wasm.js');
 
@@ -19,13 +19,17 @@ let ROOT = {
     gravity: null,
 
     post: null,
+
+
+    key: [0, 0, 0, 0, 0]
 };
 
-let _RigidBody;
+let _RigidBody, _Character;
 
 Ammo(configAmmo).then(function(Ammo) {
 
     importScripts('./WorkerRigidBody.js');
+    importScripts('./WorkerCharacter.js');
 
     let _solver, _collision, _dispatcher, _broadphase;
     let _bodyes = {Rigids: [], Character: []}, _controller = null;
@@ -59,6 +63,7 @@ Ammo(configAmmo).then(function(Ammo) {
             //self.postMessage({msg: 'start'});
 
             _RigidBody = new RigidBody(ROOT);
+            _Character = new Character(ROOT);
         }
 
         post(msg) {
@@ -68,93 +73,28 @@ Ammo(configAmmo).then(function(Ammo) {
 
         add(option) {
 
-            _RigidBody.add(option);
-
-        }
- 
-
-        /*
-        *
-        * Character
-        *
-        */
-        addCharacter(option) {
-
-            const ID = 0;
-            option.size = option.size == undefined ? [1, 2] : option.size;
-            option.position = option.position == undefined ? [0, 0, 0] : option.position;
-            option.quat = option.quat == undefined ? [0, 0, 0, 1] : option.quat;
-
-            const shape = new Ammo.btCapsuleShape(option.size[0], option.size[1] * 0.5);
-            const body = new Ammo.btPairCachingGhostObject();
-    
-            const transform = new Ammo.btTransform(); 
-            transform.setIdentity();
-            transform.setOrigin(new Ammo.btVector3(option.position[0], option.position[1], option.position[2]));
-            transform.setRotation(new Ammo.btQuaternion(option.quat[0],  option.quat[1],  option.quat[2],  option.quat[3]));
-
-            body.setWorldTransform(transform);
-            body.setCollisionShape(shape);
-            body.setCollisionFlags(16); //FLAGS.CHARACTER_OBJECT
-            body.setFriction(option.friction || 0.1 );
-            body.setRestitution(option.restitution || 0);
-            body.setActivationState(4); // STATE.DISABLE_DEACTIVATION
-            body.activate();
-
-            _controller = new Ammo.btKinematicCharacterController(body, shape, option.stepH || 0.35, option.upAxis || 1);
-            _controller.setUseGhostSweepTest(shape);
-            _controller.setVelocityForTimeInterval(new Ammo.btVector3(0, 0, 0), 1);
-            _bodyes.Character.push(body);
-
-            //options
-            if (option.gravity !== undefined) _controller.setGravity(option.gravity);
-            if (option.upAxis !== undefined) _controller.setUpAxis(option.upAxis);
-            if (option.canJump !== undefined) _controller.canJump(option.canJump);
-            if (option.maxJumpHeight !== undefined) _controller.setMaxJumpHeight(option.maxJumpHeight);//0.01
-            if (option.jumpSpeed !== undefined) _controller.setJumpSpeed(option.jumpSpeed);//0.1
-            if (option.fallSpeed !== undefined) _controller.setFallSpeed(option.fallSpeed);//55
-            if (option.slopeRadians !== undefined) _controller.setMaxSlope(option.slopeRadians);//45
-            if (option.angle !== undefined) this.setAngle(option.angle, ID);
-        }
-  
-        setAngle(angle, id) {
-
-        }
-
-        ControlCharacter(id, t, key) {
-
-        }
-
-        stepCharacter(AR, N) {
-        
-            if(!_bodyes.Character.length) return;
-        
-            _bodyes.Character.forEach(function(b, id) {
-
-                const n = N + (id * 8);
-                
-                AR[n] = b.speed;
-        
-                const transform = b.getGhostObject().getWorldTransform();
-        
-                AR[n + 1] = transform.getOrigin().x();
-                AR[n + 2] = transform.getOrigin().y();
-                AR[n + 3] = transform.getOrigin().z();
-                AR[n + 4] = transform.getRotation().x();
-                AR[n + 5] = transform.getRotation().y();
-                AR[n + 6] = transform.getRotation().z();
-                AR[n + 7] = transform.getRotation().w();
-            });
+            if (option.type == 'character') _Character.add(option);
+            else _RigidBody.add(option);
         }
 
         stepSimulation(option) {
     
             let delta = option.delta;
             let key = option.key == undefined ? null : option.key;
+            option.angle = option.angle == undefined ? 0: option.angle;
             ROOT.world.stepSimulation(option.delta, 2);
 
-            //this.ControlCharacter(0, option.angle, key);
-            //this.stepCharacter(_arr.Ar, _arr.ArPos[0]);
+            if (key != null) {
+
+                ROOT.key[0] = key[0];
+                ROOT.key[1] = key[1];
+                ROOT.key[2] = key[2];
+                ROOT.key[3] = key[3];
+                ROOT.key[4] = key[4];
+            }
+
+            _Character.control('', ROOT.key, option.angle);
+            _Character.step(ROOT.Ar, ROOT.ArPos[0])
             _RigidBody.step(ROOT.Ar, ROOT.ArPos[2]);
             self.postMessage({msg: 'step', Ar: ROOT.Ar});
         }
@@ -169,8 +109,6 @@ Ammo(configAmmo).then(function(Ammo) {
             case 'int': physics.init(event.data.opt); break;
             case 'add': physics.add(event.data.opt); break;
             case 'step': physics.stepSimulation(event.data.opt); break;
-            case 'character': physics.addCharacter(event.data.opt); break;
-            case 'characterRotation': physics.setCharacterRotation(event.data.opt.id, event.data.angle); break;
         }
     }
 });

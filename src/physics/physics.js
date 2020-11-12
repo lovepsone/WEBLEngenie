@@ -3,8 +3,55 @@
 */
 
 import * as THREE from './../../libs/three/Three.js';
-import {SoftBody} from './SoftBody.js';
+import {RigidBody} from './RigidBody.js';
+import {Character} from './Character.js'
 import {STATE, FLAG, GROUP, GeometryInfo} from './flags.js';
+
+function Capsule( radius, height, radialSegs, heightSegs ) {
+
+	THREE.BufferGeometry.call( this );
+
+	this.type = 'Capsule';
+
+    radius = radius || 1;
+    height = height || 1;
+
+    var pi = Math.PI;
+
+    radialSegs = Math.floor( radialSegs ) || 12;
+    var sHeight = Math.floor( radialSegs * 0.5 );
+
+    heightSegs = Math.floor( heightSegs ) || 1;
+    var o0 = Math.PI * 2;
+    var o1 = Math.PI * 0.5;
+    var g = new THREE.Geometry();
+    var m0 = new THREE.CylinderGeometry( radius, radius, height, radialSegs, heightSegs, true );
+
+    var mr = new THREE.Matrix4();
+    var m1 = new THREE.SphereGeometry( radius, radialSegs, sHeight, 0, o0, 0, o1);
+    var m2 = new THREE.SphereGeometry( radius, radialSegs, sHeight, 0, o0, o1, o1);
+    var mtx0 = new THREE.Matrix4().makeTranslation( 0,0,0 );
+   // if(radialSegs===6) mtx0.makeRotationY( 30 * THREE.Math.DEG2RAD );
+    var mtx1 = new THREE.Matrix4().makeTranslation(0, height*0.5,0);
+    var mtx2 = new THREE.Matrix4().makeTranslation(0, -height*0.5,0);
+    mr.makeRotationZ( pi );
+    g.merge( m0, mtx0.multiply(mr) );
+    g.merge( m1, mtx1);
+    g.merge( m2, mtx2);
+
+    g.mergeVertices();
+    g.computeVertexNormals();
+
+    m0.dispose();
+    m1.dispose();
+    m2.dispose();
+
+    this.fromGeometry( g );
+
+    g.dispose();
+}
+Capsule.prototype = Object.create(THREE.BufferGeometry.prototype);
+
 
 const clock = new THREE.Clock();
 let _worker = null, _scope = null;
@@ -17,7 +64,10 @@ let _option = {
 
     substep: 2,
     broadphase: 2,
-    isNeedUpdate: false
+    isNeedUpdate: false,
+
+    controller: null,
+    camera: null,
 };
 
 let _Ar;
@@ -27,7 +77,7 @@ let _ArMax = _ArLng[0] + _ArLng[1] + _ArLng[2] + _ArLng[3] + _ArLng[4];
 let _time = 0, _timestep = 1/60, _timerate = _timestep * 1000,  _temp = 0, _delta = 0, _count = 0, _then = 0, _timer;
 
 let isLoadAmmo = false, tmpSMG = [];
-let _SoftBody = null;
+let _RigidBody = null, _Character = null;
 
 
 export class Physics {
@@ -39,7 +89,8 @@ export class Physics {
         _worker.onmessage = this.OnMessage;
         _worker.postMessage = _worker.webkitPostMessage || _worker.postMessage;
         this.send('int', {gravity: _option.gravity, settings: [_ArLng, _ArPos, _ArMax]});
-        _SoftBody = new SoftBody();
+        _Character = new Character();
+        _RigidBody = new RigidBody();
     }
 
     OnMessage(event) {
@@ -76,21 +127,19 @@ export class Physics {
         if (_delta > _timerate) {
 
 			_then = _time - (_delta % _timerate);
-			/*if (Control == null)
-			{
-				worker.postMessage({Message: 'step', key: null});
-			}
-			else
-			{
-				worker.postMessage({Message: 'step', key: Control.getKey(), angle: Control.GetTheta()});
-            }*/
 
-            _worker.postMessage({msg: 'step', opt: {delta: _delta}});
+			if (_option.controller != null && _option.controller.getEnabled()) {
+
+                _worker.postMessage({msg: 'step', opt: {delta: _delta, key: _option.controller.getKey(), angle: _option.controller.getAngleLongitude()}});
+            } else {
+
+                _worker.postMessage({msg: 'step', opt: {delta: _delta}});
+            }
 		}
     }
 
-    start()
-	{
+    start() {
+
 		this.sendData();
 		console.log('physics.js: start ammo step.');
     }
@@ -194,16 +243,42 @@ export class Physics {
                 break;
         }
 
-        if (option.mass) _SoftBody.add(mesh, option);
+        if (option.mass) _RigidBody.add(mesh, option);
 
         return mesh;
     }
 
-    needUpdate() {
+    addCharacter(option, controller = null) {
+
+        if (controller == null) {
+
+            console.error('Physics.js: controller not defined!!!');
+            return;
+        }
+
+        _option.controller = controller;
+        option.size = option.size == undefined ? [0.25, 2, 6] : option.size;
+        option.type = 'character';
+        option.position = option.position || _option.controller.getPosition();
+        //option.quaternion
+
+        let mesh = new THREE.Mesh(new Capsule(2, 10, 6), new THREE.MeshBasicMaterial({ color: 0x993399/*, wireframe: true*/}));
+        mesh.position.fromArray(option.position);
+        _Character.add(mesh, option);
+        this.send('add', option);
+        return mesh;
+    }
+
+    needUpdate(id = 0) {
 
         if (_option.isNeedUpdate) {
 
-            _SoftBody.step(_Ar, _ArPos[2]);
+            if (_option.controller != null) {
+
+                _option.controller.setPosition(_Character.get(id).position.toArray());
+                _Character.step(_Ar, _ArPos[0]);
+            }
+            _RigidBody.step(_Ar, _ArPos[2]);
         }
     }
 }

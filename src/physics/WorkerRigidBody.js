@@ -1,5 +1,5 @@
 /*
-*
+* author lovepsone
 */
 
 class RigidBody {
@@ -103,6 +103,7 @@ class RigidBody {
 
         Ammo.destroy(rbInfo);
         Ammo.destroy(localInertia);
+        Ammo.destroy(transform);
         this.root.post({msg: 'start'});
     }
 

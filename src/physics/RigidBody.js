@@ -6,7 +6,7 @@ import * as THREE from '../../libs/three/Three.js';
 
 let _bodys = [];
 
-export class SoftBody {
+export class RigidBody {
 
     constructor() {
 
