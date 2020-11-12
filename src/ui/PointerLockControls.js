@@ -9,7 +9,7 @@ const EventExitPointerLock = new Event('ExitPointerLock');
 let _havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
 let _bindPointerLockChange, _bindMouseMove, _bindPointerLockError, _bindPointerLockClick, _isEnabled = false, _bindKeyDown, _bindKeyUp;
-let _button = {moveForward: false, moveBackward: false, moveLeft: false, moveRight: false, spase: false};
+let _button = {moveForward: 0, moveBackward: 0, moveLeft: 0, moveRight: 0, spase: 0};
 let _camera = null;
 let _lat = 0, _lon = 0, _phi = 0, _theta = 0;
 let _sensitivity = 0.06; // default sensitivity
@@ -20,7 +20,6 @@ export class PointerLockControls {
     constructor(camera, viewport/*'Window'*/) {
 
         _camera = camera;
-        //_camera.rotation.set(0, 0, 0);
         this.element = document.getElementById(viewport);
 
         _bindPointerLockChange = this.pointerLockChange.bind(this);
@@ -29,6 +28,11 @@ export class PointerLockControls {
         _bindPointerLockClick = this.pointerLockClick.bind(this);
         _bindKeyUp = this.onKeyUp.bind(this);
         _bindKeyDown = this.onKeyDown.bind(this);
+    }
+
+    getEnabled() {
+
+        return _isEnabled;
     }
 
     start() {
@@ -118,27 +122,27 @@ export class PointerLockControls {
 
     onKeyDown(event) {
 
-        console.log(event.keyCode);
+        //console.log(event.keyCode);
         switch (event.keyCode)
         {
             case 38: /*up*/
             case 87: /*W*/
-            _button.moveForward = true;
+            _button.moveForward = 1;
                 break;
             case 37: /*left*/
             case 65: /*A*/
-            _button.moveLeft = true;
+            _button.moveLeft = 1;
                 break;
             case 40: /*down*/
             case 83: /*S*/
-            _button.moveBackward = true;
+            _button.moveBackward = 1;
                 break;
             case 39: /*right*/
             case 68: /*D*/
-            _button.moveRight = true;
+            _button.moveRight = 1;
                 break;
             case 32: /*spase*/
-                if (!_button.spase) _button.spase = true; else _button.spase = false;
+                if (!_button.spase) _button.spase = 1; else _button.spase = 0;
             break;
         }
     }
@@ -149,23 +153,55 @@ export class PointerLockControls {
 		{
 			case 38: /*up*/
 			case 87: /*W*/
-                _button.moveForward = false;
+                _button.moveForward = 0;
 				break;
 			case 37: /*left*/
 			case 65: /*A*/
-                _button.moveLeft = false;
+                _button.moveLeft = 0;
 				break;
 			case 40: /*down*/
 			case 83: /*S*/
-                _button.moveBackward = false;
+                _button.moveBackward = 0;
 				break;
 			case 39: /*right*/
 			case 68: /*D*/
-                _button.moveRight = false;
+                _button.moveRight = 0;
 				break;
 			case 32: /*spase*/
-                _button.spase = false;
+                _button.spase = 0;
 				break;
 		}
+    }
+
+    setPosition(position) {
+
+        if (_isEnabled) {
+
+            _camera.position.fromArray(position);
+        }
+    }
+
+    getPosition() {
+
+        return _camera.position.toArray();
+    }
+
+    getAngleLongitude() {
+
+        if (_isEnabled) {
+
+            return _theta;
+        }
+    }
+
+    getKey() {
+
+        return [
+            _button.moveForward,
+            _button.moveLeft,
+            _button.moveBackward,
+            _button.moveRight,
+            _button.spase
+        ];
     }
 };
