@@ -1,11 +1,12 @@
 /*
 * author lovepsone
 */
+
+'use strict';
 const Module = {TOTAL_MEMORY: 256*1024*1024}, VERSION = 0.15;
+self.importScripts('./ammo.wasm.js');
 
-importScripts('./ammo.wasm.js');
-
-configAmmo  =  {
+let configAmmo  =  {
 
     locateFile:()  =>  './ammo.wasm.wasm'
 };
@@ -32,9 +33,6 @@ Ammo(configAmmo).then(function(Ammo) {
     importScripts('./WorkerCharacter.js');
 
     let _solver, _collision, _dispatcher, _broadphase;
-    let _bodyes = {Rigids: [], Character: []}, _controller = null;
-    let timeStep;
-    let _walkSpeed = 0.3, _angleInc = 0.1;
 
     console.log(`physics.worker: succesful load ammo.js. VERSION = ${VERSION}`);
     self.postMessage({msg: 'int'});
@@ -78,11 +76,11 @@ Ammo(configAmmo).then(function(Ammo) {
         }
 
         stepSimulation(option) {
-    
+
             let delta = option.delta;
             let key = option.key == undefined ? null : option.key;
             option.angle = option.angle == undefined ? 0: option.angle;
-            ROOT.world.stepSimulation(option.delta, 2);
+            ROOT.world.stepSimulation(option.delta, 2, 1/60);
 
             if (key != null) {
 

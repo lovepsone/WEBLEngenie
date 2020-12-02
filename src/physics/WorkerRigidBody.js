@@ -1,6 +1,9 @@
 /*
 * author lovepsone
 */
+//import * as THREE from '../../libs/three/Three.js';
+
+
 
 class RigidBody {
 
@@ -12,7 +15,13 @@ class RigidBody {
 
     add(option) {
 
-        let shape = null;
+        let shape = null, ammoHeightData = null;
+        const bta = new Ammo.btVector3();
+        const btb = new Ammo.btVector3();
+        const btc = new Ammo.btVector3();
+        //const va = new THREE.Vector3();
+        //const vb = new THREE.Vector3();
+        //const vc = new THREE.Vector3();
 
         option.mass = option.mass == undefined ? 0 : option.mass;
         option.size = option.size == undefined ? [1, 1, 1] : option.size;
@@ -45,20 +54,81 @@ class RigidBody {
             case 'Cone':
                 shape = new Ammo.btConeShape(option.radius, option.size[0]);
                 break;
+ 
+            case 'terrain':
+				// This parameter is not really used, since we are using PHY_FLOAT height data type and hence it is ignored
+				const heightScale = 1;
+				// Up axis = 0 for X, 1 for Y, 2 for Z. Normally 1 = Y is used.
+				const upAxis = 1;
+				// hdt, height data type. "PHY_FLOAT" is used. Possible values are "PHY_FLOAT", "PHY_UCHAR", "PHY_SHORT"
+				const hdt = "PHY_FLOAT";
+				// Set this to your needs (inverts the triangles)
+                const flipQuadEdges = false;
+
+                ammoHeightData = Ammo._malloc(4 * option.w * option.h);
+                let p = 0, p2 = 0;
+                
+				for (let j = 0; j < option.h; j ++) {
+
+					for (let i = 0; i < option.w; i ++) {
+
+						// write 32-bit float data to memory
+						Ammo.HEAPF32[ammoHeightData + p2 >> 2] = option.heightData[p];
+						p ++;
+						// 4 bytes/float
+						p2 += 4;
+					}
+                }
+
+                shape = new Ammo.btHeightfieldTerrainShape(
+					option.w,
+                    option.h,
+
+					ammoHeightData,
+
+					heightScale,
+					/*- */option.min,
+					option.max,
+
+					upAxis,
+					hdt,
+					flipQuadEdges
+                );
+                //var scaleX = 1000 / ( option.w - 1 );
+				//var scaleZ = 1000 / ( option.h - 1 );
+				shape.setLocalScaling(new Ammo.btVector3(1.4, 1, 1.4));
+                shape.setMargin(0.05);
+                break;
 
             case 'ThriMesh': {
-                const mTriMesh = new Ammo.btTriangleMesh();
-                const vx = option.v;
+                const mTriMesh = new Ammo.btTriangleMesh(true, false);
+                //const components = option.v;
+
+                if (option.index) {
+
+                    for (let i = 0; i < option.index.count; i += 3) {
+
+                        const ai = option.index.array[i] * 3;
+                        const bi = option.index.array[i + 1] * 3;
+                        const ci = option.index.array[i + 2] * 3;
+                        //va.set(components[ai], components[ai + 1], components[ai + 2]);//.applyMatrix4(transform)
+                        //vb.set(components[bi], components[bi + 1], components[bi + 2]);//.applyMatrix4(transform)
+                        //vc.set(components[ci], components[ci + 1], components[ci + 2]);//.applyMatrix4(transform)
+                        bta.setValue(option.v[ai], option.v[ai + 1], option.v[ai + 2]);
+                        btb.setValue(option.v[bi], option.v[bi + 1], option.v[bi + 2]);
+                        btc.setValue(option.v[ci], option.v[ci + 1], option.v[ci + 2]);
+                        mTriMesh.addTriangle(bta, btb, btc, false);
+                      }
+                }
+                /*const vx = option.v;
                 for (let i = 0, fMax = vx.length; i < fMax; i += 9 ) {
 
-                    const p1 = new Ammo.btVector3(vx[i + 0] * option.scale[0], vx[i + 1] * option.scale[1], vx[i + 2] * option.scale[2]);
-                    const p2 = new Ammo.btVector3(vx[i + 3] * option.scale[0], vx[i + 4] * option.scale[1], vx[i + 5] * option.scale[2]);
-                    const p3 = new Ammo.btVector3(vx[i + 6] * option.scale[0], vx[i + 7] * option.scale[1], vx[i + 8] * option.scale[2]);
+                    p1.setValue(vx[i + 0] * option.scale[0], vx[i + 1] * option.scale[1], vx[i + 2] * option.scale[2]);
+                    p2.setValue(vx[i + 3] * option.scale[0], vx[i + 4] * option.scale[1], vx[i + 5] * option.scale[2]);
+                    p3.setValue(vx[i + 6] * option.scale[0], vx[i + 7] * option.scale[1], vx[i + 8] * option.scale[2]);
                     mTriMesh.addTriangle(p1, p2, p3, true);
-                    Ammo.destroy(p1);
-                    Ammo.destroy(p2);
-                    Ammo.destroy(p3);
-                }
+                }*/
+
                 if (option.mass === 0) {
 
                     // btScaledBvhTriangleMeshShape -- if scaled instances
@@ -73,11 +143,19 @@ class RigidBody {
 
 
         const localInertia = new Ammo.btVector3(0, 0, 0);
-        if (option.mass !== 0 ) shape.calculateLocalInertia(option.mass, localInertia);
+        if (option.mass !== 0) shape.calculateLocalInertia(option.mass, localInertia);
 
         const transform = new Ammo.btTransform();
         transform.setIdentity();
-        transform.setOrigin(new Ammo.btVector3(option.position[0],  option.position[1],  option.position[2]));
+
+        if (option.type != 'terrain') {
+
+            transform.setOrigin(new Ammo.btVector3(option.position[0],  option.position[1],  option.position[2]));
+        } else {
+
+            transform.setOrigin(new Ammo.btVector3(0, (option.max + option.min) / 2, 0));
+        }
+
         transform.setRotation(new Ammo.btQuaternion(option.quat[0],  option.quat[1],  option.quat[2],  option.quat[3]));
         
         const motionState = new Ammo.btDefaultMotionState(transform);
@@ -92,6 +170,7 @@ class RigidBody {
 
             body.setCollisionFlags(option.flag || 1); 
             this.root.world.addCollisionObject(body, option.group || 2, -1);
+            this.root.world.addRigidBody(body);
 
         } else {
 
@@ -104,6 +183,12 @@ class RigidBody {
         Ammo.destroy(rbInfo);
         Ammo.destroy(localInertia);
         Ammo.destroy(transform);
+        Ammo.destroy(bta);
+        Ammo.destroy(btb);
+        Ammo.destroy(btc);
+        //Ammo.destroy(p1);
+        //Ammo.destroy(p2);
+        //Ammo.destroy(p3);
         this.root.post({msg: 'start'});
     }
 

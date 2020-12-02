@@ -47,6 +47,7 @@ class MainEngenie {
 		_worker.onmessage = this.WorkerOnMessage;
 
 		_physics = new Physics();
+		//_physics.Mesh()
 		//_scene.add(_phisics.addCharacter({}, _pointerLockControls));
 	}
 
@@ -113,6 +114,11 @@ class MainEngenie {
 		_camera.aspect =  window.innerWidth / window.innerHeight;
 		_camera.updateProjectionMatrix();
 		_renderer.setSize( window.innerWidth, window.innerHeight);
+	}
+
+	startCharacterControl() {
+
+		_scene.add(_physics.addCharacter({}, _pointerLockControls));
 	}
 }
 

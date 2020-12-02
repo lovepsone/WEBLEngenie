@@ -49,6 +49,7 @@ class Terrain {
 		_Optons.biomes.setTypePixels(0);
 
 		let geometry = new THREE.PlaneBufferGeometry(_size, _size, _size - 1, _size - 1);
+		geometry.type = 'BufferGeometry';
 		geometry.rotateX(-Math.PI / 2);
 		geometry.computeBoundingBox();
 		geometry.center();
@@ -185,6 +186,15 @@ class Terrain {
 			_mesh.material = new THREE.MeshBasicMaterial({side: THREE.DoubleSide, vertexColors: THREE.VertexColors, wireframe: wireframe});
 			_mesh.material.needsUpdate = true;
 		}
+	}
+
+	getMesh() {
+
+		if (_mesh instanceof THREE.Mesh) {
+
+			return _mesh;
+		}
+		console.error('Terrain.js: mesh was not created !!!')
 	}
 }
 

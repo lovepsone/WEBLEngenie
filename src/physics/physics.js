@@ -169,11 +169,14 @@ export class Physics {
         option.quat = option.quat || [0, 0, 0, 1];
         option.scale = option.scale || [1, 1, 1];
 
+
         if (geometry.type == 'Mesh') {
 
             isMesh = true;
             type = geometry.geometry.type;
         } else type = geometry.type;
+
+        if (option.type == 'terrain') type = option.type;
 
         switch(type) {
 
@@ -237,9 +240,33 @@ export class Physics {
                     geometry.quaternion.fromArray(option.quat);
                     geometry.scale.fromArray(option.scale);
                     option.type = 'ThriMesh';
-                    option.v = GeometryInfo(geometry.geometry);
+                    //option.v = GeometryInfo(geometry.geometry);
+                    option.v = geometry.geometry.getAttribute('position').array;
+                    option.index = geometry.geometry.getIndex();
                 }
                 this.send('add', option);
+                break;
+    
+            case "terrain":
+                if (isMesh) {
+
+                    option.max = 0;
+                    option.min = 0;
+                    mesh = geometry;
+                    geometry.position.fromArray(option.position);
+                    geometry.quaternion.fromArray(option.quat);
+                    geometry.scale.fromArray(option.scale);
+                    option.heightData = [];
+
+                    for (let i = 0; i < geometry.geometry.attributes.position.count; i++) {
+
+                        if (option.max < geometry.geometry.attributes.position.array[i * 3 + 1]) option.max = geometry.geometry.attributes.position.array[i * 3 + 1];
+                        if (option.min > geometry.geometry.attributes.position.array[i * 3 + 1]) option.min = geometry.geometry.attributes.position.array[i * 3 + 1];
+                        option.heightData.push(geometry.geometry.attributes.position.array[i * 3 + 1]);
+                    }
+
+                    this.send('add', option);
+                }
                 break;
         }
 
@@ -257,7 +284,7 @@ export class Physics {
         }
 
         _option.controller = controller;
-        option.size = option.size == undefined ? [0.25, 2, 6] : option.size;
+        option.size = option.size == undefined ? [1, 2, 6] : option.size;
         option.type = 'character';
         option.position = option.position || _option.controller.getPosition();
         //option.quaternion

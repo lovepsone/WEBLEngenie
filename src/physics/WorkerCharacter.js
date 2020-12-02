@@ -101,7 +101,7 @@ class Actor {
     
 			this.verticalVelocity += 0.02;
 			// y = this.controller.verticalVelocity;
-            if (this.verticalVelocity > 0.5) {//1.3
+            if (this.verticalVelocity > 1.5) {//1.3
 
 				this.verticalVelocity = 0;
 				this.wasJumping = false;
@@ -115,9 +115,20 @@ class Actor {
         tangle -= angle + 1.57;
         this.setAngle(tangle);
 
-        this.position.setValue(x, y + this.verticalVelocity, z);
-        direction(this.position, this.quat);
-		this.controller.setWalkDirection(this.position);
+        if (this.body.getWorldTransform().getOrigin().y() < -150) {
+
+            const transform = new Ammo.btTransform(); 
+            transform.setIdentity();
+            transform.setOrigin(new Ammo.btVector3(0, 150, 0));
+            transform.setRotation(new Ammo.btQuaternion(0,  0,  0,  1));
+            this.body.setWorldTransform(transform);
+        } else {
+
+            this.position.setValue(x, y + this.verticalVelocity, z);
+            direction(this.position, this.quat);
+        }
+
+        this.controller.setWalkDirection(this.position);
     }
 
     applyOption(option) {
@@ -135,7 +146,6 @@ class Actor {
 
             this.position.setValue(option.position[0], option.position[1], option.position[2]);
             direction(this.position, this.quat);
-            console.log(this.position.y())
             this.controller.setWalkDirection(this.position);
 		}
     }

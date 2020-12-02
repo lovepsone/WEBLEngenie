@@ -108,6 +108,7 @@ UI.getElement(DataHTML.Brush).addEventListener("click", function() {
 	}
 	ControlBrush(_UIFrame.getCurrentTab());
 });
+
 UI.getElement(DataHTML.SizeBrush).addEventListener("change", function(event) {
 
 	Engenie.getTerrain().getOptions().pressure.UpdateRadius(event.srcElement.value);
@@ -124,10 +125,13 @@ UI.getElement(DataHTML.MenuBar.CreateTerrain).addEventListener("click", function
 //play simulatuon
 UI.getElement(DataHTML.MenuBar.PlaySimulation).addEventListener("click", function() {
 
+	Engenie.getTerrain().getMesh().geometry.computeVertexNormals();
 	Engenie.getControlsCamera().dispose();
+	Engenie.startCharacterControl();
 	Engenie.getPointerLockControls().start();
 	UI.getElement(DataHTML.Camera).checked = false;
 	Engenie.getControlsCamera().UpdateEvents();
+	Engenie.getPhysics().Mesh(Engenie.getTerrain().getMesh(), {}, {w: Engenie.getTerrain().getSize(), h: Engenie.getTerrain().getSize(), type: 'terrain'});
 }, false);
 
 // exit simulation
