@@ -51,12 +51,14 @@ class Actor {
 
         this.body = new Ammo.btPairCachingGhostObject();
         const shape = new Ammo.btCapsuleShape(option.size[0], option.size[1] * 0.5);
+        shape.setMargin(0.05);
+
         const transform = new Ammo.btTransform(); 
         transform.setIdentity();
         transform.setOrigin(new Ammo.btVector3(option.position[0], option.position[1], option.position[2]));
         transform.setRotation(new Ammo.btQuaternion(option.quat[0],  option.quat[1],  option.quat[2],  option.quat[3]));
-
         this.body.setWorldTransform(transform);
+    
         this.body.setCollisionShape(shape);
         this.body.setCollisionFlags(16); //FLAGS.CHARACTER_OBJECT
         this.body.setFriction(option.friction || 0.1 );
@@ -65,11 +67,12 @@ class Actor {
         this.body.activate();
 
         this.controller = new Ammo.btKinematicCharacterController(this.body, shape, option.stepH || 0.35, option.upAxis || 1);
-        this.controller.setUseGhostSweepTest(shape);
-
-        this.controller.setVelocityForTimeInterval(new Ammo.btVector3(0, 0, 0), 1);
-
+        option.gravity = 9.8 * 3;
+        option.jumpSpeed = 20;
+        option.maxJumpHeight = 200;
         this.applyOption(option);
+        this.controller.setUseGhostSweepTest(shape);
+        this.controller.setVelocityForTimeInterval(new Ammo.btVector3(0, 0, 0), 1);
         this.setAngle(0);
         Ammo.destroy(transform);
     }
@@ -91,22 +94,10 @@ class Actor {
         let walkSpeed = 0.13, angleInc = 0.1;
         let x = 0, y = 0, z = 0;
 
-		if (key[4] == 1 && this.controller.onGround()) {
+        if (key[4] == 1 && this.controller.canJump()) {
 
-			this.wasJumping = true;
-			this.verticalVelocity = 0;
+            this.controller.jump();
         }
-
-		if (this.wasJumping) {
-    
-			this.verticalVelocity += 0.02;
-			// y = this.controller.verticalVelocity;
-            if (this.verticalVelocity > 1.5) {//1.3
-
-				this.verticalVelocity = 0;
-				this.wasJumping = false;
-			}
-		}
 
         if (key[0]) {z = -walkSpeed;} else if (key[2]) {z = walkSpeed;}
         if (key[1]) {x = -walkSpeed;} else if (key[3]) {x = walkSpeed;}
@@ -122,9 +113,10 @@ class Actor {
             transform.setOrigin(new Ammo.btVector3(0, 150, 0));
             transform.setRotation(new Ammo.btQuaternion(0,  0,  0,  1));
             this.body.setWorldTransform(transform);
+            Ammo.destroy(transform);
         } else {
 
-            this.position.setValue(x, y + this.verticalVelocity, z);
+            this.position.setValue(x, y /*+ this.verticalVelocity*/, z);
             direction(this.position, this.quat);
         }
 

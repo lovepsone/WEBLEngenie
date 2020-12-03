@@ -3,7 +3,7 @@
 */
 
 'use strict';
-const Module = {TOTAL_MEMORY: 256*1024*1024}, VERSION = 0.15;
+const Module = {TOTAL_MEMORY: 256*1024*1024}, VERSION = 0.16;
 self.importScripts('./ammo.wasm.js');
 
 let configAmmo  =  {
@@ -54,6 +54,7 @@ Ammo(configAmmo).then(function(Ammo) {
 
             ROOT.world = new Ammo.btDiscreteDynamicsWorld(_dispatcher, _broadphase, _solver, _collision);
             ROOT.world.setGravity(new Ammo.btVector3(ROOT.gravity[0], ROOT.gravity[1], ROOT.gravity[2]));
+            ROOT.world.getPairCache().setInternalGhostPairCallback(new Ammo.btGhostPairCallback());
             ROOT.post = this.post;
 
             let dInfo = ROOT.world.getDispatchInfo();
@@ -62,6 +63,8 @@ Ammo(configAmmo).then(function(Ammo) {
 
             _RigidBody = new RigidBody(ROOT);
             _Character = new Character(ROOT);
+
+            //dInfo --- destroy?
         }
 
         post(msg) {

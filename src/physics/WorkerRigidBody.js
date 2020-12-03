@@ -96,7 +96,7 @@ class RigidBody {
                 );
                 //var scaleX = 1000 / ( option.w - 1 );
 				//var scaleZ = 1000 / ( option.h - 1 );
-				shape.setLocalScaling(new Ammo.btVector3(1.4, 1, 1.4));
+				//shape.setLocalScaling(new Ammo.btVector3(1.4, 1, 1.4));
                 shape.setMargin(0.05);
                 break;
 
@@ -143,7 +143,7 @@ class RigidBody {
 
 
         const localInertia = new Ammo.btVector3(0, 0, 0);
-        if (option.mass !== 0) shape.calculateLocalInertia(option.mass, localInertia);
+        if (option.mass > 0) shape.calculateLocalInertia(option.mass, localInertia);
 
         const transform = new Ammo.btTransform();
         transform.setIdentity();
@@ -165,17 +165,16 @@ class RigidBody {
         rbInfo.set_m_restitution(option.restitution || 0.1);
         const body = new Ammo.btRigidBody(rbInfo);
 
-
         if (option.mass === 0) {
 
-            body.setCollisionFlags(option.flag || 1); 
+            body.setCollisionFlags(option.flag || 1);
             this.root.world.addCollisionObject(body, option.group || 2, -1);
             this.root.world.addRigidBody(body);
 
         } else {
 
             body.setCollisionFlags(option.flag || 0);
-            body.setActivationState(option.state || 1);
+            body.setActivationState(option.state || 1); // 4?
             this.bodys.push(body);
             this.root.world.addRigidBody(body);
         }
@@ -199,7 +198,7 @@ class RigidBody {
         this.bodys.forEach(function(b, id) {
 
             const n = N + (id * 8);
-            const transform = new Ammo.btTransform();
+            const transform = new Ammo.btTransform(); // нагрузка ?
             AR[n] = b.getLinearVelocity().length() * 9.8;//b.isActive() ? 1 : 0;
 
             if (AR[n] > 0) {

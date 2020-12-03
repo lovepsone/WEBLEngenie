@@ -284,12 +284,12 @@ export class Physics {
         }
 
         _option.controller = controller;
-        option.size = option.size == undefined ? [1, 2, 6] : option.size;
+        option.size = option.size == undefined ? [0.5, 1.7, 6] : option.size;
         option.type = 'character';
         option.position = option.position || _option.controller.getPosition();
         //option.quaternion
 
-        let mesh = new THREE.Mesh(new Capsule(2, 10, 6), new THREE.MeshBasicMaterial({ color: 0x993399/*, wireframe: true*/}));
+        let mesh = new THREE.Mesh(new Capsule(option.size[0], option.size[1], 6), new THREE.MeshBasicMaterial({ color: 0x993399/*, wireframe: true*/}));
         mesh.position.fromArray(option.position);
         _Character.add(mesh, option);
         this.send('add', option);
