@@ -134,7 +134,7 @@ class Terrain {
 		return _size;
 	}
 
-	ApplyBiomes() { // перенести метод в биомы
+	ApplyBiomes() {
 
 		if (!(_mesh instanceof THREE.Mesh)) {
 
@@ -142,32 +142,31 @@ class Terrain {
 			return;
 		}
 
-		if (_mesh instanceof THREE.Mesh && _max == 0) {
+		for (let i = 0; i < _mesh.geometry.attributes.position.count; i++) {
 
-			for (let i = 0; i < _mesh.geometry.attributes.position.count; i++) {
-
-				if (_max < _mesh.geometry.attributes.position.array[i * 3 + 1]) _max = _mesh.geometry.attributes.position.array[i * 3 + 1];
-				if (_min > _mesh.geometry.attributes.position.array[i * 3 + 1]) _min = _mesh.geometry.attributes.position.array[i * 3 + 1];
-			}
-
+			if (_max < _mesh.geometry.attributes.position.array[i * 3 + 1]) _max = _mesh.geometry.attributes.position.array[i * 3 + 1];
+			if (_min > _mesh.geometry.attributes.position.array[i * 3 + 1]) _min = _mesh.geometry.attributes.position.array[i * 3 + 1];
 		}
 
-		if (_mesh instanceof THREE.Mesh && _max != 0.0) {
+		/* fix ?
+		_mesh.geometry.computeBoundingBox();
+		_max = _mesh.geometry.boundingBox.max.y;
+		_min = _mesh.geometry.boundingBox.min.y;*/
 
-			for (let i = 0; i < _mesh.geometry.attributes.position.count; i++) {
+		for (let i = 0; i < _mesh.geometry.attributes.position.count; i++) {
 
-				let y = _mesh.geometry.attributes.position.array[i * 3 + 1];
-				let height = (y - _min) / (_max - _min);
+			let y = _mesh.geometry.attributes.position.array[i * 3 + 1];
+			let height = (y - _min) / (_max - _min);
 
-				let color = new THREE.Color(_Optons.biomes.get(height, i));
+			let color = new THREE.Color(_Optons.biomes.get(height, i));
 	
-				_mesh.geometry.attributes.color.array[i * 3] = color.r;
-				_mesh.geometry.attributes.color.array[i * 3 + 1] = color.g;
-				_mesh.geometry.attributes.color.array[i * 3 + 2] = color.b;
-				_mesh.geometry.attributes.color.needsUpdate = true;
-			}
+			_mesh.geometry.attributes.color.array[i * 3] = color.r;
+			_mesh.geometry.attributes.color.array[i * 3 + 1] = color.g;
+			_mesh.geometry.attributes.color.array[i * 3 + 2] = color.b;
+
 		}
 
+		_mesh.geometry.attributes.color.needsUpdate = true;
 		this.UpdateDataColors();
 	}
 
