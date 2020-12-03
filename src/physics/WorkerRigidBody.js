@@ -80,23 +80,8 @@ class RigidBody {
 					}
                 }
 
-                shape = new Ammo.btHeightfieldTerrainShape(
-					option.w,
-                    option.h,
-
-					ammoHeightData,
-
-					heightScale,
-					/*- */option.min,
-					option.max,
-
-					upAxis,
-					hdt,
-					flipQuadEdges
-                );
-                //var scaleX = 1000 / ( option.w - 1 );
-				//var scaleZ = 1000 / ( option.h - 1 );
-				//shape.setLocalScaling(new Ammo.btVector3(1.4, 1, 1.4));
+                shape = new Ammo.btHeightfieldTerrainShape(option.w, option.h, ammoHeightData, heightScale, /*- */option.min, option.max, upAxis, hdt, flipQuadEdges);
+				//shape.setLocalScaling(new Ammo.btVector3(1, 1, 1));
                 shape.setMargin(0.05);
                 break;
 
