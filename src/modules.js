@@ -313,6 +313,7 @@ for (let i = 0; i < DataHTML.Texture.Options.length; i++) {
 			  }, false);
 		  
 			  fr.readAsDataURL(this.files[0]);
+			  Engenie.getTerrain().getOptions().texture.ChangeBiomes();
 		}
 	}, false);
 }
