@@ -2,7 +2,7 @@
 * author lovepsone
 */
 let _mesh = null, _scope = null, _ImageLoader = null, _context = null;
-let _max = 0.0, _min = 0.0, _size = 64;
+let _max = 0.0, _min = 0.0, _size = 64, _roughness = 5;
 
 let _Optons  = {pressure: null, biomes: null, biomeMap: null, road: null, texture: null};
 
@@ -102,12 +102,12 @@ class Terrain {
 
 		for (let i = 0, n = pixel.data.length; i < n; i += 4) {
 			
-			DataHeight.push((pixel.data[i] + pixel.data[i+1] + pixel.data[i+2]) / 3);
+			DataHeight.push((pixel.data[i] + pixel.data[i + 1] + pixel.data[i + 2]) / _roughness);
 		}
 
 		for (let i = 0, n = _mesh.geometry.attributes.position.count; i < n; ++ i) {
 
-			_mesh.geometry.attributes.position.array[i*3 + 1] += (DataHeight[i] / 255) * 50;
+			_mesh.geometry.attributes.position.array[i * 3 + 1] += (DataHeight[i] / 255) * 50;
 			_mesh.geometry.attributes.position.needsUpdate = true;
 		}
 	
