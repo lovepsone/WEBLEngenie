@@ -65,7 +65,6 @@ class TextureAtlas {
         if (_ChangeBiomes) {
 
             _material = new THREE.MeshLambertMaterial();
-
             _material.onBeforeCompile = function(shader) {
 
                 shader.uniforms.diffuses = {value: _Texture2DArray};
@@ -166,7 +165,6 @@ class TextureAtlas {
                         '_mix = mix(_tropical_seasonal_forest, _mix, diff_5.r);',
                         '_mix = mix(_tropical_rain_forest, _mix, diff_5.g);',
 
-                        //'gl_FragColor = _mix;'
                         'gl_FragColor *= _mix;'
                     ].join('\n')
                 );
@@ -177,9 +175,9 @@ class TextureAtlas {
         if ( _material != null) {
 
             _mesh.material = _material;
-            _mesh.material.needsUpdate = true;
             _mesh.castShadow = true;
             _mesh.receiveShadow = true;
+            _mesh.material.needsUpdate = true;
         }
 
         _ChangeBiomes = false;
