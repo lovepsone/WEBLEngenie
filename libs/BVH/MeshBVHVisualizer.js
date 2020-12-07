@@ -1,4 +1,4 @@
-import * as THREE from './../three/Three.js';
+import * as THREE from './../three.module.js';
 import { arrayToBox } from './Utils/ArrayBoxUtilities.js';
 
 const wiremat = new THREE.LineBasicMaterial( { color: 0x00FF88, transparent: true, opacity: 0.3 } );

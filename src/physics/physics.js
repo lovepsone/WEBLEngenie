@@ -2,7 +2,7 @@
 * author lovepsone
 */
 
-import * as THREE from './../../libs/three/Three.js';
+import * as THREE from './../../libs/three.module.js';
 import {RigidBody} from './RigidBody.js';
 import {Character} from './Character.js'
 import {STATE, FLAG, GROUP, GeometryInfo} from './flags.js';

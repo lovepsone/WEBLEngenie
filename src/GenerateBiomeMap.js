@@ -2,7 +2,7 @@
 * author lovepsone
 */
 
-import * as THREE from '../libs/three/Three.js';
+import * as THREE from '../libs/three.module.js';
 import {sphereIntersectTriangle} from './../libs/BVH/Utils/MathUtilities.js';
 
 let _canvas = document.createElement('canvas'), _ctx = null;
@@ -88,7 +88,7 @@ class GenerateBiomeMap {
 		_MouseDown = false;
 	}
 
-    onDocumentMouseMove() {
+    onDocumentMouseMove(event) {
 
         if (!(_mesh instanceof THREE.Mesh)) {
 

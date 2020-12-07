@@ -2,7 +2,7 @@
 * author lovepsone
 */
 
-import * as THREE from './../libs/three/Three.js';
+import * as THREE from './../libs/three.module.js';
 
 let _CounterBox = 0
 let _boxes = [];

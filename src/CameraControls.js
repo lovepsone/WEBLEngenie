@@ -2,7 +2,7 @@
 * author lovepsone
 */
 
-import * as THREE from './../libs/three/Three.js';
+import * as THREE from './../libs/three.module.js';
 
 const STATE = { NONE: - 1, ROTATE: 0, ZOOM: 1, PAN: 2 };
 let _state = STATE.NONE;

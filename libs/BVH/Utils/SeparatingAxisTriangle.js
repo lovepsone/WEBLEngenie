@@ -1,4 +1,4 @@
-import { Triangle, Vector3, Line3, Sphere } from './../../three/Three.js';
+import { Triangle, Vector3, Line3, Sphere } from './../../three.module.js';
 import { SeparatingAxisBounds } from './SeparatingAxisBounds.js';
 import { closestPointsSegmentToSegment } from './MathUtilities.js';
 

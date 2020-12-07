@@ -5,7 +5,7 @@
  *
  *************************************************************************************************/
 
-import * as THREE from './../three/Three.js';
+import * as THREE from './../three.module.js';
 import { intersectTris, intersectClosestTri } from './Utils/RayIntersectTriUtlities.js';
 
 import { OrientedBox } from './Utils/OrientedBox.js';

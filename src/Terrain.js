@@ -6,7 +6,7 @@ let _max = 0.0, _min = 0.0, _size = 64, _roughness = 5;
 
 let _Optons  = {pressure: null, biomes: null, biomeMap: null, road: null, texture: null};
 
-import * as THREE from './../libs/three/Three.js';
+import * as THREE from './../libs/three.module.js';
 import {PressureTerrain} from './PressureTerrain.js';
 import {Biomes} from './Biomes.js';
 import {GenerateBiomeMap} from './GenerateBiomeMap.js';

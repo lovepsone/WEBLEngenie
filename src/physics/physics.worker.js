@@ -63,7 +63,6 @@ Ammo(configAmmo).then(function(Ammo) {
 
             _RigidBody = new RigidBody(ROOT);
             _Character = new Character(ROOT);
-
             //dInfo --- destroy?
         }
 

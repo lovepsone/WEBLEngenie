@@ -1,9 +1,6 @@
 /*
 * author lovepsone
 */
-//import * as THREE from '../../libs/three/Three.js';
-
-
 
 class RigidBody {
 

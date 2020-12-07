@@ -11,7 +11,7 @@ let bindMouseDown, bindMouseUp, bindMouseMove;
 let _brushMesh = null;
 
 import {sphereIntersectTriangle} from './../libs/BVH/Utils/MathUtilities.js';
-import * as THREE from './../libs/three/Three.js';
+import * as THREE from './../libs/three.module.js';
 
 class PressureTerrain {
 

@@ -1,4 +1,4 @@
-import * as THREE from './../three/Three.js';
+import * as THREE from './../three.module.js';
 import MeshBVHNode from './MeshBVHNode.js';
 import { arrayToBox, boxToArray, getLongestEdgeIndex } from './Utils/ArrayBoxUtilities.js';
 import { CENTER, AVERAGE, SAH } from './Constants.js';

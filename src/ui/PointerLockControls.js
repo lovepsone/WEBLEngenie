@@ -2,7 +2,7 @@
 * Author lovepsone
 */
 
-import * as THREE from './../../libs/three/Three.js';
+import * as THREE from './../../libs/three.module.js';
 
 const EventExitPointerLock = new Event('ExitPointerLock');
 

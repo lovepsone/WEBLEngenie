@@ -6,7 +6,7 @@ let _Texture2DArray = null, _textures = [];
 let _mesh = null, _material = null;
 let _ChangeBiomes = false;
 
-import * as THREE from './../libs/three/Three.js';
+import * as THREE from './../libs/three.module.js';
 import {BASEDATATEXTURES} from './CONST.js';
 
 class TextureAtlas {

@@ -1,4 +1,4 @@
-import { Vector3 } from './../../three/Three.js';
+import { Vector3 } from './../../three.module.js';
 
 export class SeparatingAxisBounds {
 
