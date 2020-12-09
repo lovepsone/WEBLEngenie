@@ -2,9 +2,10 @@
 * author lovepsone
 */
 
-let _Texture2DArray = null, _textures = [];
+let _Diffuse2DArray = null, _Texture2DArray = null, _textures = [];
 let _mesh = null, _material = null;
-let _ChangeBiomes = false;
+let _ChangeBiomes = false, _size = null;
+let _TextureAtlasCanvas = document.createElement('canvas');
 
 import * as THREE from './../libs/three.module.js';
 import {BASEDATATEXTURES} from './CONST.js';
@@ -15,10 +16,30 @@ class TextureAtlas {
 
         for (let i = 0; i < BASEDATATEXTURES.length; i++) {
 
-            _textures[i] = new THREE.TextureLoader().load(BASEDATATEXTURES[i][1]);
-            _textures[i].name = BASEDATATEXTURES[i][1]; // need fixed
+            _textures[i] = new THREE.TextureLoader().load(BASEDATATEXTURES[i][1], function(img) {
+
+                if (_size == null) _size = img.image.height;
+                if (_size != img.image.height || _size != img.image.width) {
+
+                    console.error(`TextureAtlas.js: (${img.name}) width and height are not the same!!!`);
+                    exit;
+                }
+
+                const id = parseInt(img.name.replace(/[^\d]/g, ''));
+
+                if (id == 0) {
+
+                    _TextureAtlasCanvas.width = _size
+                    _TextureAtlasCanvas.height = _size * BASEDATATEXTURES.length;
+                }
+
+                _TextureAtlasCanvas.getContext('2d').drawImage(img.image, 0, _size * id)
+            });
+
+            _textures[i].name = `t_id=${i}`;//BASEDATATEXTURES[i][1]; // need fixed
             _textures[i].wrapS =_textures[i].wrapT = THREE.RepeatWrapping;
         }
+        //console.log(_textures[1])
     }
 
     ReLoadTexrure(id, url) {
@@ -37,10 +58,14 @@ class TextureAtlas {
     */
     setBiomeMap(data) {
 
-        _Texture2DArray = new THREE.DataTexture2DArray(data.bump.getContext('2d').getImageData(0, 0, data.w, data.h * 5).data, data.w, data.h, 5);
+        _Diffuse2DArray = new THREE.DataTexture2DArray(data.bump.getContext('2d').getImageData(0, 0, data.w, data.h * 5).data, data.w, data.h, 5);
+        _Diffuse2DArray.format = THREE.RGBAFormat;
+        _Diffuse2DArray.type = THREE.UnsignedByteType;
+        _Diffuse2DArray.anisotropy = 2;
+        _Texture2DArray = new THREE.DataTexture2DArray(_TextureAtlasCanvas.getContext('2d').getImageData(0, 0, _size, _size * BASEDATATEXTURES.length).data, _size, _size, BASEDATATEXTURES.length);
         _Texture2DArray.format = THREE.RGBAFormat;
         _Texture2DArray.type = THREE.UnsignedByteType;
-        _Texture2DArray.anisotropy = 2;
+        _Texture2DArray.wrapS = _Texture2DArray.wrapT = _Texture2DArray.wrapR = THREE.RepeatWrapping;
     }
 
     ChangeBiomes() {
@@ -64,24 +89,11 @@ class TextureAtlas {
 
         if (_ChangeBiomes) {
 
-            _material = new THREE.MeshLambertMaterial();
+            _material = new THREE.MeshPhongMaterial();//new THREE.MeshLambertMaterial();
             _material.onBeforeCompile = function(shader) {
 
-                shader.uniforms.diffuses = {value: _Texture2DArray};
-                shader.uniforms.OCEAN = {type: "t", value: _textures[0]};
-                shader.uniforms.BEACH = {type: "t", value: _textures[1]};
-                shader.uniforms.SCORCHED = {type: "t", value: _textures[2]};
-                shader.uniforms.BARE = {type: "t", value: _textures[3]};
-                shader.uniforms.TUNDRA = {type: "t", value: _textures[4]};
-                shader.uniforms.SNOW = {type: "t", value: _textures[5]};
-                shader.uniforms.TEMPERATE_DESERT = {type: "t", value: _textures[6]};
-                shader.uniforms.TAIGA = {type: "t", value: _textures[7]};
-                shader.uniforms.GRASSLAND = {type: "t", value: _textures[8]};
-                shader.uniforms.TEMPERATE_DECIDUOUS_FOREST = {type: "t", value: _textures[9]};
-                shader.uniforms.TEMPERATE_RAIN_FOREST = {type: "t", value: _textures[10]};
-                shader.uniforms.SUBTROPICAL_DESERT = {type: "t", value: _textures[11]};
-                shader.uniforms.TROPICAL_SEASONAL_FOREST = {type: "t", value: _textures[12]};
-                shader.uniforms.TROPICAL_RAIN_FOREST = {type: "t", value: _textures[13]};
+                shader.uniforms.diffuses = {value: _Diffuse2DArray};
+                shader.uniforms.textureArray = {value: _Texture2DArray};
 
                 shader.vertexShader = 'out vec2 vUv;\n'  + shader.vertexShader;
                 shader.vertexShader = shader.vertexShader.replace(
@@ -93,77 +105,62 @@ class TextureAtlas {
                     ].join('\n')
                 );
 
-                shader.fragmentShader = [
-                    'precision highp sampler2DArray;',
-                    //'precision highp float;',
-                    //'precision highp int;',
-                    'in vec2 vUv;',
-                    'uniform sampler2D OCEAN;',
-                    'uniform sampler2D BEACH;',
-                    'uniform sampler2D SCORCHED;',
-                    'uniform sampler2D BARE;',
-                    'uniform sampler2D TUNDRA;',
-                    'uniform sampler2D SNOW;',
-                    'uniform sampler2D TEMPERATE_DESERT;',
-                    'uniform sampler2D TAIGA;',
-                    'uniform sampler2D GRASSLAND;',
-                    'uniform sampler2D TEMPERATE_DECIDUOUS_FOREST;',
-                    'uniform sampler2D TEMPERATE_RAIN_FOREST;',
-                    'uniform sampler2D SUBTROPICAL_DESERT;',
-                    'uniform sampler2D TROPICAL_SEASONAL_FOREST;',
-                    'uniform sampler2D TROPICAL_RAIN_FOREST;',
-                    'uniform sampler2DArray diffuses;',
-
-                    'float getCoord(int layer, int count) {',
-
-                    '    return max(0.0, min(float(count) - 1.0, floor(float(layer) + 0.5)));',
-                    '}',
-                ].join('\n') + shader.fragmentShader;
+                shader.fragmentShader = shader.fragmentShader.replace(
+                    '#include <clipping_planes_pars_fragment>',
+                    [
+                        '#include <clipping_planes_pars_fragment>',
+                        'precision highp sampler2DArray;',
+                        //'precision highp float;',
+                        //'precision highp int;',
+                        'in vec2 vUv;',
+                        'uniform sampler2DArray diffuses;',
+                        'uniform sampler2DArray textureArray;',
+                    ].join('\n')
+                );
 
                 shader.fragmentShader = shader.fragmentShader.replace(
                     '#include <dithering_fragment>',
                     [
                         '#include <dithering_fragment>',
 
-                        'vec4 diff_1 = texture(diffuses, vec3(vUv, 0.0));//getCoord(0, 5)',
-                        'vec4 diff_2 = texture(diffuses, vec3(vUv, 1.0));',
-                        'vec4 diff_3 = texture(diffuses, vec3(vUv, 2.0));',
-                        'vec4 diff_4 = texture(diffuses, vec3(vUv, 3.0));',
-                        'vec4 diff_5 = texture(diffuses, vec3(vUv, 4.0));',
+                        'float _repeat = 50.0;',
+                        'vec4 _diffuse = texture(diffuses, vec3(vUv, 0.0));                     //getCoord(0, 5)',
+                        'vec4 _texture = texture(textureArray, vec3(vUv * _repeat, 0.0));',
+                        'vec4 _mix = mix(_texture, vec4(0.0, 0.0, 0.0, 1.0), _diffuse.r);',
+                        '_texture = texture(textureArray , vec3(vUv * _repeat, 1.0));',
+                        '_mix = mix(_texture, _mix, _diffuse.g);',
+                        '_texture = texture(textureArray, vec3(vUv * _repeat, 2.0));',
+                        '_mix = mix(_texture, _mix, _diffuse.b);',
 
-                        'vec4 _okean = texture2D(OCEAN, vUv*10.0);',
-                        'vec4 _beach = texture2D(BEACH, vUv* 10.0);',
-                        'vec4 _scorched = texture2D(SCORCHED, vUv* 10.0);',
+                        '_diffuse = texture(diffuses, vec3(vUv, 1.0));',
+                        '_texture = texture(textureArray, vec3(vUv * _repeat, 3.0));',
+                        '_mix = mix(_texture, _mix, _diffuse.r);',
+                        '_texture = texture(textureArray, vec3(vUv * _repeat, 4.0));',
+                        '_mix = mix(_texture, _mix, _diffuse.g);',
+                        '_texture = texture(textureArray, vec3(vUv * _repeat, 5.0));',
+                        '_mix = mix(_texture, _mix, _diffuse.b);',
 
-                        'vec4  _bare = texture2D(BARE, vUv* 10.0);',
-                        'vec4 _tundra = texture2D(TUNDRA, vUv* 10.0);',
-                        'vec4 _snow = texture2D(SNOW, vUv* 10.0);',
+                        '_diffuse = texture(diffuses, vec3(vUv, 2.0));',
+                        '_texture = texture(textureArray, vec3(vUv * _repeat, 6.0));',
+                        '_mix = mix(_texture, _mix, _diffuse.r);',
+                        '_texture = texture(textureArray, vec3(vUv * _repeat, 7.0));',
+                        '_mix = mix(_texture, _mix, _diffuse.g);',
+                        '_texture = texture(textureArray, vec3(vUv * _repeat, 8.0));',
+                        '_mix = mix(_texture, _mix, _diffuse.b);',
 
-                        'vec4 _temperate_desert = texture2D(TEMPERATE_DESERT, vUv* 10.0);',
-                        'vec4 _taiga = texture2D(TAIGA, vUv* 10.0);',
-                        'vec4 _grassland = texture2D(GRASSLAND, vUv* 10.0);',
+                        '_diffuse = texture(diffuses, vec3(vUv, 3.0));',
+                        '_texture = texture(textureArray, vec3(vUv * _repeat, 9.0));',
+                        '_mix = mix(_texture, _mix, _diffuse.r);',
+                        '_texture = texture(textureArray, vec3(vUv * _repeat, 10.0));',
+                        '_mix = mix(_texture, _mix, _diffuse.g);',
+                        '_texture = texture(textureArray, vec3(vUv * _repeat, 11.0));',
+                        '_mix = mix(_texture, _mix, _diffuse.b);',
 
-                        'vec4 _temperate_decidious_forest = texture2D(TEMPERATE_DECIDUOUS_FOREST, vUv* 10.0);',
-                        'vec4 _temperate_rain_forest = texture2D(TEMPERATE_RAIN_FOREST, vUv* 10.0);',
-                        'vec4 _subtropical_desert = texture2D(SUBTROPICAL_DESERT, vUv* 10.0);',
-
-                        'vec4 _tropical_seasonal_forest = texture2D(TROPICAL_SEASONAL_FOREST, vUv* 10.0);',
-                        'vec4 _tropical_rain_forest = texture2D(TROPICAL_RAIN_FOREST, vUv* 10.0);',
-
-                        'vec4 _mix = mix(_okean, vec4(0.0, 0.0, 0.0, 1.0), diff_1.r);',
-                        '_mix = mix(_beach, _mix, diff_1.g);',
-                        '_mix = mix(_scorched, _mix, diff_1.b);',
-                        '_mix = mix(_bare, _mix, diff_2.r);',
-                        '_mix = mix(_tundra, _mix, diff_2.g);',
-                        '_mix = mix(_snow, _mix, diff_2.b);',
-                        '_mix = mix(_temperate_desert, _mix, diff_3.r);',
-                        '_mix = mix(_taiga, _mix, diff_3.g);',
-                        '_mix = mix(_grassland, _mix, diff_3.b);',
-                        '_mix = mix(_temperate_decidious_forest, _mix, diff_4.r);',
-                        '_mix = mix(_temperate_rain_forest, _mix, diff_4.g);',
-                        '_mix = mix(_subtropical_desert, _mix, diff_4.b);',
-                        '_mix = mix(_tropical_seasonal_forest, _mix, diff_5.r);',
-                        '_mix = mix(_tropical_rain_forest, _mix, diff_5.g);',
+                        '_diffuse = texture(diffuses, vec3(vUv, 4.0));',
+                        '_texture = texture(textureArray, vec3(vUv * _repeat, 12.0));',
+                        '_mix = mix(_texture, _mix, _diffuse.r);',
+                        '_texture = texture(textureArray, vec3(vUv * _repeat, 13.0));',
+                        '_mix = mix(_texture, _mix, _diffuse.g);',
 
                         'gl_FragColor *= _mix;'
                     ].join('\n')
