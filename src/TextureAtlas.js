@@ -39,12 +39,14 @@ class TextureAtlas {
             _textures[i].name = `t_id=${i}`;//BASEDATATEXTURES[i][1]; // need fixed
             _textures[i].wrapS =_textures[i].wrapT = THREE.RepeatWrapping;
         }
-        //console.log(_textures[1])
     }
 
     ReLoadTexrure(id, url) {
 
-        _textures[id] = new THREE.TextureLoader().load(url);
+        _textures[id] = new THREE.TextureLoader().load(url, function(img) {
+
+            _TextureAtlasCanvas.getContext('2d').drawImage(img.image, 0, _size * id)
+        });
         _textures[id].wrapS =_textures[id].wrapT = THREE.RepeatWrapping;
     }
 
