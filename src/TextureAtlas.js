@@ -2,10 +2,10 @@
 * author lovepsone
 */
 
-let _Colors2DArray = null, _Texture2DArray = null, _Bump2DArray = null, _textures = [], _bump = [];
+let _Colors2DArray = null, _Texture2DArray = null, _Normal2DArray = null, _textures = [], _normals = [];
 let _mesh = null, _material = null;
 let _ChangeBiomes = false, _size = null;
-let _TextureAtlasCanvas = document.createElement('canvas'), _BumpAtlasCanvas = document.createElement('canvas');
+let _TextureAtlasCanvas = document.createElement('canvas'), _NormalAtlasCanvas = document.createElement('canvas');
 
 import * as THREE from './../libs/three.module.js';
 import {BASEDATATEXTURES} from './CONST.js';
@@ -39,7 +39,7 @@ class TextureAtlas {
             _textures[i].name = `t_id=${i}`;
             _textures[i].wrapS =_textures[i].wrapT = THREE.RepeatWrapping;
 
-            _bump[i] = new THREE.TextureLoader().load(`${BASEDATATEXTURES[i][1]}_bump.jpg`, function(img) {
+            _normals[i] = new THREE.TextureLoader().load(`${BASEDATATEXTURES[i][1]}_normal.jpg`, function(img) {
 
                 if (_size == null) _size = img.image.height;
                 if (_size != img.image.height || _size != img.image.width) {
@@ -52,15 +52,15 @@ class TextureAtlas {
 
                 if (id == 0) {
 
-                    _BumpAtlasCanvas.width = _size
-                    _BumpAtlasCanvas.height = _size * BASEDATATEXTURES.length;
+                    _NormalAtlasCanvas.width = _size
+                    _NormalAtlasCanvas.height = _size * BASEDATATEXTURES.length;
                 }
 
-                _BumpAtlasCanvas.getContext('2d').drawImage(img.image, 0, _size * id);
+                _NormalAtlasCanvas.getContext('2d').drawImage(img.image, 0, _size * id);
             });
 
-            _bump[i].name = `b_id=${i}`;
-            _bump[i].wrapS =_bump[i].wrapT = THREE.RepeatWrapping;
+            _normals[i].name = `b_id=${i}`;
+            _normals[i].wrapS = _normals[i].wrapT = THREE.RepeatWrapping;
         }
     }
 
@@ -81,7 +81,7 @@ class TextureAtlas {
     }
 
     /*
-    * data = { bump, w, h }
+    * data = { colors, w, h }
     */
     setBiomeMap(data) {
 
@@ -93,6 +93,10 @@ class TextureAtlas {
         _Texture2DArray.format = THREE.RGBAFormat;
         _Texture2DArray.type = THREE.UnsignedByteType;
         _Texture2DArray.wrapS = _Texture2DArray.wrapT = _Texture2DArray.wrapR = THREE.RepeatWrapping;
+        _Normal2DArray = new THREE.DataTexture2DArray(_NormalAtlasCanvas.getContext('2d').getImageData(0, 0, _size, _size * BASEDATATEXTURES.length).data, _size, _size, BASEDATATEXTURES.length);
+        _Normal2DArray.format = THREE.RGBAFormat;
+        _Normal2DArray.type = THREE.UnsignedByteType;
+        _Normal2DArray.wrapS = _Normal2DArray.wrapT = _Normal2DArray.wrapR = THREE.RepeatWrapping;
     }
 
     ChangeBiomes() {
@@ -119,8 +123,9 @@ class TextureAtlas {
             _material = new THREE.MeshPhongMaterial();//new THREE.MeshLambertMaterial();
             _material.onBeforeCompile = function(shader) {
 
-                shader.uniforms.diffuses = {value: _Colors2DArray};
+                shader.uniforms.colorArray = {value: _Colors2DArray};
                 shader.uniforms.textureArray = {value: _Texture2DArray};
+                shader.uniforms.normalArray = {value: _Normal2DArray};
 
                 shader.vertexShader = 'out vec2 vUv;\n'  + shader.vertexShader;
                 shader.vertexShader = shader.vertexShader.replace(
@@ -140,8 +145,9 @@ class TextureAtlas {
                         //'precision highp float;',
                         //'precision highp int;',
                         'in vec2 vUv;',
-                        'uniform sampler2DArray diffuses;',
+                        'uniform sampler2DArray colorArray;',
                         'uniform sampler2DArray textureArray;',
+                        'uniform sampler2DArray normalArray;',
                     ].join('\n')
                 );
 
@@ -151,43 +157,44 @@ class TextureAtlas {
                         '#include <dithering_fragment>',
 
                         'float _repeat = 10.0;',
-                        'vec4 _diffuse = texture(diffuses, vec3(vUv, 0.0));                     //getCoord(0, 5)',
+
+                        'vec4 _color = texture(colorArray, vec3(vUv, 0.0));                     //getCoord(0, 5)',
                         'vec4 _texture = texture(textureArray, vec3(vUv * _repeat, 0.0));',
-                        'vec4 _mix = mix(_texture, vec4(0.0, 0.0, 0.0, 1.0), _diffuse.r);',
+                        'vec4 _mix = mix(_texture, vec4(0.0, 0.0, 0.0, 1.0), _color.r);',
                         '_texture = texture(textureArray , vec3(vUv * _repeat, 1.0));',
-                        '_mix = mix(_texture, _mix, _diffuse.g);',
+                        '_mix = mix(_texture, _mix, _color.g);',
                         '_texture = texture(textureArray, vec3(vUv * _repeat, 2.0));',
-                        '_mix = mix(_texture, _mix, _diffuse.b);',
+                        '_mix = mix(_texture, _mix, _color.b);',
 
-                        '_diffuse = texture(diffuses, vec3(vUv, 1.0));',
+                        '_color = texture(colorArray, vec3(vUv, 1.0));',
                         '_texture = texture(textureArray, vec3(vUv * _repeat, 3.0));',
-                        '_mix = mix(_texture, _mix, _diffuse.r);',
+                        '_mix = mix(_texture, _mix, _color.r);',
                         '_texture = texture(textureArray, vec3(vUv * _repeat, 4.0));',
-                        '_mix = mix(_texture, _mix, _diffuse.g);',
+                        '_mix = mix(_texture, _mix, _color.g);',
                         '_texture = texture(textureArray, vec3(vUv * _repeat, 5.0));',
-                        '_mix = mix(_texture, _mix, _diffuse.b);',
+                        '_mix = mix(_texture, _mix, _color.b);',
 
-                        '_diffuse = texture(diffuses, vec3(vUv, 2.0));',
+                        '_color = texture(colorArray, vec3(vUv, 2.0));',
                         '_texture = texture(textureArray, vec3(vUv * _repeat, 6.0));',
-                        '_mix = mix(_texture, _mix, _diffuse.r);',
+                        '_mix = mix(_texture, _mix, _color.r);',
                         '_texture = texture(textureArray, vec3(vUv * _repeat, 7.0));',
-                        '_mix = mix(_texture, _mix, _diffuse.g);',
+                        '_mix = mix(_texture, _mix, _color.g);',
                         '_texture = texture(textureArray, vec3(vUv * _repeat, 8.0));',
-                        '_mix = mix(_texture, _mix, _diffuse.b);',
+                        '_mix = mix(_texture, _mix, _color.b);',
 
-                        '_diffuse = texture(diffuses, vec3(vUv, 3.0));',
+                        '_color = texture(colorArray, vec3(vUv, 3.0));',
                         '_texture = texture(textureArray, vec3(vUv * _repeat, 9.0));',
-                        '_mix = mix(_texture, _mix, _diffuse.r);',
+                        '_mix = mix(_texture, _mix, _color.r);',
                         '_texture = texture(textureArray, vec3(vUv * _repeat, 10.0));',
-                        '_mix = mix(_texture, _mix, _diffuse.g);',
+                        '_mix = mix(_texture, _mix, _color.g);',
                         '_texture = texture(textureArray, vec3(vUv * _repeat, 11.0));',
-                        '_mix = mix(_texture, _mix, _diffuse.b);',
+                        '_mix = mix(_texture, _mix, _color.b);',
 
-                        '_diffuse = texture(diffuses, vec3(vUv, 4.0));',
+                        '_color = texture(colorArray, vec3(vUv, 4.0));',
                         '_texture = texture(textureArray, vec3(vUv * _repeat, 12.0));',
-                        '_mix = mix(_texture, _mix, _diffuse.r);',
+                        '_mix = mix(_texture, _mix, _color.r);',
                         '_texture = texture(textureArray, vec3(vUv * _repeat, 13.0));',
-                        '_mix = mix(_texture, _mix, _diffuse.g);',
+                        '_mix = mix(_texture, _mix, _color.g);',
 
                         'gl_FragColor *= _mix;'
                     ].join('\n')
