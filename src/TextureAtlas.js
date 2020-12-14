@@ -2,10 +2,10 @@
 * author lovepsone
 */
 
-let _Diffuse2DArray = null, _Texture2DArray = null, _textures = [];
+let _Colors2DArray = null, _Texture2DArray = null, _Bump2DArray = null, _textures = [], _bump = [];
 let _mesh = null, _material = null;
 let _ChangeBiomes = false, _size = null;
-let _TextureAtlasCanvas = document.createElement('canvas');
+let _TextureAtlasCanvas = document.createElement('canvas'), _BumpAtlasCanvas = document.createElement('canvas');
 
 import * as THREE from './../libs/three.module.js';
 import {BASEDATATEXTURES} from './CONST.js';
@@ -16,7 +16,7 @@ class TextureAtlas {
 
         for (let i = 0; i < BASEDATATEXTURES.length; i++) {
 
-            _textures[i] = new THREE.TextureLoader().load(BASEDATATEXTURES[i][1], function(img) {
+            _textures[i] = new THREE.TextureLoader().load(`${BASEDATATEXTURES[i][1]}.jpg`, function(img) {
 
                 if (_size == null) _size = img.image.height;
                 if (_size != img.image.height || _size != img.image.width) {
@@ -33,11 +33,34 @@ class TextureAtlas {
                     _TextureAtlasCanvas.height = _size * BASEDATATEXTURES.length;
                 }
 
-                _TextureAtlasCanvas.getContext('2d').drawImage(img.image, 0, _size * id)
+                _TextureAtlasCanvas.getContext('2d').drawImage(img.image, 0, _size * id);
             });
 
-            _textures[i].name = `t_id=${i}`;//BASEDATATEXTURES[i][1]; // need fixed
+            _textures[i].name = `t_id=${i}`;
             _textures[i].wrapS =_textures[i].wrapT = THREE.RepeatWrapping;
+
+            _bump[i] = new THREE.TextureLoader().load(`${BASEDATATEXTURES[i][1]}_bump.jpg`, function(img) {
+
+                if (_size == null) _size = img.image.height;
+                if (_size != img.image.height || _size != img.image.width) {
+
+                    console.error(`TextureAtlas.js: (${img.name}) width and height are not the same!!!`);
+                    exit;
+                }
+
+                const id = parseInt(img.name.replace(/[^\d]/g, ''));
+
+                if (id == 0) {
+
+                    _BumpAtlasCanvas.width = _size
+                    _BumpAtlasCanvas.height = _size * BASEDATATEXTURES.length;
+                }
+
+                _BumpAtlasCanvas.getContext('2d').drawImage(img.image, 0, _size * id);
+            });
+
+            _bump[i].name = `b_id=${i}`;
+            _bump[i].wrapS =_bump[i].wrapT = THREE.RepeatWrapping;
         }
     }
 
@@ -48,6 +71,8 @@ class TextureAtlas {
             _TextureAtlasCanvas.getContext('2d').drawImage(img.image, 0, _size * id)
         });
         _textures[id].wrapS =_textures[id].wrapT = THREE.RepeatWrapping;
+
+        //bump loading implementation required
     }
 
 	setTerrain(mesh) {
@@ -60,10 +85,10 @@ class TextureAtlas {
     */
     setBiomeMap(data) {
 
-        _Diffuse2DArray = new THREE.DataTexture2DArray(data.bump.getContext('2d').getImageData(0, 0, data.w, data.h * 5).data, data.w, data.h, 5);
-        _Diffuse2DArray.format = THREE.RGBAFormat;
-        _Diffuse2DArray.type = THREE.UnsignedByteType;
-        _Diffuse2DArray.anisotropy = 2;
+        _Colors2DArray = new THREE.DataTexture2DArray(data.colors.getContext('2d').getImageData(0, 0, data.w, data.h * 5).data, data.w, data.h, 5);
+        _Colors2DArray.format = THREE.RGBAFormat;
+        _Colors2DArray.type = THREE.UnsignedByteType;
+        _Colors2DArray.anisotropy = 2;
         _Texture2DArray = new THREE.DataTexture2DArray(_TextureAtlasCanvas.getContext('2d').getImageData(0, 0, _size, _size * BASEDATATEXTURES.length).data, _size, _size, BASEDATATEXTURES.length);
         _Texture2DArray.format = THREE.RGBAFormat;
         _Texture2DArray.type = THREE.UnsignedByteType;
@@ -94,7 +119,7 @@ class TextureAtlas {
             _material = new THREE.MeshPhongMaterial();//new THREE.MeshLambertMaterial();
             _material.onBeforeCompile = function(shader) {
 
-                shader.uniforms.diffuses = {value: _Diffuse2DArray};
+                shader.uniforms.diffuses = {value: _Colors2DArray};
                 shader.uniforms.textureArray = {value: _Texture2DArray};
 
                 shader.vertexShader = 'out vec2 vUv;\n'  + shader.vertexShader;
@@ -125,7 +150,7 @@ class TextureAtlas {
                     [
                         '#include <dithering_fragment>',
 
-                        'float _repeat = 50.0;',
+                        'float _repeat = 10.0;',
                         'vec4 _diffuse = texture(diffuses, vec3(vUv, 0.0));                     //getCoord(0, 5)',
                         'vec4 _texture = texture(textureArray, vec3(vUv * _repeat, 0.0));',
                         'vec4 _mix = mix(_texture, vec4(0.0, 0.0, 0.0, 1.0), _diffuse.r);',

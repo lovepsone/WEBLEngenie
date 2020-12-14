@@ -8,7 +8,7 @@ import {sphereIntersectTriangle} from './../libs/BVH/Utils/MathUtilities.js';
 let _canvas = document.createElement('canvas'), _ctx = null;
 let _width = 128, _height = 128, _matrix = [];
 
-let _DiffuseCanvas = document.createElement('canvas');
+let _ColorsCanvas = document.createElement('canvas');
 
 let bindMouseDown, bindMouseUp, bindMouseMove;
 let _brushMesh = null, _camera = null, _scene = null, _mesh = null;
@@ -35,11 +35,11 @@ class GenerateBiomeMap {
 
         _scene.add(_brushMesh);
 
-        _DiffuseCanvas.width = _width;
-        _DiffuseCanvas.height = _height*5;
-        _DiffuseCanvas.style.width = "256px";
-        _DiffuseCanvas.style.height = "1280px";
-        //document.getElementById(elemId).appendChild(_DiffuseCanvas);  
+        _ColorsCanvas.width = _width;
+        _ColorsCanvas.height = _height*5;
+        _ColorsCanvas.style.width = "256px";
+        _ColorsCanvas.style.height = "1280px";
+        //document.getElementById(elemId).appendChild(_ColorsCanvas);  
 
         _canvas.width = _width;
         _canvas.height = _height;
@@ -171,11 +171,11 @@ class GenerateBiomeMap {
 
     setSize(width, height) {
 
-        _DiffuseCanvas.width = width;
-        _DiffuseCanvas.height = height*5;
-        _DiffuseCanvas.getContext('2d').clearRect(0, 0, width,  height*5);
-        _DiffuseCanvas.getContext('2d').fillStyle = '#ffff00';
-        _DiffuseCanvas.getContext('2d').fillRect(0, 0, width,  height*5);
+        _ColorsCanvas.width = width;
+        _ColorsCanvas.height = height*5;
+        _ColorsCanvas.getContext('2d').clearRect(0, 0, width,  height*5);
+        _ColorsCanvas.getContext('2d').fillStyle = '#ffff00';
+        _ColorsCanvas.getContext('2d').fillRect(0, 0, width,  height*5);
     
         _ctx.clearRect(0, 0, _width, _height);
         _width = width;
@@ -198,7 +198,7 @@ class GenerateBiomeMap {
         }
     }
 
-    GenerateBump(colors, x, y) {
+    GenerateMap(colors, x, y) {
 
         let buf = '#';
         const w = Number.parseInt(_width), h = Number.parseInt(_height);
@@ -206,41 +206,41 @@ class GenerateBiomeMap {
         buf += (colors == '44447a') ? '00': 'ff'; //OCEAN
         buf += (colors == 'a09077') ? '00': 'ff'; //BEACH
         buf += (colors == '555555') ? '00': 'ff'; //SCORCHED
-        _DiffuseCanvas.getContext('2d').fillStyle = buf;
-        _DiffuseCanvas.getContext('2d').fillRect(x, h - (y + 1), 1, 1);
+        _ColorsCanvas.getContext('2d').fillStyle = buf;
+        _ColorsCanvas.getContext('2d').fillRect(x, h - (y + 1), 1, 1);
 
         buf = '#';
         buf += (colors == '888888') ? '00': 'ff'; //BARE
         buf += (colors == 'bbbbaa') ? '00': 'ff'; //TUNDRA
         buf += (colors == 'dddde4') ? '00': 'ff'; //SNOW
-        _DiffuseCanvas.getContext('2d').fillStyle = buf;
-        _DiffuseCanvas.getContext('2d').fillRect(x, h*2 - (y + 1), 1, 1);
+        _ColorsCanvas.getContext('2d').fillStyle = buf;
+        _ColorsCanvas.getContext('2d').fillRect(x, h*2 - (y + 1), 1, 1);
 
         buf = '#';
         buf += (colors == 'c9d29b') ? '00': 'ff'; //TEMPERATE_DESERT
         buf += (colors == '99aa77') ? '00': 'ff'; //TAIGA
         buf += (colors == '88aa55') ? '00': 'ff'; //GRASSLAND
-        _DiffuseCanvas.getContext('2d').fillStyle = buf;
-        _DiffuseCanvas.getContext('2d').fillRect(x, h*3 - (y + 1), 1, 1);
+        _ColorsCanvas.getContext('2d').fillStyle = buf;
+        _ColorsCanvas.getContext('2d').fillRect(x, h*3 - (y + 1), 1, 1);
 
         buf = '#';
         buf += (colors == '679459') ? '00': 'ff'; //TEMPERATE_DECIDUOUS_FOREST
         buf += (colors == '448855') ? '00': 'ff'; //TEMPERATE_RAIN_FOREST
         buf += (colors == 'd2b98b') ? '00': 'ff'; //SUBTROPICAL_DESERT
-        _DiffuseCanvas.getContext('2d').fillStyle = buf;   
-        _DiffuseCanvas.getContext('2d').fillRect(x, h*4 - (y + 1), 1, 1);
+        _ColorsCanvas.getContext('2d').fillStyle = buf;   
+        _ColorsCanvas.getContext('2d').fillRect(x, h*4 - (y + 1), 1, 1);
 
         buf = '#';
         buf += (colors == '559944') ? '00': 'ff'; //TROPICAL_SEASONAL_FOREST
         buf += (colors == '337755') ? '00': 'ff'; //TROPICAL_RAIN_FOREST
         buf += 'ff'; // none
-        _DiffuseCanvas.getContext('2d').fillStyle = buf;
-        _DiffuseCanvas.getContext('2d').fillRect(x, h*5 - (y + 1), 1, 1);
+        _ColorsCanvas.getContext('2d').fillStyle = buf;
+        _ColorsCanvas.getContext('2d').fillRect(x, h*5 - (y + 1), 1, 1);
     }
 
-    getBump() {
+    getMapColors() {
 
-        return {bump:_DiffuseCanvas, w: _width, h:_height};
+        return {colors: _ColorsCanvas, w: _width, h:_height};
     }
 
     setColorsDataBiomes(array) {
@@ -262,7 +262,7 @@ class GenerateBiomeMap {
             }
     
             _matrix[y][x] = color.getHexString();
-            this.GenerateBump(_matrix[y][x], x, y);
+            this.GenerateMap(_matrix[y][x], x, y);
             _ctx.fillStyle = '#' + _matrix[y][x];
             _ctx.fillRect(x, y, 1, 1);         
             x++;

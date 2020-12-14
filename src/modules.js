@@ -37,7 +37,7 @@ function ControlBrush(currentTab) {
 		if (Engenie.getTerrain().getOptions().texture.getChangeBiomes()) {
 
 			Engenie.getTerrain().UpdateDataColors();
-			Engenie.getTerrain().getOptions().texture.setBiomeMap(Engenie.getTerrain().getOptions().biomeMap.getBump());
+			Engenie.getTerrain().getOptions().texture.setBiomeMap(Engenie.getTerrain().getOptions().biomeMap.getMapColors());
 		}
 		Engenie.getTerrain().getOptions().texture.GenerateMaterial(UI.getElement(DataHTML.Wireframe).checked);
 	}
@@ -294,7 +294,7 @@ UI.getElement(DataHTML.Texture.Buttons[0]).addEventListener("click", function(ev
 //pre-load icon texture
 for (let i = 0; i < DataHTML.Texture.Values.length; i++) {
 
-	UI.getElement(DataHTML.Texture.Values[i]).style.background  =  `url(${BASEDATATEXTURES[i][1]})`;
+	UI.getElement(DataHTML.Texture.Values[i]).style.background  =  `url(${BASEDATATEXTURES[i][1]}.jpg)`;
 }
 
 for (let i = 0; i < DataHTML.Texture.Options.length; i++) {
