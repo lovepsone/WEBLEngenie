@@ -107,7 +107,7 @@ class Terrain {
 
 		for (let i = 0, n = _mesh.geometry.attributes.position.count; i < n; ++ i) {
 
-			_mesh.geometry.attributes.position.array[i * 3 + 1] += (DataHeight[i] / 255) * 50;
+			_mesh.geometry.attributes.position.array[i * 3 + 1] = (DataHeight[i] / 255) * 50;
 			_mesh.geometry.attributes.position.needsUpdate = true;
 		}
 	
