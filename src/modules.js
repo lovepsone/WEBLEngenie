@@ -8,6 +8,7 @@ import {HTMLlist, DataHTML}			from './ui/HTMLlist.js';
 import {UI, UIFrame}				from './ui/UI.js';
 import {lang} 						from './lang/lang.js';
 import {BASEDATATEXTURES}			from './CONST.js';
+import Stats						from './../libs/stats.module.js'
 
 const Language = 'ru';
 
@@ -15,12 +16,16 @@ new LoaderHTML5(HTMLlist);
 let _UIFrame = new UIFrame(DataHTML.Camera, DataHTML.Wireframe);
 let Frame = UI.getElement('Window');
 let Engenie = new MainEngenie(60, window.innerWidth, window.innerHeight);
+let stats = new Stats();
 
 Frame.appendChild(Engenie.getRender().domElement);
+Frame.appendChild(stats.dom);
+
 var AnimationFrame = function() {
 
 	requestAnimationFrame(AnimationFrame);
 	Engenie.Render();
+	stats.update();
 };
 
 AnimationFrame();
