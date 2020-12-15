@@ -48,7 +48,7 @@ class MainEngenie {
 
 		_physics = new Physics();
 
-		const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+		const hemiLight = new THREE.HemisphereLight( 0x000000, 0x444444 );
 		hemiLight.position.set( 0, 20, 0 );
 		_scene.add(hemiLight);
 
