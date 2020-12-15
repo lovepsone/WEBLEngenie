@@ -5,15 +5,15 @@
  *
  *************************************************************************************************/
 
-import * as THREE from './../three.module.js';
+import { Box3, Vector3, Mesh, Matrix4 } from './../three.module.js';
 import { intersectTris, intersectClosestTri } from './Utils/RayIntersectTriUtlities.js';
 
 import { OrientedBox } from './Utils/OrientedBox.js';
 import { setTriangle } from './Utils/TriangleUtils.js';
 import { SeparatingAxisTriangle } from './Utils/SeparatingAxisTriangle.js';
 
-const boundingBox = new THREE.Box3();
-const boxIntersection = new THREE.Vector3();
+const boundingBox = new Box3();
+const boxIntersection = new Vector3();
 const xyzFields = [ 'x', 'y', 'z' ];
 
 
@@ -122,8 +122,8 @@ export function raycastFirstBuffer( stride4Offset, mesh, raycaster, ray ) {
 export const shapecastBuffer = ( function () {
 
 	const triangle = new SeparatingAxisTriangle();
-	const cachedBox1 = new THREE.Box3();
-	const cachedBox2 = new THREE.Box3();
+	const cachedBox1 = new Box3();
+	const cachedBox2 = new Box3();
 	return function shapecastBuffer( stride4Offset, mesh, intersectsBoundsFunc, intersectsTriangleFunc = null, nodeScoreFunc = null ) {
 
 		const stride2Offset = stride4Offset * 2, float32Array = _float32Array, uint16Array = _uint16Array, uint32Array = _uint32Array;
@@ -140,7 +140,7 @@ export const shapecastBuffer = ( function () {
 			for ( let i = offset * 3, l = ( count + offset ) * 3; i < l; i += 3 ) {
 
 				setTriangle( triangle, i, index, pos );
-				triangle.update();
+				triangle.needsUpdate = true;
 
 				if ( intersectsTriangleFunc( triangle, i, i + 1, i + 2 ) ) {
 
@@ -181,9 +181,8 @@ export const shapecastBuffer = ( function () {
 					score1 = score2;
 					score2 = temp;
 
-					const tempBox = box1;
 					box1 = box2;
-					box2 = tempBox;
+					// box2 is always set before use below
 
 				}
 
@@ -203,13 +202,9 @@ export const shapecastBuffer = ( function () {
 
 			if ( c1Intersection ) return true;
 
-
-			if ( ! box2 ) {
-
-				box2 = cachedBox2;
-				arrayToBoxBuffer( /* c2 boundingData */ c2, float32Array, box2 );
-
-			}
+			// cached box2 will have been overwritten by previous traversal
+			box2 = cachedBox2;
+			arrayToBoxBuffer( /* c2 boundingData */ c2, float32Array, box2 );
 
 			const isC2Leaf = /* c2 count */ uint16Array[ c2 + 15 ] === 0xffff;
 			const c2Intersection =
@@ -230,8 +225,8 @@ export const intersectsGeometryBuffer = ( function () {
 
 	const triangle = new SeparatingAxisTriangle();
 	const triangle2 = new SeparatingAxisTriangle();
-	const cachedMesh = new THREE.Mesh();
-	const invertedMat = new THREE.Matrix4();
+	const cachedMesh = new Mesh();
+	const invertedMat = new Matrix4();
 
 	const obb = new OrientedBox();
 	const obb2 = new OrientedBox();
@@ -270,7 +265,7 @@ export const intersectsGeometryBuffer = ( function () {
 			// get the inverse of the geometry matrix so we can transform our triangles into the
 			// geometry space we're trying to test. We assume there are fewer triangles being checked
 			// here.
-			invertedMat.getInverse( geometryToBvh );
+			invertedMat.copy( geometryToBvh ).invert();
 
 			if ( geometry.boundsTree ) {
 

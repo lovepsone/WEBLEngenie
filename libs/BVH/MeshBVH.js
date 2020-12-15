@@ -1,10 +1,9 @@
-import * as THREE from './../three.module.js';
+import { Vector3, BufferAttribute } from './../three.module.js';
 import { CENTER } from './Constants.js';
 import { buildTree } from './buildFunctions.js';
 import { OrientedBox } from './Utils/OrientedBox.js';
 import { SeparatingAxisTriangle } from './Utils/SeparatingAxisTriangle.js';
 import { setTriangle } from './Utils/TriangleUtils.js';
-import { sphereIntersectTriangle } from './Utils/MathUtilities.js';
 import {
 	raycast,
 	raycastFirst,
@@ -29,10 +28,10 @@ const IS_LEAFNODE_FLAG = 0xFFFF;
 const SKIP_GENERATION = Symbol( 'skip tree generation' );
 
 const obb = new OrientedBox();
-const temp = new THREE.Vector3();
+const temp = new Vector3();
 const tri2 = new SeparatingAxisTriangle();
-const temp1 = new THREE.Vector3();
-const temp2 = new THREE.Vector3();
+const temp1 = new Vector3();
+const temp2 = new Vector3();
 
 export default class MeshBVH {
 
@@ -152,62 +151,6 @@ export default class MeshBVH {
 
 	static deserialize( data, geometry, setIndex = true ) {
 
-		// function setData( byteOffset, node ) {
-
-		// 	const stride4Offset = byteOffset / 4;
-		// 	const stride2Offset = byteOffset / 2;
-		// 	const boundingData = new Float32Array( 6 );
-		// 	for ( let i = 0; i < 6; i ++ ) {
-
-		// 		boundingData[ i ] = float32Array[ stride4Offset + i ];
-
-		// 	}
-		// 	node.boundingData = boundingData;
-
-		// 	const isLeaf = uint16Array[ stride2Offset + 15 ] === IS_LEAFNODE_FLAG;
-		// 	if ( isLeaf ) {
-
-		// 		node.offset = uint32Array[ stride4Offset + 6 ];
-		// 		node.count = uint16Array[ stride2Offset + 14 ];
-
-		// 	} else {
-
-		// 		const left = new MeshBVHNode();
-		// 		const right = new MeshBVHNode();
-		// 		const leftOffset = stride4Offset + BYTES_PER_NODE / 4;
-		// 		const rightOffset = uint32Array[ stride4Offset + 6 ];
-
-		// 		setData( leftOffset * 4, left );
-		// 		setData( rightOffset * 4, right );
-
-		// 		node.left = left;
-		// 		node.right = right;
-		// 		node.splitAxis = uint32Array[ stride4Offset + 7 ];
-
-		// 	}
-
-		// }
-
-		// let float32Array;
-		// let uint32Array;
-		// let uint16Array;
-
-		// const { index, roots } = data;
-		// const bvh = new MeshBVH( geometry, { [ SKIP_GENERATION ]: true } );
-		// bvh._roots = [];
-		// for ( let i = 0; i < roots.length; i ++ ) {
-
-		// 	const buffer = roots[ i ];
-		// 	float32Array = new Float32Array( buffer );
-		// 	uint32Array = new Uint32Array( buffer );
-		// 	uint16Array = new Uint16Array( buffer );
-
-		// 	const root = new MeshBVHNode();
-		// 	setData( 0, root );
-		// 	bvh._roots.push( root );
-
-		// }
-
 		const { index, roots } = data;
 		const bvh = new MeshBVH( geometry, { [ SKIP_GENERATION ]: true } );
 		bvh._roots = roots;
@@ -218,7 +161,7 @@ export default class MeshBVH {
 			const indexAttribute = geometry.getIndex();
 			if ( indexAttribute === null ) {
 
-				const newIndex = new THREE.BufferAttribute( data.index, 1, false );
+				const newIndex = new BufferAttribute( data.index, 1, false );
 				geometry.setIndex( newIndex );
 
 			} else if ( indexAttribute.array !== index ) {
@@ -311,10 +254,14 @@ export default class MeshBVH {
 					const left = stride4Offset + BYTES_PER_NODE / 4;
 					const right = uint32Array[ stride4Offset + 6 ];
 					const splitAxis = uint32Array[ stride4Offset + 7 ];
-					callback( depth, isLeaf, new Float32Array( buffer, stride4Offset * 4, 6 ), splitAxis, false );
+					const stopTraversal = callback( depth, isLeaf, new Float32Array( buffer, stride4Offset * 4, 6 ), splitAxis, false );
 
-					_traverseBuffer( left, depth + 1 );
-					_traverseBuffer( right, depth + 1 );
+					if ( ! stopTraversal ) {
+
+						_traverseBuffer( left, depth + 1 );
+						_traverseBuffer( right, depth + 1 );
+
+					}
 
 				}
 
@@ -333,9 +280,14 @@ export default class MeshBVH {
 
 				} else {
 
-					callback( depth, isLeaf, node.boundingData, node.splitAxis, ! ! node.continueGeneration );
-					if ( node.left ) _traverseNode( node.left, depth + 1 );
-					if ( node.right ) _traverseNode( node.right, depth + 1 );
+					const stopTraversal = callback( depth, isLeaf, node.boundingData, node.splitAxis, ! ! node.continueGeneration );
+
+					if ( ! stopTraversal ) {
+
+						if ( node.left ) _traverseNode( node.left, depth + 1 );
+						if ( node.right ) _traverseNode( node.right, depth + 1 );
+
+					}
 
 				}
 
@@ -481,7 +433,7 @@ export default class MeshBVH {
 		return this.shapecast(
 			mesh,
 			box => sphere.intersectsBox( box ),
-			tri => sphereIntersectTriangle( sphere, tri )
+			tri => tri.intersectsSphere( sphere )
 		);
 
 	}
@@ -520,6 +472,12 @@ export default class MeshBVH {
 			( box, isLeaf, score ) => score < closestDistance && score < maxThreshold,
 			tri => {
 
+				if ( tri.needsUpdate ) {
+
+					tri.update();
+
+				}
+
 				const sphere1 = tri.sphere;
 				for ( let i2 = 0, l2 = index.count; i2 < l2; i2 += 3 ) {
 
@@ -557,7 +515,13 @@ export default class MeshBVH {
 						closestDistance = dist;
 
 					}
-					if ( dist < minThreshold ) return true;
+
+					// stop traversal if we find a point that's under the given threshold
+					if ( dist < minThreshold ) {
+
+						return true;
+
+					}
 
 				}
 

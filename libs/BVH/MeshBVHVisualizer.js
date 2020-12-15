@@ -1,11 +1,11 @@
-import * as THREE from './../three.module.js';
+import { LineBasicMaterial, Box3Helper, Box3, Group, LineSegments } from './../three.module.js';
 import { arrayToBox } from './Utils/ArrayBoxUtilities.js';
 
-const wiremat = new THREE.LineBasicMaterial( { color: 0x00FF88, transparent: true, opacity: 0.3 } );
-const boxGeom = new THREE.Box3Helper().geometry;
-let boundingBox = new THREE.Box3();
+const wiremat = new LineBasicMaterial( { color: 0x00FF88, transparent: true, opacity: 0.3 } );
+const boxGeom = new Box3Helper().geometry;
+let boundingBox = new Box3();
 
-class MeshBVHRootVisualizer extends THREE.Group {
+class MeshBVHRootVisualizer extends Group {
 
 	constructor( mesh, depth = 10, group = 0 ) {
 
@@ -13,7 +13,7 @@ class MeshBVHRootVisualizer extends THREE.Group {
 
 		this.depth = depth;
 		this._oldDepth = - 1;
-		this._mesh = mesh;
+		this.mesh = mesh;
 		this._boundsTree = null;
 		this._group = group;
 
@@ -24,7 +24,7 @@ class MeshBVHRootVisualizer extends THREE.Group {
 	update() {
 
 		this._oldDepth = this.depth;
-		this._boundsTree = this._mesh.geometry.boundsTree;
+		this._boundsTree = this.mesh.geometry.boundsTree;
 
 		let requiredChildren = 0;
 		if ( this._boundsTree ) {
@@ -33,14 +33,19 @@ class MeshBVHRootVisualizer extends THREE.Group {
 
 				let isTerminal = isLeaf || countOrIsUnfinished;
 
-				if ( depth >= this.depth ) return;
+				// Stop traversal
+				if ( depth >= this.depth ) {
+
+					return true;
+
+				}
 
 				if ( depth === this.depth - 1 || isTerminal ) {
 
 					let m = requiredChildren < this.children.length ? this.children[ requiredChildren ] : null;
 					if ( ! m ) {
 
-						m = new THREE.LineSegments( boxGeom, wiremat );
+						m = new LineSegments( boxGeom, wiremat );
 						m.raycast = () => [];
 						this.add( m );
 
@@ -66,14 +71,14 @@ class MeshBVHRootVisualizer extends THREE.Group {
 
 }
 
-class MeshBVHVisualizer extends THREE.Group {
+class MeshBVHVisualizer extends Group {
 
 	constructor( mesh, depth = 10 ) {
 
 		super( 'MeshBVHVisualizer' );
 
 		this.depth = depth;
-		this._mesh = mesh;
+		this.mesh = mesh;
 		this._roots = [];
 
 		this.update();
@@ -82,7 +87,7 @@ class MeshBVHVisualizer extends THREE.Group {
 
 	update() {
 
-		const bvh = this._mesh.geometry.boundsTree;
+		const bvh = this.mesh.geometry.boundsTree;
 		const totalRoots = bvh ? bvh._roots.length : 0;
 		while ( this._roots.length > totalRoots ) {
 
@@ -94,7 +99,7 @@ class MeshBVHVisualizer extends THREE.Group {
 
 			if ( i >= this._roots.length ) {
 
-				const root = new MeshBVHRootVisualizer( this._mesh, this.depth, i );
+				const root = new MeshBVHRootVisualizer( this.mesh, this.depth, i );
 				this.add( root );
 				this._roots.push( root );
 
@@ -108,9 +113,28 @@ class MeshBVHVisualizer extends THREE.Group {
 
 		}
 
-		this.position.copy( this._mesh.position );
-		this.rotation.copy( this._mesh.rotation );
-		this.scale.copy( this._mesh.scale );
+	}
+
+	updateMatrixWorld( ...args ) {
+
+		this.position.copy( this.mesh.position );
+		this.rotation.copy( this.mesh.rotation );
+		this.scale.copy( this.mesh.scale );
+
+		super.updateMatrixWorld( ...args );
+
+	}
+
+	copy( source ) {
+
+		this.depth = source.depth;
+		this.mesh = source.mesh;
+
+	}
+
+	clone() {
+
+		return new MeshBVHVisualizer( this.mesh, this.depth );
 
 	}
 

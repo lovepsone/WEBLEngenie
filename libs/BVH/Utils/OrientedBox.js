@@ -87,7 +87,7 @@ OrientedBox.prototype.update = ( function () {
 		alignedSatBounds[ 1 ].setFromPointsField( points, 'y' );
 		alignedSatBounds[ 2 ].setFromPointsField( points, 'z' );
 
-		this.invMatrix.getInverse( this.matrix );
+		this.invMatrix.copy( this.matrix ).invert();
 
 	};
 
@@ -147,6 +147,10 @@ OrientedBox.prototype.intersectsTriangle = ( function () {
 			saTri.copy( triangle );
 			saTri.update();
 			triangle = saTri;
+
+		} else if ( triangle.needsUpdate ) {
+
+			triangle.update();
 
 		}
 
