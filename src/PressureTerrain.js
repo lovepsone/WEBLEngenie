@@ -43,7 +43,11 @@ class PressureTerrain {
 
 		event.preventDefault();
 		_MouseDown = false;
-		if (_mesh) _mesh.geometry.computeBoundsTree();
+		if (_mesh) {
+			_mesh.geometry.computeVertexNormals();
+			_mesh.geometry.normalizeNormals();
+			_mesh.geometry.computeBoundsTree();
+		}
 	}
 
 	onDocumentMouseMove(event) {

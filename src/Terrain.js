@@ -54,7 +54,7 @@ class Terrain {
 		geometry.rotateX(-Math.PI / 2);
 		geometry.computeBoundingBox();
 		geometry.center();
-		geometry.computeFaceNormals();
+		//geometry.computeFaceNormals();
 
 		let colors = [];
 
@@ -129,6 +129,8 @@ class Terrain {
 			_mesh.geometry.attributes.position.needsUpdate = true;
 		}
 
+		_mesh.geometry.computeVertexNormals();
+		_mesh.geometry.normalizeNormals();
 		_mesh.geometry.computeBoundsTree();
 	}
 
