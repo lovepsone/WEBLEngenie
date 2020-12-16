@@ -204,6 +204,12 @@ UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[1]).addEventListener("click",
 	UI.getElement(DataHTML.DialogLoadHeightMap.widjet).close();
 }, false);
 
+// handlers roughness height map
+UI.getElement(DataHTML.ValRoughnessHeightMap).addEventListener("change", function(event) {
+
+	Engenie.getTerrain().setRoughness(parseInt(event.srcElement.value));
+}, false);
+
 // handlers Right Bar
 for (let i = 0; i < DataHTML.RightBar.Buttons.length; i++) {
 

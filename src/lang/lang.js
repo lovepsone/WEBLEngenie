@@ -14,6 +14,7 @@ var lang = {
 			'Сохранить',
 			'Загрузить',
 			'Карта высот',
+			'Грубость высоты',
 			],
 		'CreateTerrain': [
 			'Создание Террейна',
@@ -90,6 +91,7 @@ var lang = {
 			'Save',
 			'Loading',
 			'Height Map',
+			'Roughness Height Map',
 			],
 		'CreateTerrain': [
 			'Create Terrain',

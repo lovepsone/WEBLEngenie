@@ -16,6 +16,7 @@ var DataHTML = {
 			'SaveTerrain': 'SaveTerrain',
 			'LoadTerrain': 'LoadTerrain',
 			'LoadHeightMap': 'LoadHeightMap',
+			'RoughnessHeightMap': 'RoughnessHeightMap',
 			'PlaySimulation': 'PlaySimulation',
 		},
 	'RightBar': {
@@ -71,6 +72,7 @@ var DataHTML = {
 	'SizeBrush': 'sizebrush',
 	'ValBrush': 'valbrush',
 	'Wireframe': 'wireframe',
+	'ValRoughnessHeightMap': 'valRoughnessHeightMap',
 };
 const StyleIconLoadTexture = "outline:0;opacity:0;pointer-events:none;user-select:none";
 const StyleIconLabelTexture = "position:static;width:80px;height:80px;font-size: 10px;color:white;display:inline-block;cursor:pointer;text-align:center;background-size:100%;";
@@ -126,6 +128,9 @@ let HTMLlist = [
 				{'tag': 'div', 'id': DataHTML.MenuBar.LoadTerrain, 'class': 'option', 'text': txt.MenuBar[3]},
 				{'tag': 'hr'},
 				{'tag': 'div', 'id': DataHTML.MenuBar.LoadHeightMap, 'class': 'option', 'text': txt.MenuBar[4]},
+				{'tag': 'div', 'id': DataHTML.MenuBar.RoughnessHeightMap, 'class': 'option', 'text': txt.MenuBar[5], 'children': [
+					{'tag': 'input', 'id': DataHTML.ValRoughnessHeightMap, 'type': 'range', 'min': -10, 'max': 10, 'value': 5}
+				]},
 			]},
 		]},
 		//simulate

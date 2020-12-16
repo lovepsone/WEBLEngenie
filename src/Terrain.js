@@ -2,9 +2,9 @@
 * author lovepsone
 */
 let _mesh = null, _scope = null, _pixel = null, _context = null;
-let _max = 0.0, _min = 0.0, _size = 64, _roughness = 2;
+let _max = 0.0, _min = 0.0, _size = 1, _roughness = 2;
 
-let _Optons  = {pressure: null, biomes: null, biomeMap: null, road: null, texture: null};
+let _Optons  = {pressure: null, biomes: null, biomeMap: null, road: null, texture: null, isHeightMap: false};
 
 import * as THREE from './../libs/three.module.js';
 import {PressureTerrain} from './PressureTerrain.js';
@@ -43,6 +43,7 @@ class Terrain {
 			_min = 0.0;
 		}
 
+		_Optons.isHeightMap = false;
 		_size = size;
 
 		_Optons.biomes.setSize(_size, _size);
@@ -89,6 +90,12 @@ class Terrain {
 
 	LoadHeightMap(image) {
 
+		if (!(_mesh instanceof THREE.Mesh)) {
+
+			console.warn('Terrain.js: create a terrain before doing this.');
+			return;
+		}
+
 		let canvas = document.createElement('canvas');
 		canvas.width = image.width;
 		canvas.height = image.height;
@@ -97,11 +104,23 @@ class Terrain {
 		_context.drawImage(image, 0, 0);
 		_pixel = null;
 		_pixel = _context.getImageData(0, 0, image.width, image.height);
-
+		_Optons.isHeightMap = true;
 		this.ApplyHeightMap();
 	}
 
 	ApplyHeightMap() {
+
+		if (!(_mesh instanceof THREE.Mesh)) {
+
+			console.warn('Terrain.js: create a terrain before doing this.');
+			return;
+		}
+
+		if (!_Optons.isHeightMap) {
+
+			console.warn('Terrain.js: heightmap was not loaded.');
+			return;
+		}
 
 		for (let i = 0, n = _mesh.geometry.attributes.position.count; i < n; ++ i) {
 
@@ -113,11 +132,17 @@ class Terrain {
 		_mesh.geometry.computeBoundsTree();
 	}
 
+	setRoughness(val) {
+
+		_roughness = val;
+		this.ApplyHeightMap();
+	}
+
 	UpdateDataColors() {
 
 		if (!(_mesh instanceof THREE.Mesh)) {
 
-			console.warn('Terrain.js: UpdateDataColors().');
+			console.warn('Terrain.js: create a terrain before doing this.');
 			return;
 		}
 		_Optons.biomeMap.setColorsDataBiomes(_mesh.geometry.attributes.color);
