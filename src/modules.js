@@ -207,7 +207,9 @@ UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[1]).addEventListener("click",
 // handlers roughness height map
 UI.getElement(DataHTML.ValRoughnessHeightMap).addEventListener("change", function(event) {
 
-	Engenie.getTerrain().setRoughness(parseInt(event.srcElement.value));
+	let val = parseInt(event.srcElement.value);
+	if (val === 0) val = 1; 
+	Engenie.getTerrain().setRoughness(val);
 }, false);
 
 // handlers Right Bar
