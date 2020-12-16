@@ -1,8 +1,8 @@
 /*
 * author lovepsone
 */
-let _mesh = null, _scope = null, _ImageLoader = null, _context = null;
-let _max = 0.0, _min = 0.0, _size = 64, _roughness = 5;
+let _mesh = null, _scope = null, _pixel = null, _context = null;
+let _max = 0.0, _min = 0.0, _size = 64, _roughness = 2;
 
 let _Optons  = {pressure: null, biomes: null, biomeMap: null, road: null, texture: null};
 
@@ -95,22 +95,21 @@ class Terrain {
 		_context = canvas.getContext('2d');
 
 		_context.drawImage(image, 0, 0);
-		let pixel = _context.getImageData(0, 0, image.width, image.height);
+		_pixel = null;
+		_pixel = _context.getImageData(0, 0, image.width, image.height);
 
-		let DataHeight = [];
-		//let DataHeight = new Float32Array(image.width * image.height);
+		this.ApplyHeightMap();
+	}
 
-		for (let i = 0, n = pixel.data.length; i < n; i += 4) {
-			
-			DataHeight.push((pixel.data[i] + pixel.data[i + 1] + pixel.data[i + 2]) / _roughness);
-		}
+	ApplyHeightMap() {
 
 		for (let i = 0, n = _mesh.geometry.attributes.position.count; i < n; ++ i) {
 
-			_mesh.geometry.attributes.position.array[i * 3 + 1] = (DataHeight[i] / 255) * 50;
+			const tmp = (_pixel.data[i * 4] + _pixel.data[i * 4 + 1] + _pixel.data[i * 4 + 2]) / _roughness;
+			_mesh.geometry.attributes.position.array[i * 3 + 1] = (tmp / 255) * 50;
 			_mesh.geometry.attributes.position.needsUpdate = true;
 		}
-	
+
 		_mesh.geometry.computeBoundsTree();
 	}
 
