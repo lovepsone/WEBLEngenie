@@ -14,6 +14,7 @@ import {GenerateBiomeMap} from './GenerateBiomeMap.js';
 import {Road} from './Road.js';
 import {acceleratedRaycast, computeBoundsTree, disposeBoundsTree} from './../libs/BVH/index.js';
 import {TextureAtlas} from './TextureAtlas.js';
+import {COLORBOARDROAD} from './CONST.js';
 
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -163,6 +164,7 @@ class Terrain {
 
 	ApplyBiomes() {
 
+		const cBoard = new THREE.Color(COLORBOARDROAD);
 		if (!(_mesh instanceof THREE.Mesh)) {
 
 			console.warn('Terrain.js: Create geometry before overlaying biome.');
@@ -182,15 +184,21 @@ class Terrain {
 
 		for (let i = 0; i < _mesh.geometry.attributes.position.count; i++) {
 
-			let y = _mesh.geometry.attributes.position.array[i * 3 + 1];
-			let height = (y - _min) / (_max - _min);
+			const bufcolor =  new THREE.Color().fromArray(_mesh.geometry.attributes.color.array, i * 3);
 
-			let color = new THREE.Color(_Optons.biomes.get(height, i));
-	
+			if (
+				Math.fround(_mesh.geometry.attributes.color.array[i * 3]) == Math.fround(cBoard.r) &&
+				Math.fround(_mesh.geometry.attributes.color.array[i * 3 + 1]) == Math.fround(cBoard.g) &&
+				Math.fround(_mesh.geometry.attributes.color.array[i * 3 + 2]) == Math.fround(cBoard.b)
+			) continue;
+			const y = _mesh.geometry.attributes.position.array[i * 3 + 1];
+			const height = (y - _min) / (_max - _min);
+
+			const color = new THREE.Color(_Optons.biomes.get(height, i));
+
 			_mesh.geometry.attributes.color.array[i * 3] = color.r;
 			_mesh.geometry.attributes.color.array[i * 3 + 1] = color.g;
 			_mesh.geometry.attributes.color.array[i * 3 + 2] = color.b;
-
 		}
 
 		_mesh.geometry.attributes.color.needsUpdate = true;
