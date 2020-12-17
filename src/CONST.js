@@ -20,6 +20,7 @@ export const BASENAMETEXTURES =  {
     TROPICAL_RAIN_FOREST:       './texture/tropical_rain_forest_512', //0x337755
 };
 
+export const COLORBOARDROAD = 0xc9d29b;
 export const BASEDATATEXTURES = Object.entries(BASENAMETEXTURES);
 
 export const CLASSTULLTIP = 'ToolTip';

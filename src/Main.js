@@ -139,6 +139,10 @@ class MainEngenie {
 				break;
 			case 'RoadComplete':
 				_terrain.getOptions().road.Draw(event.data.dataRoad);
+				_terrain.UpdateDataColors();
+				_terrain.getOptions().texture.ChangeBiomes();
+				_terrain.getOptions().texture.setBiomeMap(_terrain.getOptions().biomeMap.getMapColors());
+				_terrain.getOptions().texture.GenerateMaterial(false);
 				break;
         }
 	}

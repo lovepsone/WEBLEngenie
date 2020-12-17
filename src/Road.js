@@ -3,6 +3,7 @@
 */
 
 import * as THREE from './../libs/three.module.js';
+import {COLORBOARDROAD} from './CONST.js';
 
 let _CounterBox = 0
 let _boxes = [];
@@ -166,7 +167,7 @@ class Road {
 
 	Draw(dataRoad) {
 
-		const test = new THREE.Color(0x44447a);
+		const colorBoard = new THREE.Color(COLORBOARDROAD);
 
 		const buff = dataRoad;
 		let position = _mesh.geometry.getAttribute('position');
@@ -176,9 +177,9 @@ class Road {
 
 			position.array[buff.index[i] * 3 + 1] = buff.vertex[i].y;
 			position.needsUpdate = true;
-			color.array[buff.index[i]*3] = test.r;
-			color.array[buff.index[i]*3 + 1] = test.g;
-			color.array[buff.index[i]*3 + 2] = test.b;
+			color.array[buff.index[i] * 3] = colorBoard.r;
+			color.array[buff.index[i] * 3 + 1] = colorBoard.g;
+			color.array[buff.index[i] * 3 + 2] = colorBoard.b;
 			color.needsUpdate = true;
 		}
 	}
