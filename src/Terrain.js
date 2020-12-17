@@ -1,5 +1,6 @@
 /*
 * author lovepsone
+* generator height map https://tangrams.github.io/heightmapper
 */
 let _mesh = null, _scope = null, _pixel = null, _context = null;
 let _max = 0.0, _min = 0.0, _size = 1, _roughness = 2;

@@ -124,14 +124,14 @@ class TextureAtlas {
 
         if (_ChangeBiomes) {
 
-            _material = new THREE.MeshPhongMaterial();//new THREE.MeshLambertMaterial();
+            _material = new THREE.MeshPhongMaterial();
             _material.onBeforeCompile = function(shader) {
 
                 shader.uniforms.colorArray = {value: _Colors2DArray};
                 shader.uniforms.textureArray = {value: _Texture2DArray};
                 shader.uniforms.normalArray = {value: _Normal2DArray};
 
-                shader.vertexShader = `out vec2 vUv;\n${shader.vertexShader}`;//  + shader.vertexShader;
+                shader.vertexShader = `out vec2 vUv;\n${shader.vertexShader}`;
 
                 shader.vertexShader = shader.vertexShader.replace(
                     '#include <begin_vertex>',
