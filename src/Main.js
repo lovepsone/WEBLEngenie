@@ -100,7 +100,7 @@ class MainEngenie {
 	RoadGenerate(wireframe) {
 
 		const buf = _terrain.getOptions().road.Generate(wireframe);
-		_worker.postMessage({'cmd': 'RoadGenerate', 'points': buf.points, 'ExtrudePoints': buf.ExtrudePoints});
+		_worker.postMessage({'cmd': 'RoadGenerate', 'points': buf.points, 'ExtrudePoints': buf.ExtrudePoints, 'Wireframe': wireframe});
 	}
 
 	WorkerOnMessage(event) {
@@ -118,7 +118,7 @@ class MainEngenie {
 				_terrain.UpdateDataColors();
 				_terrain.getOptions().texture.ChangeBiomes();
 				_terrain.getOptions().texture.setBiomeMap(_terrain.getOptions().biomeMap.getMapColors());
-				_terrain.getOptions().texture.GenerateMaterial(false);
+				_terrain.getOptions().texture.GenerateMaterial(event.data.wireframe);
 				break;
         }
 	}

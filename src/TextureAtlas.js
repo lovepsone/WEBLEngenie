@@ -114,7 +114,7 @@ class TextureAtlas {
         return false;
     }
 
-    GenerateMaterial(wireframe) {
+    GenerateMaterial(wireframe = true) {
 
         if (!(_mesh instanceof THREE.Mesh)) {
 
@@ -124,7 +124,7 @@ class TextureAtlas {
 
         if (_ChangeBiomes) {
 
-            _material = new THREE.MeshPhongMaterial();
+            _material = new THREE.MeshPhongMaterial({wireframe: wireframe});
             _material.onBeforeCompile = function(shader) {
 
                 shader.uniforms.colorArray = {value: _Colors2DArray};
@@ -296,6 +296,7 @@ class TextureAtlas {
             _mesh.castShadow = true;
             _mesh.receiveShadow = true;
             _mesh.material.needsUpdate = true;
+            //_mesh.material.wireframe = wireframe;
         }
 
         _ChangeBiomes = false;
