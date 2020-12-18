@@ -2,14 +2,14 @@
 
 ### Libraries used ###
 
-[three.js] https://github.com/mrdoob/three.js/ &mdash;
-[Mesh BVH] https://github.com/gkjohnson/three-mesh-bvh &mdash;
+[three.js] (https://github.com/mrdoob/three.js/) &mdash;
+[Mesh BVH] (https://github.com/gkjohnson/three-mesh-bvh) &mdash;
 
 ### Preliminary innovations (intent) ###
 
-Adjustable skybox &mdash;
-Adjustable lighting &mdash;
-Add options for road editor &mdash;
-Add physics options &mdash;
-Add vegetation generator &mdash;
-Optimization and optimization again &mdash;
+- Adjustable skybox
+- Adjustable lighting
+- Add options for road editor
+- Add physics options
+- Add vegetation generator
+- Optimization and optimization again
