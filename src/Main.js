@@ -48,41 +48,17 @@ class MainEngenie {
 
 		_physics = new Physics();
 
-		const hemiLight = new THREE.HemisphereLight( 0x000000, 0x444444 );
-		hemiLight.position.set( 0, 20, 0 );
+		const hemiLight = new THREE.HemisphereLight(0x000000, 0x444444);
+		hemiLight.position.set(0, 20, 0);
 		_scene.add(hemiLight);
 
 		const dirLight = new THREE.DirectionalLight(0xffffff);
-		dirLight.position.set(- 3, 100, - 30);
+		dirLight.position.set(-3, 100, -30);
 		dirLight.castShadow = true;
-		/*dirLight.shadow.camera.top = 2;
-		dirLight.shadow.camera.bottom = - 2;
-		dirLight.shadow.camera.left = - 2;
-		dirLight.shadow.camera.right = 2;
-		dirLight.shadow.camera.near = 0.1;
-		dirLight.shadow.camera.far = 40;*/
+		dirLight.shadow.mapSize.width = 2048 * 2;
+		dirLight.shadow.mapSize.height = 2048 * 2;
+
 		_scene.add(dirLight);
-
-		/*const dLight = 200;
-		const sLight = dLight * 0.25;
-		light.shadow.camera.left = - sLight;
-		light.shadow.camera.right = sLight;
-		light.shadow.camera.top = sLight;
-		light.shadow.camera.bottom = - sLight;
-
-		light.shadow.camera.near = dLight / 30;
-		light.shadow.camera.far = dLight;
-
-		light.shadow.mapSize.x = 1024 * 2;
-		light.shadow.mapSize.y = 1024 * 2;*/
-
-
-		/*let t = new THREE.Mesh( new THREE.BoxBufferGeometry( 10, 10, 10, 1, 1, 1 ), new THREE.MeshPhongMaterial( { color: new THREE.Color(0x40ff40) } ));
-		t.receiveShadow = true;
-		t.castShadow = true;
-		t.position.y = 30;
-		_scene.add(t);*/
-
 	}
 
 	Render() {
