@@ -14,10 +14,11 @@ let _camera = null;
 let _lat = 0, _lon = 0, _phi = 0, _theta = 0;
 let _sensitivity = 0.06; // default sensitivity
 let _target = new THREE.Vector3(0, 0, 0);
+let _headPosition = 0.0;
 
 export class PointerLockControls {
 
-    constructor(camera, viewport/*'Window'*/) {
+    constructor(camera, viewport/*'Window'*/, headPosition = 1.4) {
 
         _camera = camera;
         this.element = document.getElementById(viewport);
@@ -28,6 +29,7 @@ export class PointerLockControls {
         _bindPointerLockClick = this.pointerLockClick.bind(this);
         _bindKeyUp = this.onKeyUp.bind(this);
         _bindKeyDown = this.onKeyDown.bind(this);
+        _headPosition = headPosition;
     }
 
     getEnabled() {
@@ -122,7 +124,6 @@ export class PointerLockControls {
 
     onKeyDown(event) {
 
-        //console.log(event.keyCode);
         switch (event.keyCode)
         {
             case 38: /*up*/
@@ -177,13 +178,14 @@ export class PointerLockControls {
 
         if (_isEnabled) {
 
+            position[1] += _headPosition;
             _camera.position.fromArray(position);
         }
     }
 
     getPosition() {
 
-        return _camera.position.toArray();
+        return [_camera.position.x, _camera.position.y - _headPosition, _camera.position.z]//_camera.position.toArray();
     }
 
     getAngleLongitude() {
