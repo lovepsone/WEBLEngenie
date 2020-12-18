@@ -184,7 +184,7 @@ class TextureAtlas {
                     [
                         //'#include <map_fragment>',
 
-                        'float _repeat = 10.0;',
+                        'float _repeat = 5.0;',
 
                         'vec4 _color = texture(colorArray, vec3(vUv, 0.0));                     //getCoord(0, 5)',
                         'vec4 _texture = texture(textureArray, vec3(vUv * _repeat, 0.0));',
