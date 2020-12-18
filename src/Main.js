@@ -97,9 +97,9 @@ class MainEngenie {
 		_worker.postMessage({'cmd': 'BiomeStart', 'size': _terrain.getOptions().biomes.getSize()});
 	}
 
-	RoadGenerate() {
+	RoadGenerate(wireframe) {
 
-		const buf = _terrain.getOptions().road.Generate();
+		const buf = _terrain.getOptions().road.Generate(wireframe);
 		_worker.postMessage({'cmd': 'RoadGenerate', 'points': buf.points, 'ExtrudePoints': buf.ExtrudePoints});
 	}
 

@@ -43,6 +43,8 @@ class Terrain {
 			_Optons.road.DisposeEvents();
 			_max = 0.0;
 			_min = 0.0;
+			_Optons.road.Remove();
+			_Optons.texture.clear();
 		}
 
 		_Optons.isHeightMap = false;

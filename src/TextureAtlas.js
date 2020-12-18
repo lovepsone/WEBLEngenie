@@ -300,6 +300,11 @@ class TextureAtlas {
 
         _ChangeBiomes = false;
     }
+
+    clear() {
+
+        _material = null;
+    }
 }
 
 export {TextureAtlas}

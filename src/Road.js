@@ -5,14 +5,10 @@
 import * as THREE from './../libs/three.module.js';
 import {COLORBOARDROAD} from './CONST.js';
 
-let _CounterBox = 0
-let _boxes = [];
-let _lines = [];
-let _mesh = null;
-let _camera = null;
-let _scene = null;
-let _mouseVector = new THREE.Vector2();
-let _raycaster = new THREE.Raycaster();
+let _CounterBox = 0, _boxes = [], _lines = [], _roads = [];
+let _mesh = null, _camera = null, _scene = null;
+let _mouseVector = new THREE.Vector2(), _raycaster = new THREE.Raycaster();
+
 
 let bindMouseDown, bindMouseMove;
 let _brushMesh = null;
@@ -184,7 +180,7 @@ class Road {
 		}
 	}
 
-	Generate() {
+	Generate(wireframe) {
 
 		let points = [];
 	
@@ -215,15 +211,39 @@ class Road {
 	
 		let texture = new THREE.TextureLoader().load("texture/asphalt1_512.jpg");
 		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-		let mesh = new THREE.Mesh(extrudeGeometry, new THREE.MeshBasicMaterial({map: texture, wireframe: false}));
-		_scene.add(mesh);
-		mesh.position.y += 0.05;
+		_roads.push(new THREE.Mesh(extrudeGeometry, new THREE.MeshBasicMaterial({map: texture, wireframe: wireframe})));
+		_scene.add(_roads[_roads.length - 1]);
+		_roads[_roads.length - 1].position.y += 0.05;
 
 		_boxes.length = 0;
 		_lines.length = 0;
 		_CounterBox = 0;
 
 		return {'points': _mesh.geometry.getAttribute('position'), 'ExtrudePoints': points};
+	}
+
+	WireFrame(value = true) {
+
+		if (_roads.length > 0) {
+
+			for (let i = 0; i < _roads.length; i++) {
+
+				_roads[i].material.wireframe = value;
+			}
+		}
+	}
+
+	Remove() {
+
+		if (_roads.length > 0) {
+
+			for (let i = 0; i < _roads.length; i++) {
+
+				_scene.remove(_roads[i]);
+			}
+
+			_roads = [];
+		}
 	}
 }
 

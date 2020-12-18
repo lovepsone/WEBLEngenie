@@ -37,6 +37,7 @@ function ControlBrush(currentTab) {
 	if (currentTab == 1) {
 
 		Engenie.getTerrain().setDefaultMaterial(UI.getElement(DataHTML.Wireframe).checked);
+		Engenie.getTerrain().getOptions().road.WireFrame(UI.getElement(DataHTML.Wireframe).checked);
 	} else {
 
 		if (Engenie.getTerrain().getOptions().texture.getChangeBiomes()) {
@@ -45,6 +46,7 @@ function ControlBrush(currentTab) {
 			Engenie.getTerrain().getOptions().texture.setBiomeMap(Engenie.getTerrain().getOptions().biomeMap.getMapColors());
 		}
 		Engenie.getTerrain().getOptions().texture.GenerateMaterial(UI.getElement(DataHTML.Wireframe).checked);
+		Engenie.getTerrain().getOptions().road.WireFrame(UI.getElement(DataHTML.Wireframe).checked);
 	}
 
 	if (UI.getElement(DataHTML.Camera).checked) {
@@ -265,6 +267,7 @@ UI.getElement(DataHTML.Pressuere.Options[0]).addEventListener("change", function
 UI.getElement(DataHTML.Wireframe).addEventListener("change", function(event) {
 
 	Engenie.getTerrain().WireFrame(event.srcElement.checked);
+	Engenie.getTerrain().getOptions().road.WireFrame(UI.getElement(DataHTML.Wireframe).checked);
 }, false);
 
 // handlers biomes
@@ -283,7 +286,7 @@ UI.getElement(DataHTML.Biomes.Buttons[1]).addEventListener("click", function(eve
 //handlers Edit Road
 UI.getElement(DataHTML.Road.Buttons[0]).addEventListener("click", function(event) {
 
-	Engenie.RoadGenerate();
+	Engenie.RoadGenerate(_UIFrame.CheckedWireframe());
 }, false);
 
 //handlers Edit Biomes
