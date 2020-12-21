@@ -29,5 +29,14 @@ self.onmessage = function(event) {
             _CalculateRoad.clearData();
             tmp = null;
             break;
+
+        case 'HeightMapPerlin':
+            _NoisePerlin.setSize(event.data.size, event.data.size);
+            self.postMessage({'cmd': 'HeightMapPerlinGenerate', 'colors':  _NoisePerlin.Generate()});
+            break;
+
+        case 'HeightMapDiamondSquare':
+            self.postMessage({'cmd': 'HeightMapPerlinGenerate', 'colors':  0});
+            break;
     }
 }

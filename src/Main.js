@@ -103,23 +103,42 @@ class MainEngenie {
 		_worker.postMessage({'cmd': 'RoadGenerate', 'points': buf.points, 'ExtrudePoints': buf.ExtrudePoints, 'Wireframe': wireframe});
 	}
 
+	HeightMapNoisePerlin() {
+
+		_worker.postMessage({'cmd': 'HeightMapPerlin', 'size': _terrain.getSize()});
+	}
+
+	HeightDiamondSquare() {
+
+		_worker.postMessage({'cmd': 'HeightMapDiamondSquare', 'size': _terrain.getSize()});
+	}
+
 	WorkerOnMessage(event) {
 
         switch(event.data.cmd) {
 
             case 'BiomeDraw':
 				_worker.postMessage({'cmd': 'BiomePixels', 'data': _terrain.getOptions().biomes.Draw(event.data.colors)});
-                break;
+				break;
+
             case 'BiomeComplete':
 				_terrain.getOptions().biomes.setMoisture(event.data.result);
 				break;
-			case 'RoadComplete':
 
+			case 'RoadComplete':
 				_terrain.getOptions().road.Draw(event.data.dataRoad);
 				_terrain.UpdateDataColors();
 				_terrain.getOptions().texture.ChangeBiomes();
 				_terrain.getOptions().texture.setBiomeMap(_terrain.getOptions().biomeMap.getMapColors());
 				_terrain.getOptions().texture.GenerateMaterial(event.data.wireframe);
+				break;
+
+			case 'HeightMapPerlinGenerate':
+				_terrain.ApplyPerlin(event.data.colors);
+				break;
+
+			case 'HeightMapDiamondSquareGenerate':
+				console.log('algorithm not implemented');
 				break;
         }
 	}

@@ -166,12 +166,12 @@ UI.getElement(DataHTML.MenuBar.LoadHeightMap).addEventListener("click", function
 
 UI.getElement(DataHTML.MenuBar.NoisePerlin).addEventListener("click", function() {
 
-	console.log('algorithm not implemented');
+	Engenie.HeightMapNoisePerlin();
 }, false);
 
 UI.getElement(DataHTML.MenuBar.DiamondSquare).addEventListener("click", function() {
 
-	console.log('algorithm not implemented');
+	Engenie.HeightDiamondSquare();
 }, false);
 
 UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListener("click", function(event) {

@@ -12,7 +12,7 @@ let matrix = null;
 
 class DrawNoise {
 
-	constructor(width = 128, height = 128, elemId = 'CanvasGenNoise') {
+	constructor(width = 128, height = 128, elemId = 'CanvasGenNoise', isAddElem = true) {
 
         _width = width * cellSize;
         _height = height * cellSize;
@@ -22,8 +22,8 @@ class DrawNoise {
         canvas.style.width = "256px";
         canvas.style.height = "256px";
 
-		ctx = canvas.getContext('2d');
-        document.getElementById(elemId).appendChild(canvas);
+        ctx = canvas.getContext('2d');
+        if (isAddElem) document.getElementById(elemId).appendChild(canvas);
         matrix = [];
 
         for(let i = 0; i < _width; i++) {
