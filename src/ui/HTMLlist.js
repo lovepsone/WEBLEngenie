@@ -18,6 +18,8 @@ var DataHTML = {
 			'LoadHeightMap': 'LoadHeightMap',
 			'RoughnessHeightMap': 'RoughnessHeightMap',
 			'PlaySimulation': 'PlaySimulation',
+			'NoisePerlin': 'NoisePerlin',
+			'DiamondSquare': 'DiamondSquare',
 		},
 	'RightBar': {
 		'Buttons': ['TabEditorTerrain', 'TabEditorBiomes', 'TabEditorRoads', 'TabEditorTextures'],
@@ -126,11 +128,7 @@ let HTMLlist = [
 				{'tag': 'div', 'id': DataHTML.MenuBar.CreateTerrain, 'class': 'option', 'text': txt.MenuBar[1]},
 				{'tag': 'div', 'id': DataHTML.MenuBar.SaveTerrain, 'class': 'option', 'text': txt.MenuBar[2]},
 				{'tag': 'div', 'id': DataHTML.MenuBar.LoadTerrain, 'class': 'option', 'text': txt.MenuBar[3]},
-				{'tag': 'hr'},
-				{'tag': 'div', 'id': DataHTML.MenuBar.LoadHeightMap, 'class': 'option', 'text': txt.MenuBar[4]},
-				{'tag': 'div', 'id': DataHTML.MenuBar.RoughnessHeightMap, 'class': 'option', 'text': txt.MenuBar[5], 'children': [
-					{'tag': 'input', 'id': DataHTML.ValRoughnessHeightMap, 'type': 'range', 'min': -10, 'max': 10, 'value': 5}
-				]},
+				//{'tag': 'hr'},
 			]},
 		]},
 		//simulate
@@ -138,6 +136,18 @@ let HTMLlist = [
 			{'tag': 'div', 'class': 'title', 'text': "simulation"},
 			{'tag': 'div', 'class': 'options', 'children': [
 				{'tag': 'div', 'id': DataHTML.MenuBar.PlaySimulation, 'class': 'option', 'text': "Play"},
+			]},
+		]},
+		// height maps
+		{'tag': 'div', 'class': 'menu', 'children': [
+			{'tag': 'div', 'class': 'title', 'text': txt.MenuBar[4]},
+			{'tag': 'div', 'class': 'options', 'children': [
+				{'tag': 'div', 'id': DataHTML.MenuBar.LoadHeightMap, 'class': 'option', 'text': txt.MenuBar[6]},
+				{'tag': 'div', 'id': DataHTML.MenuBar.NoisePerlin, 'class': 'option', 'text': txt.MenuBar[7]},
+				{'tag': 'div', 'id': DataHTML.MenuBar.DiamondSquare, 'class': 'option', 'text': txt.MenuBar[8]},
+				{'tag': 'div', 'id': DataHTML.MenuBar.RoughnessHeightMap, 'class': 'option', 'text': txt.MenuBar[5], 'children': [
+					{'tag': 'input', 'id': DataHTML.ValRoughnessHeightMap, 'type': 'range', 'min': -10, 'max': 10, 'value': 5}
+				]},
 			]},
 		]},
 	

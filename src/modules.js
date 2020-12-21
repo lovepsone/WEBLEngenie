@@ -164,6 +164,16 @@ UI.getElement(DataHTML.MenuBar.LoadHeightMap).addEventListener("click", function
 	UI.getElement(DataHTML.DialogLoadHeightMap.widjet).showModal();
 }, false);
 
+UI.getElement(DataHTML.MenuBar.NoisePerlin).addEventListener("click", function() {
+
+	console.log('algorithm not implemented');
+}, false);
+
+UI.getElement(DataHTML.MenuBar.DiamondSquare).addEventListener("click", function() {
+
+	console.log('algorithm not implemented');
+}, false);
+
 UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListener("click", function(event) {
 
 	let reader = new FileReader();
