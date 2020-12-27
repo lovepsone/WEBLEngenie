@@ -7,7 +7,8 @@ import {CameraControls} from './CameraControls.js';
 import {PointerLockControls} from './ui/PointerLockControls.js';
 import * as THREE from './../libs/three.module.js';
 import {Physics} from './physics/physics.js';
-
+import {GLTFExporter} from './../libs/GLTFExporter.js';
+import {GLTFLoader} from './../libs/GLTFLoader.js';
 
 let _renderer, _camera, _scene; 
 let _controls = null, _pointerLockControls = null, _terrain = null;
@@ -154,6 +155,55 @@ class MainEngenie {
 	startCharacterControl() {
 
 		_scene.add(_physics.addCharacter({}, _pointerLockControls));
+	}
+
+	//test function
+	exportGLTF(link) {
+
+		const gltfExporter = new GLTFExporter();
+
+		gltfExporter.parse(_terrain.getMesh(), function(result) {
+
+			if (result instanceof ArrayBuffer) {
+
+				link.href = URL.createObjectURL(new Blob([result], {type: 'application/octet-stream'}));
+				link.download = 'terrain.glb';
+				link.click();
+			} else {
+
+				const output = JSON.stringify(result, null, 2);
+				link.href = URL.createObjectURL(new Blob([output], {type: 'text/plain'}));
+				link.download = 'terrain.gltf';
+				link.click();
+			}
+		});
+	}
+
+	//test function
+	importGLTF() {
+
+		const loader = new GLTFLoader();//.setPath( './');
+
+		loader.load('terrain.gltf', function(gltf) {
+
+			gltf.scene.traverse(function (child) {
+
+				if ( child.isMesh ) {
+				}
+			});
+
+			_scene.add(gltf.scene);
+		},
+
+		function(xhr) {
+
+			console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+		},
+
+		function (error) {
+
+			console.log('An error happened');
+		});
 	}
 }
 

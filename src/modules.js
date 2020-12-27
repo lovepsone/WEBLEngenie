@@ -150,11 +150,15 @@ UI.getElement("Window").addEventListener("ExitPointerLock", function() {
 
 UI.getElement(DataHTML.MenuBar.SaveTerrain).addEventListener("click", function() {
 
-	console.log('Save terrain in developing');
+	const link = UI.createElement('a');
+	link.style.display = 'none';
+	UI.body.appendChild(link);
+	Engenie.exportGLTF(link);
 }, false);
 
 UI.getElement(DataHTML.MenuBar.LoadTerrain).addEventListener("click", function() {
 
+	Engenie.importGLTF();
 	console.log('Loading terrain in developing');
 }, false);
 
