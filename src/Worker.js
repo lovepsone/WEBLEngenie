@@ -4,7 +4,9 @@
 
 import {NoisePerlin} from './worker/NoisePerlin.js';
 import {CalculateRoad} from './worker/CalculateRoad.js';
+import {NoiseDiamondSquare} from './worker/NoiseDiamondSquare.js';
 
+let _NoiseDiamondSquare = new NoiseDiamondSquare(128);
 let _NoisePerlin = new NoisePerlin(128, 128);
 let _CalculateRoad = new CalculateRoad(5);
 
@@ -36,7 +38,8 @@ self.onmessage = function(event) {
             break;
 
         case 'HeightMapDiamondSquare':
-            self.postMessage({'cmd': 'HeightMapPerlinGenerate', 'colors':  0});
+            _NoiseDiamondSquare.setSize(event.data.size);
+            self.postMessage({'cmd': 'HeightMapDiamondSquareGenerate', 'colors':  _NoiseDiamondSquare.Generate()});
             break;
     }
 }

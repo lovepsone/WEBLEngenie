@@ -134,11 +134,12 @@ class MainEngenie {
 				break;
 
 			case 'HeightMapPerlinGenerate':
-				_terrain.ApplyPerlin(event.data.colors);
+				_terrain.ApplyNoise(event.data.colors);
 				break;
 
 			case 'HeightMapDiamondSquareGenerate':
-				console.log('algorithm not implemented');
+				_terrain.setRoughness(2, false);
+				_terrain.ApplyNoise(event.data.colors);
 				break;
         }
 	}

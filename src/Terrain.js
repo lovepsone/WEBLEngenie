@@ -2,7 +2,7 @@
 * author lovepsone
 * generator height map https://tangrams.github.io/heightmapper
 */
-let _mesh = null, _scope = null, _pixel = null, _context = null, _hPerlinNoise = null;
+let _mesh = null, _scope = null, _pixel = null, _context = null, _hNoise = null;
 let _max = 0.0, _min = 0.0, _size = 1, _roughness = 2;
 
 let _Optons  = {pressure: null, biomes: null, biomeMap: null, road: null, texture: null, isHeightMap: false};
@@ -32,7 +32,7 @@ class Terrain {
 		_Optons.pressure = new PressureTerrain(_scope.camera, 'Window', _scope.scene);
 		_Optons.biomeMap = new GenerateBiomeMap(_scope.camera, 'Window', _scope.scene);
 		_Optons.texture = new TextureAtlas();
-		_hPerlinNoise = new DrawNoise(128, 128, 'HeightMapNoise', false);
+		_hNoise = new DrawNoise(128, 128, 'HeightMapNoise', false);
 	}
 
 	Create(size) {
@@ -140,10 +140,10 @@ class Terrain {
 		_mesh.geometry.computeBoundsTree();
 	}
 
-	setRoughness(val) {
+	setRoughness(val, isApplyMap = true) {
 
 		_roughness = val;
-		this.ApplyHeightMap();
+		if (isApplyMap) this.ApplyHeightMap();
 	}
 
 	UpdateDataColors() {
@@ -209,16 +209,16 @@ class Terrain {
 		this.UpdateDataColors();
 	}
 
-	ApplyPerlin(colors) {
+	ApplyNoise(colors) {
 
-        for (let i = 0; i < colors.length; i++) {
+        for (let i = 0; i < _size; i++) {
 
-            for (let j = 0; j < colors[i].length; j++) {
+            for (let j = 0; j < _size; j++) {
 
-                _hPerlinNoise.setMatrix(i, j, colors[i][j]);
+                _hNoise.setMatrix(i, j, colors[i][j]);
             }
 		}
-		_pixel = _hPerlinNoise.getContext().getImageData(0, 0, _size, _size);
+		_pixel = _hNoise.getContext().getImageData(0, 0, _size, _size);
 		_Optons.isHeightMap = true;
 		this.ApplyHeightMap();
 	}
