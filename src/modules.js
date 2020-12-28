@@ -317,7 +317,7 @@ for (let i = 2; i < 16; i++) {
 UI.getElement(DataHTML.Texture.Buttons[0]).addEventListener("click", function(event) {
 
 	Engenie.getTerrain().UpdateDataColors();
-	Engenie.getTerrain().getOptions().texture.setBiomeMap(Engenie.getTerrain().getOptions().biomeMap.getBump());
+	Engenie.getTerrain().getOptions().texture.setBiomeMap(Engenie.getTerrain().getOptions().biomeMap.getMapColors());
 	Engenie.getTerrain().getOptions().texture.GenerateMaterial(UI.getElement(DataHTML.Wireframe).checked);
 }, false);
 
