@@ -3,16 +3,19 @@
 */
 
 let _Colors2DArray = null, _Texture2DArray = null, _Normal2DArray = null, _textures = [], _normals = [];
-let _mesh = null, _material = null;
+let _mesh = null, _material = null, _packingTexture = null;
 let _ChangeBiomes = false, _size = null;
 let _TextureAtlasCanvas = document.createElement('canvas'), _NormalAtlasCanvas = document.createElement('canvas');
 
 import * as THREE from './../libs/three.module.js';
 import {BASEDATATEXTURES} from './CONST.js';
+import {PackingTexture} from './PackingTexture.js';
 
 class TextureAtlas {
 
     constructor() {
+
+        _packingTexture = new PackingTexture();
 
         for (let i = 0; i < BASEDATATEXTURES.length; i++) {
 
@@ -101,6 +104,10 @@ class TextureAtlas {
         _Normal2DArray.type = THREE.UnsignedByteType;
         _Normal2DArray.wrapS = _Normal2DArray.wrapT = _Normal2DArray.wrapR = THREE.RepeatWrapping;
         _Normal2DArray.anisotropy = 2;
+    
+        _packingTexture.setTexturesDiffuse(_textures);
+        _packingTexture.setTexturesNormal(_normals);
+        _packingTexture.setColorsMap(data.colors, data.w, 5);
     }
 
     ChangeBiomes() {
@@ -124,8 +131,21 @@ class TextureAtlas {
 
         if (_ChangeBiomes) {
 
-            _material = new THREE.MeshPhongMaterial({wireframe: wireframe});
-            _material.onBeforeCompile = function(shader) {
+            const buf = _packingTexture.mix();
+            const map = new THREE.CanvasTexture(buf.diffuse);
+            map.flipY = false;
+            const normal = new THREE.CanvasTexture(buf.normal);
+            normal.flipY = false;
+
+            _material = new THREE.MeshPhongMaterial({
+                wireframe: wireframe,
+                map: map,
+                normalMap: normal,
+                normalScale: new THREE.Vector2(0.8, 0.8),
+            });
+
+            // перенести шейдер
+            /*_material.onBeforeCompile = function(shader) {
 
                 shader.uniforms.colorArray = {value: _Colors2DArray};
                 shader.uniforms.textureArray = {value: _Texture2DArray};
@@ -287,14 +307,14 @@ class TextureAtlas {
                     ].join('\n')
                 );
                 _material.userData.shader = shader;
-            }
+            }*/
         }
 
         if ( _material != null) {
 
-            _mesh.material = _material;
             _mesh.castShadow = true;
             _mesh.receiveShadow = true;
+            _mesh.material = _material;
             _mesh.material.needsUpdate = true;
             //_mesh.material.wireframe = wireframe;
         }
