@@ -169,6 +169,7 @@ class Terrain {
 	ApplyBiomes() {
 
 		const cBoard = new THREE.Color(COLORBOARDROAD);
+
 		if (!(_mesh instanceof THREE.Mesh)) {
 
 			console.warn('Terrain.js: Create geometry before overlaying biome.');

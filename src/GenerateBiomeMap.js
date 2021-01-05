@@ -264,7 +264,7 @@ class GenerateBiomeMap {
             _matrix[y][x] = color.getHexString();
             this.GenerateMap(_matrix[y][x], x, y);
             _ctx.fillStyle = '#' + _matrix[y][x];
-            _ctx.fillRect(x, y, 1, 1);         
+            _ctx.fillRect(x, y, 1, 1);
             x++;
         }
     }

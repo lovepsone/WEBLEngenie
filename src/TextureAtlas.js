@@ -131,11 +131,14 @@ class TextureAtlas {
 
         if (_ChangeBiomes) {
 
+            //https://gist.github.com/emilio-martinez/d293ad7e6794cd2c954ee3c414e90173
             const buf = _packingTexture.mix();
             const map = new THREE.CanvasTexture(buf.diffuse);
             map.flipY = false;
+            map.anisotropy = 4;
             const normal = new THREE.CanvasTexture(buf.normal);
             normal.flipY = false;
+            normal.anisotropy = 4;
 
             _material = new THREE.MeshPhongMaterial({
                 wireframe: wireframe,
