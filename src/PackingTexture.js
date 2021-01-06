@@ -32,6 +32,7 @@ export class PackingTexture {
         _MixCanvasNormal.getContext('2d').fillStyle = '#000000';
         _MixCanvasNormal.getContext('2d').fillRect(0, 0, TEX_SIZE, TEX_SIZE);
     }
+
     /*
     * return img.data
     */
