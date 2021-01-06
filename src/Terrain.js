@@ -39,6 +39,7 @@ class Terrain {
 
 		if (_mesh instanceof THREE.Mesh) {
 
+			_mesh.geometry.dispose();
 			_scope.scene.remove(_mesh);
 			_mesh = null;
 			_Optons.pressure.DisposeEvents();
