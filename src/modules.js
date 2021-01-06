@@ -24,10 +24,10 @@ Frame.appendChild(Engenie.getRender().domElement);
 Frame.appendChild(stats.dom);
 Frame.appendChild(InfoRender.getDOmElement());
 
-let AnimationFrame = function() {
+let AnimationFrame = function(nowMsec) {
 
 	requestAnimationFrame(AnimationFrame);
-	Engenie.Render();
+	Engenie.Render(nowMsec);
 	stats.update();
 	InfoRender.update(Engenie.getRender());
 };

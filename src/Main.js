@@ -10,7 +10,7 @@ import {Physics} from './physics/physics.js';
 import {GLTFExporter} from './../libs/GLTFExporter.js';
 import {GLTFLoader} from './../libs/GLTFLoader.js';
 
-let _renderer, _camera, _scene; 
+let _renderer, _camera, _scene, _dirLight, _DebugLight, _timer = {lastTimeMsec: null, delta: 0, now: 0}; 
 let _controls = null, _pointerLockControls = null, _terrain = null;
 let _worker = null;
 let _physics = null;
@@ -49,22 +49,24 @@ class MainEngenie {
 
 		_physics = new Physics();
 
-		const hemiLight = new THREE.HemisphereLight(0x000000, 0x444444);
-		hemiLight.position.set(0, 20, 0);
+		const hemiLight = new THREE.HemisphereLight(0x282828, 0xc8c8c8); //0x444444
+		hemiLight.position.set(0, 120, 0);
 		_scene.add(hemiLight);
 
-		const dirLight = new THREE.DirectionalLight(0xffffff);
-		dirLight.position.set(-3, 100, -30);
-		dirLight.castShadow = true;
-		dirLight.shadow.mapSize.width = 2048 * 2;
-		dirLight.shadow.mapSize.height = 2048 * 2;
-
-		_scene.add(dirLight);
+		_dirLight = new THREE.DirectionalLight(0xffffe0);
+		_dirLight.position.set(0, 100, 0);
+		_dirLight.castShadow = true;
+		_dirLight.shadow.mapSize.width = 2048 * 2;
+		_dirLight.shadow.mapSize.height = 2048 * 2;
+		_DebugLight = new THREE.Mesh(new THREE.SphereBufferGeometry(1, 32, 32), new THREE.MeshBasicMaterial({color: 0xffff00}));
+		_dirLight.add(_DebugLight);
+		_scene.add(_dirLight);
 	}
 
-	Render() {
+	Render(nowMsec) {
 
 		_physics.needUpdate();
+		this.updateLight(nowMsec);
 		_renderer.render(_scene, _camera);
 	}
 	
@@ -176,7 +178,7 @@ class MainEngenie {
 				link.download = 'terrain.gltf';
 				link.click();
 			}
-		});
+		}, {embedImages: true, binary: false});
 	}
 
 	//test function
@@ -186,12 +188,13 @@ class MainEngenie {
 
 		loader.load('terrain.gltf', function(gltf) {
 
-			gltf.scene.traverse(function (child) {
+			/*gltf.scene.traverse(function (child) {
 
 				if ( child.isMesh ) {
 				}
-			});
+			});*/
 
+			console.log(gltf.scene);
 			_scene.add(gltf.scene);
 		},
 
@@ -204,6 +207,19 @@ class MainEngenie {
 
 			console.log('An error happened');
 		});
+	}
+
+	updateLight(now) {
+
+		_timer.lastTimeMsec = _timer.lastTimeMsec || now - 1000/60;
+		const deltaMsec	= Math.min(200, now - _timer.lastTimeMsec);
+		_timer.lastTimeMsec = now;
+		_timer.delta = deltaMsec / 1000;
+		_timer.now = now / 1000;
+
+		const angle	= _timer.now * Math.PI * 2 * 0.2;
+		_dirLight.position.x = Math.cos(angle) * 50;
+		_dirLight.position.y = Math.sin(angle) * 50;
 	}
 }
 
