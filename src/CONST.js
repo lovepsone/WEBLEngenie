@@ -20,6 +20,15 @@ export const BASENAMETEXTURES =  {
     TROPICAL_RAIN_FOREST:       './texture/tropical_rain_forest_512', //0x337755
 };
 
+export const SKYSIZE = 512;
+
+export const SKYTEXTURES = {
+
+    clear_1: './texture/sky/sky_clear_1.png',
+    clear_2: './texture/sky/sky_clear_2.png'
+};
+export const SKYDATATEXTURES = Object.entries(SKYTEXTURES);
+
 export const COLORBOARDROAD = 0xc9d29b;
 export const BASEDATATEXTURES = Object.entries(BASENAMETEXTURES);
 

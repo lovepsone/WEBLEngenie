@@ -9,9 +9,11 @@ import * as THREE from './../libs/three.module.js';
 import {Physics} from './physics/physics.js';
 import {GLTFExporter} from './../libs/GLTFExporter.js';
 import {GLTFLoader} from './../libs/GLTFLoader.js';
+import {SunLight} from './SunLight.js';
+import {Sky} from './Sky.js';
 
-let _renderer, _camera, _scene, _dirLight, _DebugLight, _timer = {lastTimeMsec: null, delta: 0, now: 0}; 
-let _controls = null, _pointerLockControls = null, _terrain = null;
+let _renderer, _camera, _scene; 
+let _controls = null, _pointerLockControls = null, _terrain = null, _sky = null, _sunLight = null;
 let _worker = null;
 let _physics = null;
 
@@ -48,25 +50,14 @@ class MainEngenie {
 		_worker.onmessage = this.WorkerOnMessage;
 
 		_physics = new Physics();
-
-		const hemiLight = new THREE.HemisphereLight(0x282828, 0xc8c8c8); //0x444444
-		hemiLight.position.set(0, 120, 0);
-		_scene.add(hemiLight);
-
-		_dirLight = new THREE.DirectionalLight(0xffffe0);
-		_dirLight.position.set(0, 100, 0);
-		_dirLight.castShadow = true;
-		_dirLight.shadow.mapSize.width = 2048 * 2;
-		_dirLight.shadow.mapSize.height = 2048 * 2;
-		_DebugLight = new THREE.Mesh(new THREE.SphereBufferGeometry(1, 32, 32), new THREE.MeshBasicMaterial({color: 0xffff00}));
-		_dirLight.add(_DebugLight);
-		_scene.add(_dirLight);
+		//_sky = new Sky(_scene);
+		_sunLight = new SunLight(_scene, true);
 	}
 
-	Render(nowMsec) {
+	Render(frame) {
 
 		_physics.needUpdate();
-		this.updateLight(nowMsec);
+		//_sunLight.needUpdate(frame)
 		_renderer.render(_scene, _camera);
 	}
 	
@@ -77,6 +68,7 @@ class MainEngenie {
 
 	getTerrain() {
 
+		//_sky.update(1);
 		return _terrain;
 	}
 
@@ -208,19 +200,6 @@ class MainEngenie {
 			console.log('An error happened');
 		});
 	}
-
-	updateLight(now) {
-
-		_timer.lastTimeMsec = _timer.lastTimeMsec || now - 1000/60;
-		const deltaMsec	= Math.min(200, now - _timer.lastTimeMsec);
-		_timer.lastTimeMsec = now;
-		_timer.delta = deltaMsec / 1000;
-		_timer.now = now / 1000;
-
-		const angle	= _timer.now * Math.PI * 2 * 0.2;
-		_dirLight.position.x = Math.cos(angle) * 50;
-		_dirLight.position.y = Math.sin(angle) * 50;
-	}
-}
+};
 
 export {MainEngenie};
