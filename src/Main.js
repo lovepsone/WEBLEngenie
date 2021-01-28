@@ -52,6 +52,8 @@ class MainEngenie {
 		_physics = new Physics();
 		//_sky = new Sky(_scene);
 		_sunLight = new SunLight(_scene, true);
+	
+		window.addEventListener('resize', this.onRenderResize);
 	}
 
 	Render(frame) {
