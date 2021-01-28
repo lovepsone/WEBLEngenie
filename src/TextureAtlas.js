@@ -1,5 +1,5 @@
 /*
-* author lovepsone
+* @author lovepsone 2019 - 2021
 */
 
 let _Colors2DArray = null, _Texture2DArray = null, _Normal2DArray = null, _textures = [], _normals = [];

@@ -1,5 +1,5 @@
 /*
-* author lovepsone
+* @author lovepsone 2019 - 2021
 */
 
 /*	style html :
@@ -92,7 +92,8 @@ let HTMLlist = [
 					{'tag': 'option', 'value': '64', 'text': 'size: 64x64'},
 					{'tag': 'option', 'value': '128', 'text': 'size: 128x128'},
 					{'tag': 'option', 'value': '256', 'text': 'size: 256x256'},
-					{'tag': 'option', 'value': '512', 'text': 'size: 512x512'}
+					{'tag': 'option', 'value': '512', 'text': 'size: 512x512'},
+					{'tag': 'option', 'value': '1024', 'text': 'size: 1024x1024'}
 				]},
 			]},
 			{'tag': 'div', 'style': 'border-bottom: 1px solid white;', 'align': 'center', 'children': [

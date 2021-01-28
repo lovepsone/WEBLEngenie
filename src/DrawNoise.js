@@ -1,5 +1,5 @@
 /*
-* Author lovepsone
+* @author lovepsone 2019 - 2021
 */
 
 let _width = 0, _height = 0;

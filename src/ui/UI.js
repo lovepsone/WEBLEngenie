@@ -1,5 +1,5 @@
 /*
-* author lovepsone
+* @author lovepsone 2019 - 2021
 */
 
 import {CLASSTULLTIP, TOOLTIPWIND} from './../CONST.js';

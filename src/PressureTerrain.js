@@ -1,5 +1,5 @@
 /*
-* author lovepsone
+* @author lovepsone 2019 - 2021
 */
 
 let _radius = 0.1, _strength = 0.5; // options

@@ -1,5 +1,5 @@
 /*
-* Author lovepsone
+* @author lovepsone 2019 - 2021
 */
 
 import * as THREE from './../../libs/three.module.js';

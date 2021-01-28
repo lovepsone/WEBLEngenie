@@ -1,5 +1,5 @@
 /*
-* author lovepsone
+* @author lovepsone 2019 - 2021
 */
 
 import * as THREE from './../libs/three.module.js';
@@ -47,6 +47,7 @@ const WorldUVGenerator = {
 		const d_y = vertices[indexD * 3 + 1];
 		const d_z = vertices[indexD * 3 + 2];
 
+		console.log(Math.abs(a_y - b_y))
 		if (Math.abs(a_y - b_y) < 0.01) {
 
 			return [
@@ -205,11 +206,11 @@ class Road {
 		shape.moveTo(0.5, 5);
 		shape.lineTo(0.5, 0);
 
-		let extrudeSettings = {steps: 10 * points.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false)/*, UVGenerator: WorldUVGenerator*/};
+		let extrudeSettings = {steps: 10 * points.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false), UVGenerator: WorldUVGenerator};
 		let extrudeGeometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
 	
-		let texture = new THREE.TextureLoader().load("texture/asphalt1_512.jpg");
-		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+		let texture = new THREE.TextureLoader().load(/*"texture/asphalt1_512.jpg"*/"asphalt2_512.jpg");
+		/*texture.wrapS = */texture.wrapT = THREE.RepeatWrapping;
 
 		let vShader = `
 			out vec2 vUv;

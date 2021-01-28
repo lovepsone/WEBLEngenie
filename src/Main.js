@@ -1,5 +1,5 @@
 /*
-* author lovepsone
+* @author lovepsone 2019 - 2021
 */
 
 import {Terrain} from './Terrain.js';
@@ -172,6 +172,7 @@ class MainEngenie {
 				link.download = 'terrain.gltf';
 				link.click();
 			}
+
 		}, {embedImages: true, binary: false});
 	}
 

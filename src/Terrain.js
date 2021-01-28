@@ -1,5 +1,5 @@
 /*
-* author lovepsone
+* @author lovepsone 2019 - 2021
 * generator height map https://tangrams.github.io/heightmapper
 */
 let _mesh = null, _scope = null, _pixel = null, _context = null, _hNoise = null;
