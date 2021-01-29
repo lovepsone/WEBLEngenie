@@ -153,12 +153,27 @@ class MainEngenie {
 		_scene.add(_physics.addCharacter({}, _pointerLockControls));
 	}
 
-	//test function
+	//exports only without roads
 	exportGLTF(link) {
 
 		const gltfExporter = new GLTFExporter();
 
 		gltfExporter.parse(_terrain.getMesh(), function(result) {
+
+			if (result.images.length > 0) {
+
+				link.href = result.images[0].uri;
+				link.download = 'terrain_map.png';
+				link.click();
+				link.href = result.images[1].uri;
+				link.download = 'terrain_normal.png';
+				link.click();
+
+				result.images = [
+					{"uri": "./terrain_map.png"},
+					{"uri": "./terrain_normal.png"}
+				];
+			}
 
 			if (result instanceof ArrayBuffer) {
 
@@ -172,25 +187,23 @@ class MainEngenie {
 				link.download = 'terrain.gltf';
 				link.click();
 			}
-
 		}, {embedImages: true, binary: false});
 	}
 
-	//test function
+	// imports only without roads
 	importGLTF() {
 
-		const loader = new GLTFLoader();//.setPath( './');
+		const loader = new GLTFLoader().setPath( './');
 
 		loader.load('terrain.gltf', function(gltf) {
 
-			/*gltf.scene.traverse(function (child) {
+			gltf.scene.traverse(function (child) {
 
-				if ( child.isMesh ) {
+				if (child.isMesh) {
+
+					_scene.add(child);
 				}
-			});*/
-
-			console.log(gltf.scene);
-			_scene.add(gltf.scene);
+			});
 		},
 
 		function(xhr) {
@@ -200,7 +213,7 @@ class MainEngenie {
 
 		function (error) {
 
-			console.log('An error happened');
+			console.log('An error happened' + error);
 		});
 	}
 };
