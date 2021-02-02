@@ -3,11 +3,12 @@
 * generator height map https://tangrams.github.io/heightmapper
 */
 let _mesh = null, _scope = null, _pixel = null, _context = null, _hNoise = null;
-let _max = 0.0, _min = 0.0, _size = 1, _roughness = 2;
+let _max = 0.0, _min = 0.0, _size = 1, _roughness = 40;
 
 let _Optons  = {pressure: null, biomes: null, biomeMap: null, road: null, texture: null, isHeightMap: false};
 
 import * as THREE from './../libs/three.module.js';
+import {BufferGeometryUtils} from './../libs/BufferGeometryUtils.js';
 import {PressureTerrain} from './PressureTerrain.js';
 import {Biomes} from './Biomes.js';
 import {GenerateBiomeMap} from './GenerateBiomeMap.js';
@@ -131,14 +132,17 @@ class Terrain {
 
 		for (let i = 0, n = _mesh.geometry.attributes.position.count; i < n; ++ i) {
 
-			const tmp = (_pixel.data[i * 4] + _pixel.data[i * 4 + 1] + _pixel.data[i * 4 + 2]) / _roughness;
-			_mesh.geometry.attributes.position.array[i * 3 + 1] = (tmp / 255) * 50;
+			if (_roughness  == 0) _roughness = 1;
+			const tmp = (_pixel.data[i * 4] + _pixel.data[i * 4 + 1] + _pixel.data[i * 4 + 2]) / 3;
+			_mesh.geometry.attributes.position.array[i * 3 + 1] = (tmp / 255) * _roughness;
 			_mesh.geometry.attributes.position.needsUpdate = true;
 		}
 
 		_mesh.geometry.computeVertexNormals();
 		_mesh.geometry.normalizeNormals();
 		_mesh.geometry.computeBoundsTree();
+
+		//BufferGeometryUtils.mergeVertices(_mesh.geometry); // is it necessary?
 	}
 
 	setRoughness(val, isApplyMap = true) {
