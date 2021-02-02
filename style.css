@@ -55,7 +55,6 @@ dialog {
 	display: none;
 	padding: 5px 0;
 	background: #fff;
-	width: 150px;
 	max-height: calc(100% - 80px);
 	overflow: auto;
 }
