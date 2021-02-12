@@ -133,7 +133,7 @@ UI.getElement(DataHTML.MenuBar.CreateTerrain).addEventListener("click", function
 	UI.getElement(DataHTML.DialogCreateTerrain.widjet).showModal();
 }, false);
 
-//play simulatuon
+// play simulatuon
 UI.getElement(DataHTML.MenuBar.PlaySimulation).addEventListener("click", function() {
 
 	Engenie.getTerrain().getMesh().geometry.computeVertexNormals();
@@ -252,7 +252,7 @@ for (let i = 0; i < DataHTML.RightBar.Buttons.length; i++) {
 
 // handlers Dialog Create Terrain
 UI.getElement(DataHTML.DialogCreateTerrain.Buttons[0]).addEventListener("click", function() {
-// баг, если находишься в другой вкладке
+// баг, если находишься в другой вкладке(переключение на стартоваю вкладку)
 	Engenie.getTerrain().Create(UI.getElement(DataHTML.DialogCreateTerrain.Options[0]).value);
 	Engenie.getTerrain().WireFrame(_UIFrame.CheckedWireframe());
 
@@ -325,6 +325,19 @@ UI.getElement(DataHTML.Texture.Buttons[0]).addEventListener("click", function(ev
 	Engenie.getTerrain().getOptions().texture.GenerateMaterial(UI.getElement(DataHTML.Wireframe).checked);
 }, false);
 
+// handlers Load Texture
+UI.getElement(DataHTML.Texture.File).addEventListener("change", function() {
+
+	let fr = new FileReader();
+		
+	fr.addEventListener("load", function() {
+			
+			Engenie.getTerrain().getOptions().texture.LoadCompleteTexture(fr.result);
+	}, false);
+
+	fr.readAsDataURL(this.files[0]);
+}, false);
+
 //pre-load icon texture
 for (let i = 0; i < DataHTML.Texture.Values.length; i++) {
 
@@ -333,7 +346,7 @@ for (let i = 0; i < DataHTML.Texture.Values.length; i++) {
 
 for (let i = 0; i < DataHTML.Texture.Options.length; i++) {
 
-	UI.getElement(DataHTML.Texture.Options[i]).addEventListener("change", function () {
+	UI.getElement(DataHTML.Texture.Options[i]).addEventListener("change", function() {
 
 		if (this.files[0]) {
 
@@ -344,10 +357,10 @@ for (let i = 0; i < DataHTML.Texture.Options.length; i++) {
 				UI.getElement(DataHTML.Texture.Values[i]).style.background  = `url(${fr.result})`;
 				UI.ToolTip.UpdateStyle();
 				Engenie.getTerrain().getOptions().texture.ReLoadTexrure(i, fr.result);
-			  }, false);
+			}, false);
 		  
-			  fr.readAsDataURL(this.files[0]);
-			  Engenie.getTerrain().getOptions().texture.ChangeBiomes();
+			fr.readAsDataURL(this.files[0]);
+			Engenie.getTerrain().getOptions().texture.ChangeBiomes();
 		}
 	}, false);
 }

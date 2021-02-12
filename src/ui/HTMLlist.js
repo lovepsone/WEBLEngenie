@@ -67,7 +67,8 @@ var DataHTML = {
 			'vTemperateDesert', 'vTaiga', 'vGrassLand',
 			'vTemperateDeciduousForest', 'vTemperateRainForest', 'vSubtropicalDesert',
 			'vTropicalSeasonalForest', 'vTropicalRainForest'],
-		'Buttons': ['bTextureApply'],
+		'Buttons': ['bTextureApply', 'bTextureLoading'],
+		'File': 'TextureFile',
 	},
 	'Camera': 'camera',
 	'Brush': 'brush',
@@ -76,7 +77,7 @@ var DataHTML = {
 	'Wireframe': 'wireframe',
 	'ValRoughnessHeightMap': 'valRoughnessHeightMap',
 };
-const StyleIconLoadTexture = "outline:0;opacity:0;pointer-events:none;user-select:none";
+const StyleIconLoadTexture = "outline:0;opacity:0;pointer-events:none;user-select:none;display:none;z-index:-1;width:0.1px;height:0.1px;";
 const StyleIconLabelTexture = "position:static;width:80px;height:80px;font-size: 10px;color:white;display:inline-block;cursor:pointer;text-align:center;background-size:100%;";
 const cssToolTip = "width:240px;height:240px;font-size:20px;color:white;background:inherit;border:4px outset white;border-radius:5px;";
 
@@ -268,7 +269,13 @@ let HTMLlist = [
 			{'tag': 'br'},
 			{'tag': 'br'},
 			{'tag': 'button', 'id': DataHTML.Texture.Buttons[0], 'style':'text-align: center; width: 120px;', 'text': txt.TabEditTexture[16]},
-			
+			{'tag': 'hr'},
+			{'tag': 'br'},
+			{'tag': 'div', 'text': txt.TabEditTexture[17]},
+			{'tag': 'br'},
+			{'tag': 'label', 'id': DataHTML.Texture.Buttons[1], 'style': 'width:120px;height:30px;display:text-align:center;block;border-radius:1px;color:#fff;background:#333;', 'text':  txt.TabEditTexture[18], 'children': [
+				{'tag': 'input', 'id': DataHTML.Texture.File, 'type':'file', 'style': StyleIconLoadTexture},
+			]},
 		]},
 	]},
 	{'tag': 'div', 'style': "position: absolute;top: 36px; right: 310px;", 'children': [

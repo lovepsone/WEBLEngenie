@@ -65,7 +65,7 @@ var lang = {
 		],
 		'TabEditTexture': [
 			'Редактор текстур',
-			'Перед текстурированием наложите все биомы, редактируйте атлас или примените стандартный.',
+			'Редактор Атласа Текстур<br>Перед текстурированием наложите все биомы, редактируйте атлас или примените стандартный. Для загрузки другой текстуры в атлас, кликните по картинке.',
 			'Земля под водой',
 			'Пляжный песок',
 			'Выжженая земля',
@@ -81,6 +81,8 @@ var lang = {
 			'Тропический лес',
 			'Тропический дождливый лес',
 			'Применить',
+			'Редактор готовой текстуры<br>Загрузка готовой текстуры:',
+			'Загрузить',
 		],
 	},
 
@@ -145,7 +147,7 @@ var lang = {
 		],
 		'TabEditTexture': [
 			'Texture editor',
-			'Before texturing, overlay all biomes, edit the atlas or apply a standard one.',
+			'Texture Atlas Editor<br>Before texturing, overlay all biomes, edit the atlas or apply a standard one. To load another texture into the atlas, click on the picture.',
 			'Graound',
 			'Beach',
 			'Scorched',
@@ -161,6 +163,8 @@ var lang = {
 			'Tropical Seasonal Forest',
 			'Tropical Rain Forest',
 			'Apply',
+			'Texture editor<br>Loading the finished texture:',
+			'Loading',
 		],
 	}
 }

@@ -38,7 +38,7 @@ class LoaderHTML5 {
 		if (this.getAttr(elems['dir'])) 		element.setAttribute('dir', elems['dir']);
 		if (this.getAttr(elems['accesskey'])) 	element.setAttribute('accesskey', elems['accesskey']);
 		if (this.getAttr(elems['contenteditable'])) element.setAttribute('contenteditable', elems['contenteditable']);
-		// hidden 
+		if (this.getAttr(elems['visibility']))	element.setAttribute('visibility', elems['visibility']);
 		if (this.getAttr(elems['lang'])) 		element.setAttribute('lang', elems['lang']);
 		if (this.getAttr(elems['spellcheck'])) 	element.setAttribute('spellcheck', elems['spellcheck']);
 		if (this.getAttr(elems['style']))		element.style.cssText = elems['style'];
