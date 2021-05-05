@@ -20,6 +20,7 @@ var DataHTML = {
 			'PlaySimulation': 'PlaySimulation',
 			'NoisePerlin': 'NoisePerlin',
 			'DiamondSquare': 'DiamondSquare',
+			'Smoothing' : 'Smoothing',
 		},
 	'RightBar': {
 		'Buttons': ['TabEditorTerrain', 'TabEditorBiomes', 'TabEditorRoads', 'TabEditorTextures'],
@@ -150,6 +151,8 @@ let HTMLlist = [
 				{'tag': 'div', 'id': DataHTML.MenuBar.RoughnessHeightMap, 'class': 'option', 'text': txt.MenuBar[5], 'children': [
 					{'tag': 'input', 'id': DataHTML.ValRoughnessHeightMap, 'type': 'range', 'min': -100, 'max': 100, 'value': 40, 'style':'width: 180px;'}
 				]},
+				/*------------------------------------*/
+				{'tag': 'div', 'id': DataHTML.MenuBar.Smoothing, 'class': 'option', 'text': 'smoothing'},
 			]},
 		]},
 	
@@ -273,7 +276,7 @@ let HTMLlist = [
 			{'tag': 'br'},
 			{'tag': 'div', 'text': txt.TabEditTexture[17]},
 			{'tag': 'br'},
-			{'tag': 'label', 'id': DataHTML.Texture.Buttons[1], 'style': 'width:120px;height:30px;display:text-align:center;block;border-radius:1px;color:#fff;background:#333;', 'text':  txt.TabEditTexture[18], 'children': [
+			{'tag': 'label', 'id': DataHTML.Texture.Buttons[1], 'style': 'width:160px;height:30px;display:text-align:center;block;border-radius:1px;color:#fff;background:#333;', 'text':  txt.TabEditTexture[18], 'children': [
 				{'tag': 'input', 'id': DataHTML.Texture.File, 'type':'file', 'style': StyleIconLoadTexture},
 			]},
 		]},

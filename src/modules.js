@@ -181,6 +181,10 @@ UI.getElement(DataHTML.MenuBar.DiamondSquare).addEventListener("click", function
 
 	Engenie.HeightDiamondSquare();
 }, false);
+UI.getElement(DataHTML.MenuBar.Smoothing).addEventListener("click", function() {
+	
+	Engenie.getTerrain().Smoothing();
+}, false);
 
 UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListener("click", function(event) {
 
@@ -189,7 +193,7 @@ UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListener("click",
 	let image = new Image();
 
 	reader.readAsDataURL(file);
-// для оптимизации требуется удалить обработчкик
+	// для оптимизации требуется удалить обработчкик
 	reader.onload = function(res) {
 
 		image.src = res.target.result;

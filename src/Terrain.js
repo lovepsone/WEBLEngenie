@@ -49,10 +49,11 @@ class Terrain {
 			_min = 0.0;
 			_Optons.road.Remove();
 			_Optons.texture.clear();
+			_size = 1;
 		}
 
 		_Optons.isHeightMap = false;
-		_size = size;
+		_size = Number(size);
 
 		_Optons.biomes.setSize(_size, _size);
 		_Optons.biomes.setTypePixels(0);
@@ -229,6 +230,37 @@ class Terrain {
 		this.ApplyHeightMap();
 	}
 
+	Smoothing() {
+
+		const count = _mesh.geometry.attributes.position.count - _size - 1;
+
+		for (let i = _size; i < count; i++) {
+
+			const l = i % _size;
+
+			if (i % _size != 0 && l != (_size - 1)) {
+
+				const a = _mesh.geometry.attributes.position.array[i * 3 + 1];
+				const b = _mesh.geometry.attributes.position.array[(i - 1) * 3 + 1];
+				const c = _mesh.geometry.attributes.position.array[(i + 1) * 3 + 1];
+				_mesh.geometry.attributes.position.array[i * 3 + 1] = 0.5 * (0.5 * (b + c) + a);
+
+				if (i < _size * 2) {
+
+					for (let j = i; j < count; j += _size) {
+
+						const aa = _mesh.geometry.attributes.position.array[j * 3 + 1];
+						const bb = _mesh.geometry.attributes.position.array[(j - _size) * 3 + 1];
+						const cc = _mesh.geometry.attributes.position.array[(j + _size) * 3 + 1];
+						_mesh.geometry.attributes.position.array[j * 3 + 1] = 0.5 * (0.5 * (bb + cc) + aa);
+					}
+				}
+			}
+		}
+
+		_mesh.geometry.attributes.position.needsUpdate = true;
+	}
+
 	WireFrame(value = true) {
 
 		if (_mesh instanceof THREE.Mesh) {
@@ -252,7 +284,9 @@ class Terrain {
 
 			return _mesh;
 		}
-		console.error('Terrain.js: mesh was not created !!!')
+
+		alert('Terrain.js: mesh was not created !!!');
+		return 0;
 	}
 }
 
