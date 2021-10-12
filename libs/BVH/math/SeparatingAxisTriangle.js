@@ -1,4 +1,4 @@
-import { Triangle, Vector3, Line3, Sphere } from './../../three.module.js';
+import { Triangle, Vector3, Line3, Sphere, Plane } from './../../three.module.js';
 import { SeparatingAxisBounds } from './SeparatingAxisBounds.js';
 import { closestPointsSegmentToSegment, sphereIntersectTriangle } from './MathUtilities.js';
 
@@ -13,6 +13,7 @@ export class SeparatingAxisTriangle extends Triangle {
 		this.satBounds = new Array( 4 ).fill().map( () => new SeparatingAxisBounds() );
 		this.points = [ this.a, this.b, this.c ];
 		this.sphere = new Sphere();
+		this.plane = new Plane();
 		this.needsUpdate = false;
 
 	}
@@ -23,20 +24,12 @@ export class SeparatingAxisTriangle extends Triangle {
 
 	}
 
-}
-
-SeparatingAxisTriangle.prototype.update = ( function () {
-
-	const arr = new Array( 3 );
-	return function update() {
+	update() {
 
 		const a = this.a;
 		const b = this.b;
 		const c = this.c;
-
-		arr[ 0 ] = this.a;
-		arr[ 1 ] = this.b;
-		arr[ 2 ] = this.c;
+		const points = this.points;
 
 		const satAxes = this.satAxes;
 		const satBounds = this.satBounds;
@@ -44,25 +37,86 @@ SeparatingAxisTriangle.prototype.update = ( function () {
 		const axis0 = satAxes[ 0 ];
 		const sab0 = satBounds[ 0 ];
 		this.getNormal( axis0 );
-		sab0.setFromPoints( axis0, arr );
+		sab0.setFromPoints( axis0, points );
 
 		const axis1 = satAxes[ 1 ];
 		const sab1 = satBounds[ 1 ];
 		axis1.subVectors( a, b );
-		sab1.setFromPoints( axis1, arr );
+		sab1.setFromPoints( axis1, points );
 
 		const axis2 = satAxes[ 2 ];
 		const sab2 = satBounds[ 2 ];
 		axis2.subVectors( b, c );
-		sab2.setFromPoints( axis2, arr );
+		sab2.setFromPoints( axis2, points );
 
 		const axis3 = satAxes[ 3 ];
 		const sab3 = satBounds[ 3 ];
 		axis3.subVectors( c, a );
-		sab3.setFromPoints( axis3, arr );
+		sab3.setFromPoints( axis3, points );
 
 		this.sphere.setFromPoints( this.points );
+		this.plane.setFromNormalAndCoplanarPoint( axis0, a );
 		this.needsUpdate = false;
+
+	}
+
+}
+
+SeparatingAxisTriangle.prototype.closestPointToSegment = ( function () {
+
+	const point1 = new Vector3();
+	const point2 = new Vector3();
+	const edge = new Line3();
+
+	return function distanceToSegment( segment, target1 = null, target2 = null ) {
+
+		const { start, end } = segment;
+		const points = this.points;
+		let distSq;
+		let closestDistanceSq = Infinity;
+
+		// check the triangle edges
+		for ( let i = 0; i < 3; i ++ ) {
+
+			const nexti = ( i + 1 ) % 3;
+			edge.start.copy( points[ i ] );
+			edge.end.copy( points[ nexti ] );
+
+			closestPointsSegmentToSegment( edge, segment, point1, point2 );
+
+			distSq = point1.distanceToSquared( point2 );
+			if ( distSq < closestDistanceSq ) {
+
+				closestDistanceSq = distSq;
+				if ( target1 ) target1.copy( point1 );
+				if ( target2 ) target2.copy( point2 );
+
+			}
+
+		}
+
+		// check end points
+		this.closestPointToPoint( start, point1 );
+		distSq = start.distanceToSquared( point1 );
+		if ( distSq < closestDistanceSq ) {
+
+			closestDistanceSq = distSq;
+			if ( target1 ) target1.copy( point1 );
+			if ( target2 ) target2.copy( start );
+
+		}
+
+		this.closestPointToPoint( end, point1 );
+		distSq = end.distanceToSquared( point1 );
+		if ( distSq < closestDistanceSq ) {
+
+			closestDistanceSq = distSq;
+			if ( target1 ) target1.copy( point1 );
+			if ( target2 ) target2.copy( end );
+
+		}
+
+		return Math.sqrt( closestDistanceSq );
 
 	};
 
@@ -76,7 +130,16 @@ SeparatingAxisTriangle.prototype.intersectsTriangle = ( function () {
 	const cachedSatBounds = new SeparatingAxisBounds();
 	const cachedSatBounds2 = new SeparatingAxisBounds();
 	const cachedAxis = new Vector3();
-	return function intersectsTriangle( other ) {
+	const dir1 = new Vector3();
+	const dir2 = new Vector3();
+	const tempDir = new Vector3();
+	const edge = new Line3();
+	const edge1 = new Line3();
+	const edge2 = new Line3();
+
+	// TODO: If the triangles are coplanar and intersecting the target is nonsensical. It should at least
+	// be a line contained by both triangles if not a different special case somehow represented in the return result.
+	return function intersectsTriangle( other, target = null ) {
 
 		if ( this.needsUpdate ) {
 
@@ -89,6 +152,10 @@ SeparatingAxisTriangle.prototype.intersectsTriangle = ( function () {
 			saTri2.copy( other );
 			saTri2.update();
 			other = saTri2;
+
+		} else if ( other.needsUpdate ) {
+
+			other.update();
 
 		}
 
@@ -136,6 +203,109 @@ SeparatingAxisTriangle.prototype.intersectsTriangle = ( function () {
 
 		}
 
+		if ( target ) {
+
+			const plane1 = this.plane;
+			const plane2 = other.plane;
+
+			if ( Math.abs( plane1.normal.dot( plane2.normal ) ) > 1.0 - 1e-10 ) {
+
+				// TODO find two points that intersect on the edges and make that the result
+				console.warn( 'SeparatingAxisTriangle.intersectsTriangle: Triangles are coplanar which does not support an output edge. Setting edge to 0, 0, 0.' );
+				target.start.set( 0, 0, 0 );
+				target.end.set( 0, 0, 0 );
+
+			} else {
+
+				// find the edge that intersects the other triangle plane
+				const points1 = this.points;
+				let found1 = false;
+				for ( let i = 0; i < 3; i ++ ) {
+
+					const p1 = points1[ i ];
+					const p2 = points1[ ( i + 1 ) % 3 ];
+
+					edge.start.copy( p1 );
+					edge.end.copy( p2 );
+
+					if ( plane2.intersectLine( edge, found1 ? edge1.start : edge1.end ) ) {
+
+						if ( found1 ) {
+
+							break;
+
+						}
+
+						found1 = true;
+
+					}
+
+				}
+
+				// find the other triangles edge that intersects this plane
+				const points2 = other.points;
+				let found2 = false;
+				for ( let i = 0; i < 3; i ++ ) {
+
+					const p1 = points2[ i ];
+					const p2 = points2[ ( i + 1 ) % 3 ];
+
+					edge.start.copy( p1 );
+					edge.end.copy( p2 );
+
+					if ( plane1.intersectLine( edge, found2 ? edge2.start : edge2.end ) ) {
+
+						if ( found2 ) {
+
+							break;
+
+						}
+
+						found2 = true;
+
+					}
+
+				}
+
+				// find swap the second edge so both lines are running the same direction
+				edge1.delta( dir1 );
+				edge2.delta( dir2 );
+
+
+				if ( dir1.dot( dir2 ) < 0 ) {
+
+					let tmp = edge2.start;
+					edge2.start = edge2.end;
+					edge2.end = tmp;
+
+				}
+
+				tempDir.subVectors( edge1.start, edge2.start );
+				if ( tempDir.dot( dir1 ) > 0 ) {
+
+					target.start.copy( edge1.start );
+
+				} else {
+
+					target.start.copy( edge2.start );
+
+				}
+
+				tempDir.subVectors( edge1.end, edge2.end );
+				if ( tempDir.dot( dir1 ) < 0 ) {
+
+					target.end.copy( edge1.end );
+
+				} else {
+
+					target.end.copy( edge2.end );
+
+				}
+
+			}
+
+		}
+
 		return true;
 
 	};
@@ -166,30 +336,13 @@ SeparatingAxisTriangle.prototype.distanceToTriangle = ( function () {
 
 	return function distanceToTriangle( other, target1 = null, target2 = null ) {
 
-		if ( other.needsUpdate ) {
+		const lineTarget = target1 || target2 ? line1 : null;
+		if ( this.intersectsTriangle( other, lineTarget ) ) {
 
-			other.update();
-
-		}
-
-		if ( this.needsUpdate ) {
-
-			this.update();
-
-		}
-
-		if ( this.intersectsTriangle( other ) ) {
-
-			// TODO: This will not result in a point that lies on
-			// the intersection line of the triangles
 			if ( target1 || target2 ) {
 
-				this.getMidpoint( point );
-				other.closestPointToPoint( point, point2 );
-				this.closestPointToPoint( point2, point );
-
-				if ( target1 ) target1.copy( point );
-				if ( target2 ) target2.copy( point2 );
+				if ( target1 ) lineTarget.getCenter( target1 );
+				if ( target2 ) lineTarget.getCenter( target2 );
 
 			}
 

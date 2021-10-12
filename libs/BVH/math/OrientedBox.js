@@ -1,4 +1,4 @@
-import { Box3, Vector3, Matrix4, Sphere, Line3 } from './../../three.module.js';
+import { Box3, Vector3, Matrix4, Line3 } from './../../three.module.js';
 import { SeparatingAxisBounds } from './SeparatingAxisBounds.js';
 import { SeparatingAxisTriangle } from './SeparatingAxisTriangle.js';
 import { closestPointsSegmentToSegment } from './MathUtilities.js';
@@ -16,7 +16,7 @@ export class OrientedBox extends Box3 {
 		this.satAxes = new Array( 3 ).fill().map( () => new Vector3() );
 		this.satBounds = new Array( 3 ).fill().map( () => new SeparatingAxisBounds() );
 		this.alignedSatBounds = new Array( 3 ).fill().map( () => new SeparatingAxisBounds() );
-		this.sphere = new Sphere();
+		this.needsUpdate = false;
 
 	}
 
@@ -24,6 +24,7 @@ export class OrientedBox extends Box3 {
 
 		super.set( min, max );
 		this.matrix = matrix;
+		this.needsUpdate = true;
 
 	}
 
@@ -31,6 +32,7 @@ export class OrientedBox extends Box3 {
 
 		super.copy( other );
 		this.matrix.copy( other.matrix );
+		this.needsUpdate = true;
 
 	}
 
@@ -65,8 +67,6 @@ OrientedBox.prototype.update = ( function () {
 
 		}
 
-		this.sphere.setFromPoints( this.points );
-
 		const satBounds = this.satBounds;
 		const satAxes = this.satAxes;
 		const minVec = points[ 0 ];
@@ -88,6 +88,7 @@ OrientedBox.prototype.update = ( function () {
 		alignedSatBounds[ 2 ].setFromPointsField( points, 'z' );
 
 		this.invMatrix.copy( this.matrix ).invert();
+		this.needsUpdate = false;
 
 	};
 
@@ -98,7 +99,12 @@ OrientedBox.prototype.intersectsBox = ( function () {
 	const aabbBounds = new SeparatingAxisBounds();
 	return function intersectsBox( box ) {
 
-		if ( ! box.intersectsSphere( this.sphere ) ) return false;
+		// TODO: should this be doing SAT against the AABB?
+		if ( this.needsUpdate ) {
+
+			this.update();
+
+		}
 
 		const min = box.min;
 		const max = box.max;
@@ -141,6 +147,12 @@ OrientedBox.prototype.intersectsTriangle = ( function () {
 	const cachedSatBounds2 = new SeparatingAxisBounds();
 	const cachedAxis = new Vector3();
 	return function intersectsTriangle( triangle ) {
+
+		if ( this.needsUpdate ) {
+
+			this.update();
+
+		}
 
 		if ( ! triangle.isSeparatingAxisTriangle ) {
 
@@ -208,6 +220,12 @@ OrientedBox.prototype.closestPointToPoint = ( function () {
 
 	return function closestPointToPoint( point, target1 ) {
 
+		if ( this.needsUpdate ) {
+
+			this.update();
+
+		}
+
 		target1
 			.copy( point )
 			.applyMatrix4( this.invMatrix )
@@ -242,7 +260,14 @@ OrientedBox.prototype.distanceToBox = ( function () {
 	const point1 = new Vector3();
 	const point2 = new Vector3();
 
+	// early out if we find a value below threshold
 	return function distanceToBox( box, threshold = 0, target1 = null, target2 = null ) {
+
+		if ( this.needsUpdate ) {
+
+			this.update();
+
+		}
 
 		if ( this.intersectsBox( box ) ) {
 
@@ -256,6 +281,7 @@ OrientedBox.prototype.distanceToBox = ( function () {
 				if ( target2 ) target2.copy( point2 );
 
 			}
+
 			return 0;
 
 		}
