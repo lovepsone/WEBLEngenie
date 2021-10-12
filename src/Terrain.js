@@ -13,7 +13,7 @@ import {PressureTerrain} from './PressureTerrain.js';
 import {Biomes} from './Biomes.js';
 import {GenerateBiomeMap} from './GenerateBiomeMap.js';
 import {Road} from './Road.js';
-import {acceleratedRaycast, computeBoundsTree, disposeBoundsTree} from './../libs/BVH/index.js';
+import {acceleratedRaycast, computeBoundsTree, disposeBoundsTree, CONTAINED, INTERSECTED, NOT_INTERSECTED, MeshBVHVisualizer,} from './../libs/BVH/index.js';
 import {TextureAtlas} from './TextureAtlas.js';
 import {COLORBOARDROAD} from './CONST.js';
 import {DrawNoise} from './DrawNoise.js';

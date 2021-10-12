@@ -59,6 +59,7 @@ class MainEngenie {
 	Render(frame) {
 
 		_physics.needUpdate();
+		_terrain.getOptions().pressure.needUpdate();
 		//_sunLight.needUpdate(frame)
 		_renderer.render(_scene, _camera);
 	}
