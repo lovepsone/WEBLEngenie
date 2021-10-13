@@ -77,7 +77,7 @@ class Road {
 
 		if (intersects.length > 0) {
 
-			_boxes.push( new THREE.Mesh(new THREE.BoxBufferGeometry(1, 1, 1), new THREE.MeshStandardMaterial({color: 0x00ff00, roughness: 0.75, metalness: 0, transparent: true, opacity: 0.5, premultipliedAlpha: true, emissive: 0xEC407A, emissiveIntensity: 0.5})));
+			_boxes.push(new THREE.Mesh(new THREE.BoxBufferGeometry(1, 1, 1), new THREE.MeshStandardMaterial({color: 0x00ff00, roughness: 0.75, metalness: 0, transparent: true, opacity: 0.5, premultipliedAlpha: true, emissive: 0xEC407A, emissiveIntensity: 0.5})));
             _boxes[_CounterBox].position.copy(intersects[0].point);
             _scene.add(_boxes[_CounterBox]);
 			_CounterBox++;
@@ -160,9 +160,7 @@ class Road {
 
 			points.push(new THREE.Vector3().copy(_boxes[i].position));
 			_scene.remove(_boxes[i]);
-
-			if (i < _lines.length)
-				_scene.remove(_lines[i]);
+			if (i < _lines.length) _scene.remove(_lines[i]);
 		}
 
 		if (points.length == 0) {
@@ -179,10 +177,10 @@ class Road {
 		shape.moveTo(0.5, 5);
 		shape.lineTo(0.5, 0);
 
-		let extrudeSettings = {steps: 10 * points.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false), UVGenerator: WorldUVGenerator};
+		let extrudeSettings = {steps: 7 * points.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false), UVGenerator: WorldUVGenerator};
 		let extrudeGeometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
 	
-		let texture = new THREE.TextureLoader().load("road/road.jpg");
+		let texture = new THREE.TextureLoader().load("texture/roads/asphalt3.jpg");
 		texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 
 		_roads.push(new THREE.Mesh(extrudeGeometry, new THREE.MeshPhongMaterial({map: texture, wireframe: wireframe})));
