@@ -34,7 +34,7 @@ var lang = {
 		'TabEditTerrain' : [
 			'Редактор Террейна',
 			'Вдавливание и выдавливание террейна',
-			'',
+			'Тип сглаживания: ',
 			'Интенсивность: ',
 		],
 		'TabEditBiomes': [
@@ -116,8 +116,8 @@ var lang = {
 		'TabEditTerrain' : [
 			'Editor Terrain',
 			'Pressure and Extrusion terrain',
-			'',
-			'Strength: ',
+			'Type of smoothing: ',
+			'Intensity: ',
 		],
 		'TabEditBiomes': [
 			'Biome Editor',

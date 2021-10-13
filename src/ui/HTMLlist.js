@@ -37,8 +37,8 @@ var DataHTML = {
 		'File': 'MapFile',
 	},
 	'Pressuere': {
-		'Options': ['EditStrength'],
-		'Values': ['EditStrengthVal'],
+		'Options': ['EditIntensity', 'TypeSmooth'],
+		'Values': ['EditIntensityVal'],
 	},
 	'Biomes': {
 		'Options': [],
@@ -173,6 +173,12 @@ let HTMLlist = [
 			{'tag': 'br'},
 			{'tag': 'input', 'id': DataHTML.Pressuere.Options[0],  'style':"font-size: 12px; border: 0px; margin: 5px;width: 270px;", 'type': 'range', 'value': 5, 'max': 100, 'min': -100},
 			{'tag': 'div', 'id': DataHTML.Pressuere.Values[0], 'text': 5, 'align': 'center'},
+			{'tag': 'label', 'for': DataHTML.Pressuere.Options[1], 'text': txt.TabEditTerrain[2]},
+			{'tag': 'select', id: DataHTML.Pressuere.Options[1], 'children':[
+				{'tag':'option', 'value': 0, 'text': 'clay'},
+				{'tag':'option', 'value': 1, 'text': 'normal'},
+				{'tag':'option', 'value': 2, 'text': 'flatten'},
+			]}
 		]},
 		{'tag': 'div', 'id': DataHTML.RightBar.Contents[1], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none; text-align: center;', 'children': [
 			{'tag': 'br'},

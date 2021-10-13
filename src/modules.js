@@ -285,6 +285,11 @@ UI.getElement(DataHTML.Pressuere.Options[0]).addEventListener("change", function
 	UI.getElement(DataHTML.Pressuere.Values[0]).innerHTML = event.srcElement.value;
 }, false);
 
+UI.getElement(DataHTML.Pressuere.Options[1]).addEventListener("change", function(event) {
+
+	Engenie.getTerrain().getOptions().pressure.UpdateTypeBrush(event.srcElement.value);
+}, false);
+
 //handlers checked wareframe
 UI.getElement(DataHTML.Wireframe).addEventListener("change", function(event) {
 

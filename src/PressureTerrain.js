@@ -3,7 +3,7 @@
 * Part of the code from https://github.com/gkjohnson/three-mesh-bvh/blob/master/example/sculpt.js
 */
 
-let _radius = 1.0, _intensity = 50,  _maxSteps = 10;// options
+let _radius = 1.0, _intensity = 10.0/5.0,  _maxSteps = 10;// options
 let _typeBrush = 0; //clay, normal, flatten
 let _mesh = null, _camera = null; // object3d
 let _mouseVector = new THREE.Vector2();
@@ -91,6 +91,11 @@ class PressureTerrain {
 	UpdateIntensity(s) {
 
 		_intensity = s / 5.0;
+	}
+
+	UpdateTypeBrush(t) {
+
+		_typeBrush = t;
 	}
 
 	AddEvents() {
