@@ -32,8 +32,8 @@ class GenerateBiomeMap {
 		for (let i = 0; i < 50; i ++) {
 	
 			const nexti = i + 1;
-			const x1 = Math.sin( 2 * Math.PI * i / 50);
-			const y1 = Math.cos( 2 * Math.PI * i / 50);
+			const x1 = Math.sin(2 * Math.PI * i / 50);
+			const y1 = Math.cos(2 * Math.PI * i / 50);
 			const x2 = Math.sin(2 * Math.PI * nexti / 50);
 			const y2 = Math.cos(2 * Math.PI * nexti / 50);
 			brushSegments.push(new THREE.Vector3(x1, 0, y1), new THREE.Vector3(x2, 0, y2));
