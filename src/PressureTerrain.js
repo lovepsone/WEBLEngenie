@@ -6,11 +6,9 @@
 let _radius = 1.0, _intensity = 50,  _maxSteps = 10;// options
 let _typeBrush = 0; //clay, normal, flatten
 let _mesh = null, _camera = null; // object3d
-
-let _mouseVector = new THREE.Vector2(), _raycaster = new THREE.Raycaster();
+let _mouseVector = new THREE.Vector2();
 let bindMouseDown, bindMouseUp, bindMouseMove;
 let _brushMesh = null;
-
 let _brushActive = false;
 let _lastMouse = new THREE.Vector2(), _mouseState = false, _lastMouseState = false;
 let _lastCastPose = new THREE.Vector3();
@@ -28,7 +26,7 @@ class PressureTerrain {
 		bindMouseUp = this.onDocumentMouseUp.bind(this);
 		bindMouseMove = this.onDocumentMouseMove.bind(this);
 
-		const brushSegments = [ new THREE.Vector3(), new THREE.Vector3( 0, 1, 0 ) ];
+		const brushSegments = [new THREE.Vector3(), new THREE.Vector3(0, 1, 0)];
 		for (let i = 0; i < 50; i ++) {
 	
 			const nexti = i + 1;
@@ -139,20 +137,15 @@ class PressureTerrain {
 			intersectsBounds: (box, isLeaf, score, depth, nodeIndex) => {
 
 				accumulatedTraversedNodeIndices.add(nodeIndex);
-				const intersects = sphere.intersectsBox(box);
-				const {min, max} = box;
+				const intersects = sphere.intersectsBox(box), {min, max} = box;
 
 				if (intersects) {
-	
 					for (let x = 0; x <= 1; x ++) {
 						for (let y = 0; y <= 1; y ++) {
 							for (let z = 0; z <= 1; z ++ ) {
 	
 								tempVec.set(x === 0 ? min.x : max.x, y === 0 ? min.y : max.y, z === 0 ? min.z : max.z);
-								if (!sphere.containsPoint(tempVec)) {
-	
-									return INTERSECTED;
-								}
+								if (!sphere.containsPoint(tempVec)) return INTERSECTED;
 							}
 						}
 					}
@@ -162,17 +155,12 @@ class PressureTerrain {
 			},
 
 			intersectsTriangle: (tri, index, contained) => {
-	
+
 				const triIndex = index;
 				triangles.add(triIndex);
 				accumulatedTriangles.add(triIndex);
-				const i3 = 3 * index;
-				const a = i3 + 0;
-				const b = i3 + 1;
-				const c = i3 + 2;
-				const va = indexAttr.getX(a);
-				const vb = indexAttr.getX(b);
-				const vc = indexAttr.getX(c);
+				const i3 = 3 * index, a = i3 + 0, b = i3 + 1, c = i3 + 2;
+				const va = indexAttr.getX(a), vb = indexAttr.getX(b), vc = indexAttr.getX(c);
 
 				if (contained) {
 
@@ -205,7 +193,7 @@ class PressureTerrain {
 				}
 				return false;
 			}
-		} );
+		});
 	
 		// Compute the average normal at this point
 		const localPoint = new THREE.Vector3();
@@ -241,7 +229,7 @@ class PressureTerrain {
 		}
 
 		// perform vertex adjustment
-		const targetHeight = _intensity * 0.01;
+		const targetHeight = _intensity * 0.05;
 		const plane = new THREE.Plane();
 		plane.setFromNormalAndCoplanarPoint(normal, planePoint);
 
