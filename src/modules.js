@@ -186,6 +186,20 @@ UI.getElement(DataHTML.MenuBar.Smoothing).addEventListener("click", function() {
 	Engenie.getTerrain().Smoothing();
 }, false);
 
+// handlers lang
+UI.getElement(DataHTML.MenuBar.EN).addEventListener("click", function(event) {
+
+	document.cookie = 'lang=en';
+	alert('Refresh the page to change the language. If your browser does not support cookies, the language will not change.');
+}, false);
+
+// handlers lang
+UI.getElement(DataHTML.MenuBar.RU).addEventListener("click", function(event) {
+
+	document.cookie = 'lang=ru';
+	alert('Refresh the page to change the language. If your browser does not support cookies, the language will not change.');
+}, false);
+
 UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListener("click", function(event) {
 
 	let reader = new FileReader();

@@ -9,9 +9,10 @@
 import {lang} 			from './../lang/lang.js';
 import {CLASSTULLTIP, TOOLTIPWIND}	from './../CONST.js';
 
-var txt = lang['ru'];
+const data = document.cookie.match(/lang=(.+?)(;|$)/);
+const txt = lang[data ? data[1] : 'ru'];
 
-var DataHTML = {
+const DataHTML = {
 	'MenuBar': {'CreateTerrain': 'CreateTerrain',
 			'SaveTerrain': 'SaveTerrain',
 			'LoadTerrain': 'LoadTerrain',
@@ -21,6 +22,8 @@ var DataHTML = {
 			'NoisePerlin': 'NoisePerlin',
 			'DiamondSquare': 'DiamondSquare',
 			'Smoothing' : 'Smoothing',
+			'EN': 'EN',
+			'RU': 'RU',
 		},
 	'RightBar': {
 		'Buttons': ['TabEditorTerrain', 'TabEditorBiomes', 'TabEditorRoads', 'TabEditorTextures'],
@@ -155,7 +158,14 @@ let HTMLlist = [
 				{'tag': 'div', 'id': DataHTML.MenuBar.Smoothing, 'class': 'option', 'text': 'smoothing'},
 			]},
 		]},
-	
+		//lang
+		{'tag': 'div', 'class': 'menu', 'children': [
+			{'tag': 'div', 'class': 'title', 'text':'Language'},
+			{'tag': 'div', 'class': 'options', 'style':'width: 200px;', 'children': [
+				{'tag': 'div', 'id': DataHTML.MenuBar.EN, 'class': 'option', 'text': 'EN - en'},
+				{'tag': 'div', 'id': DataHTML.MenuBar.RU, 'class': 'option', 'text': 'RU - ru'},
+			]},
+		]},
 	]},
 	//side bar 
 	{'tag': 'div', 'id': 'sidebar', 'children': [

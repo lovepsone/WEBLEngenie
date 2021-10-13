@@ -2,7 +2,7 @@
 * @author lovepsone 2019 - 2021
 */
 
-var lang = {
+const lang = {
 
 	'ru': {
 		'Camera': 'Управление камерой:',
