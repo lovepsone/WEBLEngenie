@@ -107,10 +107,11 @@ class PressureTerrain {
 	
 	DisposeEvents() {
 
+		_brushActive = false;
+		_brushMesh.visible = false;
 		this.element.removeEventListener("mousedown", bindMouseDown, false);
 		this.element.removeEventListener("mouseup", bindMouseUp, false);
 		this.element.removeEventListener("mousemove", bindMouseMove, false);
-		_brushMesh.visible = false;
 	}
 
 	performStroke(point, brushObject, brushOnly = false, accumulatedFields = {}) {
