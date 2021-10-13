@@ -53,10 +53,23 @@ class Road {
 		bindMouseDown =  this.onDocumentMouseDown.bind(this);
 		bindMouseMove = this.onDocumentMouseMove.bind(this);
 
-		_brushMesh = new THREE.Mesh(new THREE.SphereBufferGeometry(1, 50, 50), new THREE.MeshStandardMaterial({color: 0xEC407A, roughness: 0.75, metalness: 0, transparent: true, opacity: 0.5, premultipliedAlpha: true, emissive: 0xEC407A, emissiveIntensity: 0.5}));
-        _brushMesh.name = "BrushRoad";
-        _brushMesh.visible = false;
-        _scene.add(_brushMesh);
+		const brushSegments = [new THREE.Vector3(), new THREE.Vector3(0, 1, 0)];
+		for (let i = 0; i < 50; i ++) {
+	
+			const nexti = i + 1;
+			const x1 = Math.sin( 2 * Math.PI * i / 50);
+			const y1 = Math.cos( 2 * Math.PI * i / 50);
+			const x2 = Math.sin(2 * Math.PI * nexti / 50);
+			const y2 = Math.cos(2 * Math.PI * nexti / 50);
+			brushSegments.push(new THREE.Vector3(x1, 0, y1), new THREE.Vector3(x2, 0, y2));
+		}
+
+		_brushMesh = new THREE.LineSegments();
+		_brushMesh.geometry.setFromPoints(brushSegments);
+		_brushMesh.material.color.set(0xEC407A);
+		_brushMesh.name = "BrushRoad";
+		_brushMesh.visible = false;
+		_scene.add(_brushMesh);
     }
 
 	setTerrain(mesh) {
@@ -107,7 +120,7 @@ class Road {
 
 		let intersects = _raycaster.intersectObject(_mesh);
 		let bvh = _mesh.geometry.boundsTree;
-        _brushMesh.scale.setScalar(1);
+        _brushMesh.scale.setScalar(1.5);
 
 		if (intersects.length > 0) {
 

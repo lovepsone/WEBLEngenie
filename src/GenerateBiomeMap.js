@@ -15,7 +15,7 @@ let _brushMesh = null, _camera = null, _scene = null, _mesh = null;
 let _mouseVector = new THREE.Vector2();
 let _MouseDown = false;
 let _ColorPen = new THREE.Color(0x44447a);
-let _radius = 0.1;
+let _radius = 10.0 / 5.0;
 
 class GenerateBiomeMap {
 
@@ -36,17 +36,14 @@ class GenerateBiomeMap {
 			const y1 = Math.cos( 2 * Math.PI * i / 50);
 			const x2 = Math.sin(2 * Math.PI * nexti / 50);
 			const y2 = Math.cos(2 * Math.PI * nexti / 50);
-	
 			brushSegments.push(new THREE.Vector3(x1, 0, y1), new THREE.Vector3(x2, 0, y2));
 		}
 
-		//_brushMesh = new THREE.Mesh(new THREE.SphereBufferGeometry(1, 50, 50), new THREE.MeshStandardMaterial({color: 0xEC407A, roughness: 0.75, metalness: 0, transparent: true, opacity: 0.5, premultipliedAlpha: true, emissive: 0xEC407A, emissiveIntensity: 0.5}));
 		_brushMesh = new THREE.LineSegments();
 		_brushMesh.geometry.setFromPoints(brushSegments);
 		_brushMesh.material.color.set(0xEC407A);
         _brushMesh.name = "BrushBiome";
         _brushMesh.visible = false;
-
         _scene.add(_brushMesh);
 
         _ColorsCanvas.width = _width;
@@ -119,7 +116,7 @@ class GenerateBiomeMap {
 
 		const intersects = raycaster.intersectObject(_mesh, true)[0];
 		const bvh = _mesh.geometry.boundsTree;
-		_brushMesh.scale.setScalar(_radius);
+		_brushMesh.scale.set(_radius, _radius, _radius);
         _brushMesh.visible = false;
 
 		if (intersects) {
