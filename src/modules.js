@@ -392,22 +392,33 @@ UI.ToolTip.Int();
 // key event
 window.addEventListener("keydown", function(event) {
 
-	switch(event.key) {
+	switch(event.keyCode) {
 
-		case 'w':
-		case 'W':
-			const EventW = new Event('change');
+		case 87:
+			const Event87 = new Event('change');
 			UI.getElement(DataHTML.Wireframe).checked = !UI.getElement(DataHTML.Wireframe).checked;
-			UI.getElement(DataHTML.Wireframe).dispatchEvent(EventW);
+			UI.getElement(DataHTML.Wireframe).dispatchEvent(Event87);
 			break;
 
-		case 'e':
-		case 'E':
-			const EventE = new Event('change');
+		case 69:
+			const Event69 = new Event('change');
 			if (UI.getElement(DataHTML.Camera).checked) Engenie.getControlsCamera().dispose(); else Engenie.getControlsCamera().UpdateEvents();
 			UI.getElement(DataHTML.Camera).checked = !UI.getElement(DataHTML.Camera).checked;
 			UI.getElement(DataHTML.Brush).checked = !UI.getElement(DataHTML.Brush).checked;
 			ControlBrush(_UIFrame.getCurrentTab());
+			UI.getElement(DataHTML.Wireframe).dispatchEvent(Event69);
+			break;
+
+		case 81:
+			const Event81 = new Event('change');
+			UI.getElement(DataHTML.SizeBrush).value ++;
+			UI.getElement(DataHTML.SizeBrush).dispatchEvent(Event81);
+			break;
+
+		case 65:
+			const Event65 = new Event('change');
+			UI.getElement(DataHTML.SizeBrush).value --;
+			UI.getElement(DataHTML.SizeBrush).dispatchEvent(Event65);
 			break;
 	}
 }, false);
