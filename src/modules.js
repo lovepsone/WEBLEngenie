@@ -90,7 +90,7 @@ function ControlBrush(currentTab) {
 // checked camera or brush
 UI.getElement(DataHTML.Camera).checked = true;
 Engenie.getControlsCamera().UpdateEvents();
-UI.getElement(DataHTML.Camera).addEventListener("click", function() {
+UI.getElement(DataHTML.Camera).addEventListener("change", function() {
 
 	if (UI.getElement(DataHTML.Camera).checked) {
 
@@ -104,7 +104,7 @@ UI.getElement(DataHTML.Camera).addEventListener("click", function() {
 	ControlBrush(_UIFrame.getCurrentTab());
 });
 
-UI.getElement(DataHTML.Brush).addEventListener("click", function() {
+UI.getElement(DataHTML.Brush).addEventListener("change", function() {
 
 	if (UI.getElement(DataHTML.Brush).checked) {
 
@@ -388,3 +388,26 @@ for (let i = 0; i < DataHTML.Texture.Options.length; i++) {
 
 // start ToolTips
 UI.ToolTip.Int();
+
+// key event
+window.addEventListener("keydown", function(event) {
+
+	switch(event.key) {
+
+		case 'w':
+		case 'W':
+			const EventW = new Event('change');
+			UI.getElement(DataHTML.Wireframe).checked = !UI.getElement(DataHTML.Wireframe).checked;
+			UI.getElement(DataHTML.Wireframe).dispatchEvent(EventW);
+			break;
+
+		case 'e':
+		case 'E':
+			const EventE = new Event('change');
+			if (UI.getElement(DataHTML.Camera).checked) Engenie.getControlsCamera().dispose(); else Engenie.getControlsCamera().UpdateEvents();
+			UI.getElement(DataHTML.Camera).checked = !UI.getElement(DataHTML.Camera).checked;
+			UI.getElement(DataHTML.Brush).checked = !UI.getElement(DataHTML.Brush).checked;
+			ControlBrush(_UIFrame.getCurrentTab());
+			break;
+	}
+}, false);
