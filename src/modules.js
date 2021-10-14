@@ -11,8 +11,6 @@ import {BASEDATATEXTURES}			from './CONST.js';
 import Stats						from './../libs/stats.module.js';
 import {RenderInfo}					from './RenderInfo.js';
 
-const Language = 'ru';
-
 new LoaderHTML5(HTMLlist);
 let _UIFrame = new UIFrame(DataHTML.Camera, DataHTML.Wireframe);
 let Frame = UI.getElement('Window');

@@ -5,7 +5,7 @@ This project is an attempt to create a terrain editor, but it led to something m
 
 [three.js] (https://github.com/mrdoob/three.js/) &mdash;
 [Mesh BVH] (https://github.com/gkjohnson/three-mesh-bvh) &mdash;
-
+[Ammo.js]  (https://github.com/kripken/ammo.js) &mdash;
 ### Preliminary innovations (intent)
 
 - Adjustable skybox
