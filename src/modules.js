@@ -390,6 +390,16 @@ for (let i = 0; i < DataHTML.Texture.Options.length; i++) {
 UI.ToolTip.Int();
 
 // key event
+window.addEventListener("wheel", function(event) {
+
+	if (UI.getElement(DataHTML.Brush).checked) {
+
+		const EventWheel = new Event('change');
+		event.deltaY > 0 ? UI.getElement(DataHTML.SizeBrush).value++ : UI.getElement(DataHTML.SizeBrush).value--;
+		UI.getElement(DataHTML.SizeBrush).dispatchEvent(EventWheel);
+	}
+}, false);
+
 window.addEventListener("keydown", function(event) {
 
 	switch(event.keyCode) {
@@ -410,15 +420,34 @@ window.addEventListener("keydown", function(event) {
 			break;
 
 		case 81:
+			if(_UIFrame.getCurrentTab()) break;
 			const Event81 = new Event('change');
-			UI.getElement(DataHTML.SizeBrush).value ++;
-			UI.getElement(DataHTML.SizeBrush).dispatchEvent(Event81);
+
+			if (event.altKey) {
+
+				if (UI.getElement(DataHTML.Pressuere.Options[1]).value > 1) break;
+				UI.getElement(DataHTML.Pressuere.Options[1]).value++;
+				UI.getElement(DataHTML.Pressuere.Options[1]).dispatchEvent(Event81);
+			} else {
+
+				UI.getElement(DataHTML.Pressuere.Options[0]).value++;
+				UI.getElement(DataHTML.Pressuere.Options[0]).dispatchEvent(Event81);
+			}
 			break;
 
 		case 65:
+			if(_UIFrame.getCurrentTab()) break;
 			const Event65 = new Event('change');
-			UI.getElement(DataHTML.SizeBrush).value --;
-			UI.getElement(DataHTML.SizeBrush).dispatchEvent(Event65);
+
+			if (event.altKey) {
+
+				if (UI.getElement(DataHTML.Pressuere.Options[1]).value < 1) break;
+				UI.getElement(DataHTML.Pressuere.Options[1]).value--;
+				UI.getElement(DataHTML.Pressuere.Options[1]).dispatchEvent(Event65);
+			} else {
+				UI.getElement(DataHTML.Pressuere.Options[0]).value--;
+				UI.getElement(DataHTML.Pressuere.Options[0]).dispatchEvent(Event65);
+			}
 			break;
 	}
 }, false);
