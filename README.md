@@ -8,10 +8,15 @@ This project is an attempt to create a terrain editor, but it led to something m
 [Ammo.js]  (https://github.com/kripken/ammo.js) &mdash;
 
 ### Hotkeys (Testing, in developing)
+# Editor window
+- mose wheel - resizes the pen when the pen is on
 - w - on/off WareFrame
 - e - switch brush/camera and back
-- q - increase pen size
-- a - reduce pen size
+# Terrain editor tab, with re-enabled
+- q - increases the intensity of the pen
+- a - decreases the intensity of the pen
+- alt + q - changing the type of intensity
+- alt + a - changing the type of intensity
 
 ### Preliminary innovations (intent)
 
