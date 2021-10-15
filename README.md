@@ -3,9 +3,9 @@ This project is an attempt to create a terrain editor, but it led to something m
 
 ### Libraries used
 
-*[three.js] (https://github.com/mrdoob/three.js/) &mdash; JavaScript 3D Library.
-*[Mesh BVH] (https://github.com/gkjohnson/three-mesh-bvh) &mdash; A BVH implementation to speed up raycasting and enable spatial queries against three.js meshes.
-*[Ammo.js]  (https://github.com/kripken/ammo.js) &mdash; About
+* [three.js] (https://github.com/mrdoob/three.js/) &mdash; JavaScript 3D Library.
+* [Mesh BVH] (https://github.com/gkjohnson/three-mesh-bvh) &mdash; A BVH implementation to speed up raycasting and enable spatial queries against three.js meshes.
+* [Ammo.js]  (https://github.com/kripken/ammo.js) &mdash; About
 Direct port of the Bullet physics engine to JavaScript using Emscripten.
 
 ### Hotkeys (Testing, in developing)
