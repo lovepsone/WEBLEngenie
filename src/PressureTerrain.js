@@ -286,8 +286,8 @@ class PressureTerrain {
 			const i0 = tri3 + 0;
 			const i1 = tri3 + 1;
 			const i2 = tri3 + 2;
-			const v0 = indexAttr.getX(i0 );
-			const v1 = indexAttr.getX(i1 );
+			const v0 = indexAttr.getX(i0);
+			const v1 = indexAttr.getX(i1);
 			const v2 = indexAttr.getX(i2);
 			triangle.a.fromBufferAttribute(posAttr, v0 );
 			triangle.b.fromBufferAttribute(posAttr, v1 );
