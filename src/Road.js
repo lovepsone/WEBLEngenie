@@ -3,7 +3,7 @@
 */
 
 import * as THREE from './../libs/three.module.js';
-import {COLORBOARDROAD} from './CONST.js';
+import {COLORBOARDROAD, STEPSROAD} from './CONST.js';
 
 let _CounterBox = 0, _boxes = [], _lines = [], _roads = [];
 let _mesh = null, _camera = null, _scene = null;
@@ -146,23 +146,42 @@ class Road {
 		_brushMesh.visible = false;
 	}
 
+	// нужно добавить общую переменную для не тронутых индексов
 	Draw(dataRoad) {
 
-		const colorBoard = new THREE.Color(COLORBOARDROAD);
-
 		const buff = dataRoad;
+		const colorBoard = new THREE.Color(COLORBOARDROAD);
+		const MaxBoards = buff.boards.length;
+		const nonIndexHeightCount = buff.boards[MaxBoards - 1].length + buff.boards[MaxBoards - 2].length;
 		let position = _mesh.geometry.getAttribute('position');
 		let color = _mesh.geometry.getAttribute('color');
 
 		for (let i = 0; i < buff.vertex.length; i++) {
 
-			position.array[buff.index[i] * 3 + 1] = buff.vertex[i].y;
-			position.needsUpdate = true;
+			if (i < buff.vertex.length - nonIndexHeightCount) position.array[buff.index[i] * 3 + 1] = buff.vertex[i].y;
+
 			color.array[buff.index[i] * 3] = colorBoard.r;
 			color.array[buff.index[i] * 3 + 1] = colorBoard.g;
 			color.array[buff.index[i] * 3 + 2] = colorBoard.b;
-			color.needsUpdate = true;
 		}
+
+		const unique1 = [... new Set(buff.boards[MaxBoards - 1])];
+		const unique2 = [... new Set(buff.boards[MaxBoards - 2])];
+		const unique3 = [... new Set(buff.boards[MaxBoards - 3])];
+		const unique4 = [... new Set(buff.boards[MaxBoards - 4])];
+
+		console.log(unique1.length);
+		console.log(unique2.length);
+		console.log(unique3.length);
+		console.log(unique4.length);
+		// lerp
+		const b = buff.boards[MaxBoards - 3];
+		const c = buff.boards[MaxBoards - 2];
+
+		for (let i = 0; i < b.length; i++) {
+		}
+		position.needsUpdate = true;
+		color.needsUpdate = true;
 	}
 
 	Generate(wireframe) {
@@ -190,7 +209,7 @@ class Road {
 		shape.moveTo(0.5, 5);
 		shape.lineTo(0.5, 0);
 
-		let extrudeSettings = {steps: 7 * points.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false), UVGenerator: WorldUVGenerator};
+		let extrudeSettings = {steps: STEPSROAD * points.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false), UVGenerator: WorldUVGenerator};
 		let extrudeGeometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
 	
 		let texture = new THREE.TextureLoader().load("texture/roads/asphalt3.jpg");

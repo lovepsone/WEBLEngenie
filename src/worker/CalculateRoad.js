@@ -3,8 +3,9 @@
 */
 
 import * as THREE from './../../libs/three.module.js';
+import {STEPSROAD, MAXBOARDS} from './../CONST.js';
 
-let _PostData = {vertex: [], index: []};
+let _PostData = {vertex: [], index: [], boards: []};
 
 class CalculateRoad {
 
@@ -34,13 +35,13 @@ class CalculateRoad {
 
         const ray = new THREE.Raycaster();
         const origin = new THREE.Vector3();
-        const direction = [new THREE.Vector3(0, 1, 0), new THREE.Vector3(0,-1, 0)];
+        const direction = [new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0)];
         const size = Math.sqrt(points.count);
 
         const mesh = new THREE.Mesh(
             new THREE.ExtrudeBufferGeometry(
                 this.ShapeTop,
-                {steps: 25 * this.ExtrudePoints.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(this.ExtrudePoints, false)}
+                {steps: STEPSROAD * this.ExtrudePoints.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(this.ExtrudePoints, false)}
             ),
             new THREE.MeshBasicMaterial({color: 0xff0000})
         );
@@ -62,7 +63,7 @@ class CalculateRoad {
             }
         }
 
-        for (let i = 0; i < 3; i++) this.addBoard(_PostData, size);
+        for (let i = 0; i < MAXBOARDS; i++) this.addBoard(_PostData, size, i);
 
         return _PostData;
     }
@@ -104,7 +105,7 @@ class CalculateRoad {
         return result;
     }
 
-    addBoard(data, size) {
+    addBoard(data, size, indexBoard) {
 
         let bufIndex = [], bufVertex = [];
 
@@ -120,11 +121,13 @@ class CalculateRoad {
         }
         data.index.push(...bufIndex);
         data.vertex.push(...bufVertex);
+        data.boards[indexBoard] = [];
+        data.boards[indexBoard].push(...bufIndex);
     }
 
     clearData() {
 
-        _PostData = {vertex: [], index: []};
+        _PostData = {vertex: [], index: [], boards: []};
     }
 }
 
