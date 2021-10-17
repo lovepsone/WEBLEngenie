@@ -146,15 +146,15 @@ class Road {
 		_brushMesh.visible = false;
 	}
 
-	// нужно добавить общую переменную для не тронутых индексов
 	Draw(dataRoad) {
 
 		const buff = dataRoad;
 		const colorBoard = new THREE.Color(COLORBOARDROAD);
 		const MaxBoards = buff.boards.length;
-		const nonIndexHeightCount = buff.boards[MaxBoards - 1].length + buff.boards[MaxBoards - 2].length;
+		const nonIndexHeightCount = buff.boards[MaxBoards - 1].length + buff.boards[MaxBoards - 2].length + buff.boards[MaxBoards - 3].length + buff.boards[MaxBoards - 4].length;
 		let position = _mesh.geometry.getAttribute('position');
 		let color = _mesh.geometry.getAttribute('color');
+		const size = Math.sqrt(position.count);
 
 		for (let i = 0; i < buff.vertex.length; i++) {
 
@@ -165,23 +165,45 @@ class Road {
 			color.array[buff.index[i] * 3 + 2] = colorBoard.b;
 		}
 
-		const unique1 = [... new Set(buff.boards[MaxBoards - 1])];
-		const unique2 = [... new Set(buff.boards[MaxBoards - 2])];
-		const unique3 = [... new Set(buff.boards[MaxBoards - 3])];
-		const unique4 = [... new Set(buff.boards[MaxBoards - 4])];
+		const unique =[
+			[... new Set(buff.boards[MaxBoards - 5])],
+			[... new Set(buff.boards[MaxBoards - 4])],
+			[... new Set(buff.boards[MaxBoards - 3])],
+			[... new Set(buff.boards[MaxBoards - 2])],
+			[... new Set(buff.boards[MaxBoards - 1])]
+		];
 
-		console.log(unique1.length);
-		console.log(unique2.length);
-		console.log(unique3.length);
-		console.log(unique4.length);
-		// lerp
-		const b = buff.boards[MaxBoards - 3];
-		const c = buff.boards[MaxBoards - 2];
+		this.SmoothBoard(unique, position, size);
 
-		for (let i = 0; i < b.length; i++) {
-		}
 		position.needsUpdate = true;
 		color.needsUpdate = true;
+	}
+
+	SmoothBoard(indx, point, cout) {
+		//    b
+        // a --- c
+        //    d
+		for (let i = 0; i < indx.length - 1; i++) {
+
+			for (let j = 0; j < indx[i].length; j++) {
+
+				let aIndx = indx[i + 1].indexOf(indx[i][j] - 1);
+				let bIndx = indx[i + 1].indexOf(indx[i][j] - cout);
+				let cIndx = indx[i + 1].indexOf(indx[i][j] + 1);
+				let dIndx = indx[i + 1].indexOf(indx[i][j] + cout);
+				const e = point.array[indx[i][j] * 3 + 1];
+				const a = (aIndx > -1 && aIndx != undefined) ? point.array[aIndx * 3 + 1] : 0;
+				const b = (bIndx > -1 && bIndx != undefined) ? point.array[bIndx * 3 + 1] : 0;
+				const c = (cIndx > -1 && cIndx != undefined) ? point.array[cIndx * 3 + 1] : 0;
+				const d = (dIndx > -1 && dIndx != undefined) ? point.array[dIndx * 3 + 1] : 0;
+				let tmp = 0;
+				if (a != 0) tmp++;
+				if (b != 0) tmp++;
+				if (c != 0) tmp++;
+				if (d != 0) tmp++;
+				point.array[indx[i][j] * 3 + 1] = (0.5 * (a + b + c + d) / tmp + e) * 0.5;
+			}
+		}
 	}
 
 	Generate(wireframe) {
