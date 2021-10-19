@@ -3,7 +3,7 @@
 */
 
 import * as THREE from './../libs/three.module.js';
-import {COLORBOARDROAD, STEPSROAD} from './CONST.js';
+import {COLORBOARDROAD, STEPSROAD, STEPSBOARDS} from './CONST.js';
 
 let _CounterBox = 0, _boxes = [], _lines = [], _roads = [];
 let _mesh = null, _camera = null, _scene = null;
@@ -173,7 +173,7 @@ class Road {
 			[... new Set(buff.boards[MaxBoards - 5])]
 		];
 
-		for (let i = 0; i < 5; i++) this.SmoothBoard(unique, position, size);
+		for (let i = 0; i < STEPSBOARDS; i++) this.SmoothBoard(unique, position, size);
 
 		position.needsUpdate = true;
 		color.needsUpdate = true;

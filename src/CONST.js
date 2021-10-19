@@ -32,6 +32,7 @@ export const SKYDATATEXTURES = Object.entries(SKYTEXTURES);
 export const COLORBOARDROAD = 0xc9d29b;
 export const STEPSROAD = 7;
 export const MAXBOARDS = 8;
+export const STEPSBOARDS = 3;
 export const BASEDATATEXTURES = Object.entries(BASENAMETEXTURES);
 
 export const CLASSTULLTIP = 'ToolTip';
