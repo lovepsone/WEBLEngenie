@@ -166,14 +166,14 @@ class Road {
 		}
 
 		const unique =[
-			[... new Set(buff.boards[MaxBoards - 5])],
-			[... new Set(buff.boards[MaxBoards - 4])],
-			[... new Set(buff.boards[MaxBoards - 3])],
+			[... new Set(buff.boards[MaxBoards - 1])],
 			[... new Set(buff.boards[MaxBoards - 2])],
-			[... new Set(buff.boards[MaxBoards - 1])]
+			[... new Set(buff.boards[MaxBoards - 3])],
+			[... new Set(buff.boards[MaxBoards - 4])],
+			[... new Set(buff.boards[MaxBoards - 5])]
 		];
 
-		this.SmoothBoard(unique, position, size);
+		for (let i = 0; i < 5; i++) this.SmoothBoard(unique, position, size);
 
 		position.needsUpdate = true;
 		color.needsUpdate = true;
@@ -187,21 +187,14 @@ class Road {
 
 			for (let j = 0; j < indx[i].length; j++) {
 
-				let aIndx = indx[i + 1].indexOf(indx[i][j] - 1);
-				let bIndx = indx[i + 1].indexOf(indx[i][j] - cout);
-				let cIndx = indx[i + 1].indexOf(indx[i][j] + 1);
-				let dIndx = indx[i + 1].indexOf(indx[i][j] + cout);
-				const e = point.array[indx[i][j] * 3 + 1];
-				const a = (aIndx > -1 && aIndx != undefined) ? point.array[aIndx * 3 + 1] : 0;
-				const b = (bIndx > -1 && bIndx != undefined) ? point.array[bIndx * 3 + 1] : 0;
-				const c = (cIndx > -1 && cIndx != undefined) ? point.array[cIndx * 3 + 1] : 0;
-				const d = (dIndx > -1 && dIndx != undefined) ? point.array[dIndx * 3 + 1] : 0;
-				let tmp = 0;
-				if (a != 0) tmp++;
-				if (b != 0) tmp++;
-				if (c != 0) tmp++;
-				if (d != 0) tmp++;
-				point.array[indx[i][j] * 3 + 1] = (0.5 * (a + b + c + d) / tmp + e) * 0.5;
+				const a = point.array[indx[i][j] * 3 + 1];
+				const b = point.array[(indx[i][j] - 1) * 3 + 1];
+				const c = point.array[(indx[i][j] + 1) * 3 + 1];
+				const d = point.array[(indx[i][j] + cout) * 3 + 1];
+				const e = point.array[(indx[i][j] - cout) * 3 + 1];
+				point.array[indx[i][j] * 3 + 1] = (0.5 * (a + b) + 0.5 * (a + c)) * 0.5;
+				const f = point.array[indx[i][j] * 3 + 1];
+				point.array[indx[i][j] * 3 + 1] = (0.5 * (f + d) + 0.5 * (f + e)) * 0.5;
 			}
 		}
 	}
