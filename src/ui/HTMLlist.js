@@ -7,7 +7,17 @@
 */
 
 import {lang} 			from './../lang/lang.js';
-import {CLASSTULLTIP, TOOLTIPWIND}	from './../CONST.js';
+import {CLASSTULLTIP,
+	TOOLTIPWIND,
+	MAXINTENSITY,
+	MININTENSITY,
+	MAXSIZEBOARD,
+	MINSIZEBOARD,
+	MAXSIZEROAD,
+	MINSIZEROAD,
+	MAXSIZEBRUSH,
+	MINSIZEBRUSH
+}	from './../CONST.js';
 
 const data = document.cookie.match(/lang=(.+?)(;|$)/);
 const txt = lang[data ? data[1] : 'ru'];
@@ -181,7 +191,7 @@ let HTMLlist = [
 			{'tag': 'br'},
 			{'tag': 'label', 'for': DataHTML.Pressuere.Options[0], 'text': txt.TabEditTerrain[3]},
 			{'tag': 'br'},
-			{'tag': 'input', 'id': DataHTML.Pressuere.Options[0],  'style':"font-size: 12px; border: 0px; margin: 5px;width: 270px;", 'type': 'range', 'value': 5, 'max': 100, 'min': -100},
+			{'tag': 'input', 'id': DataHTML.Pressuere.Options[0],  'style':"font-size: 12px; border: 0px; margin: 5px;width: 270px;", 'type': 'range', 'value': 5, 'max': MAXINTENSITY, 'min': MININTENSITY},
 			{'tag': 'div', 'id': DataHTML.Pressuere.Values[0], 'text': 5, 'align': 'center'},
 			{'tag': 'label', 'for': DataHTML.Pressuere.Options[1], 'text': txt.TabEditTerrain[2]},
 			{'tag': 'select', id: DataHTML.Pressuere.Options[1], 'children':[
@@ -225,11 +235,11 @@ let HTMLlist = [
 			{'tag': 'br'},
 			{'tag': 'label', 'for': DataHTML.Road.Options[0], 'text': 'Size_Road'},
 			{'tag': 'br'},
-			{'tag': 'input', 'id': DataHTML.Road.Options[0],  'style':"font-size: 12px; border: 0px; margin: 5px;width: 270px;", 'type': 'range', 'value': 5, 'max': 25, 'min': 5},
+			{'tag': 'input', 'id': DataHTML.Road.Options[0],  'style':"font-size: 12px; border: 0px; margin: 5px;width: 270px;", 'type': 'range', 'value': 5, 'max': MAXSIZEROAD, 'min': MINSIZEROAD},
 			{'tag': 'div', 'id': DataHTML.Road.Values[0], 'text': 5, 'align': 'center'},
 			{'tag': 'label', 'for': DataHTML.Road.Options[1], 'text': 'Size_Board'},
 			{'tag': 'br'},
-			{'tag': 'input', 'id': DataHTML.Road.Options[1],  'style':"font-size: 12px; border: 0px; margin: 5px;width: 270px;", 'type': 'range', 'value': 8, 'max': 16, 'min': 8},
+			{'tag': 'input', 'id': DataHTML.Road.Options[1],  'style':"font-size: 12px; border: 0px; margin: 5px;width: 270px;", 'type': 'range', 'value': 8, 'max': MAXSIZEBOARD, 'min': MINSIZEBOARD},
 			{'tag': 'div', 'id': DataHTML.Road.Values[1], 'text': 8, 'align': 'center'},
 			{'tag': 'button', 'id': DataHTML.Road.Buttons[0], 'style':'text-align: center; width: 120px;', 'text': txt.TabEditRoads[2]},
 		]},
@@ -308,7 +318,7 @@ let HTMLlist = [
 	{'tag': 'div', 'style': "position: absolute;top: 36px; right: 310px;", 'children': [
 		{'tag': 'label', 'for': DataHTML.SizeBrush, 'style':"font-size: 14px; color: #eee;", 'text': txt.SizeBrush},
 		{'tag': 'label', 'id': DataHTML.ValBrush, 'for': DataHTML.SizeBrush, 'style':"font-size: 14px; color: #eee;", 'text': '10'},
-		{'tag': 'input', 'id': DataHTML.SizeBrush, 'type': 'range', 'style':"width: 200px;",'value': 10, 'max': 100, 'min': 1},
+		{'tag': 'input', 'id': DataHTML.SizeBrush, 'type': 'range', 'style':"width: 200px;",'value': 10, 'max': MAXSIZEBRUSH, 'min': MINSIZEBRUSH},
 	]},
 	{'tag': 'div', 'style': "position: absolute;top: 60px; right: 310px;", 'children': [
 		{'tag': 'label', 'for': DataHTML.Brush, 'style':"font-size: 14px; color: #eee;", 'text': txt.Brush},

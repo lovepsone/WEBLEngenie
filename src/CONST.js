@@ -29,6 +29,14 @@ export const SKYTEXTURES = {
 };
 export const SKYDATATEXTURES = Object.entries(SKYTEXTURES);
 
+export const MAXINTENSITY = 100;
+export const MININTENSITY = -100;
+export const MAXSIZEROAD = 25;
+export const MINSIZEROAD = 5;
+export const MAXSIZEBOARD = 16;
+export const MINSIZEBOARD = 8;
+export const MAXSIZEBRUSH = 100;
+export const MINSIZEBRUSH = 1;
 export const COLORBOARDROAD = 0xc9d29b;
 export const STEPSROAD = 7;
 export const MAXBOARDS = 8;
