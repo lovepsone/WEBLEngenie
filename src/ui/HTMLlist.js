@@ -56,8 +56,8 @@ const DataHTML = {
 		'Canvas': 'CanvasGenNoise',
 	},
 	'Road': {
-		'Options': [],
-		'Values': [],
+		'Options': ['SizeRoad', 'SizeBoard'],
+		'Values': ['SizeRoadVal', 'SizeBoardVal'],
 		'Buttons': ['RoadGenerate'],
 	},
 	'Texture': {
@@ -223,6 +223,14 @@ let HTMLlist = [
 		]},
 		{'tag': 'div', 'id': DataHTML.RightBar.Contents[2], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none;', 'children': [
 			{'tag': 'br'},
+			{'tag': 'label', 'for': DataHTML.Road.Options[0], 'text': 'Size_Road'},
+			{'tag': 'br'},
+			{'tag': 'input', 'id': DataHTML.Road.Options[0],  'style':"font-size: 12px; border: 0px; margin: 5px;width: 270px;", 'type': 'range', 'value': 5, 'max': 25, 'min': 5},
+			{'tag': 'div', 'id': DataHTML.Road.Values[0], 'text': 5, 'align': 'center'},
+			{'tag': 'label', 'for': DataHTML.Road.Options[1], 'text': 'Size_Board'},
+			{'tag': 'br'},
+			{'tag': 'input', 'id': DataHTML.Road.Options[1],  'style':"font-size: 12px; border: 0px; margin: 5px;width: 270px;", 'type': 'range', 'value': 8, 'max': 16, 'min': 8},
+			{'tag': 'div', 'id': DataHTML.Road.Values[1], 'text': 8, 'align': 'center'},
 			{'tag': 'button', 'id': DataHTML.Road.Buttons[0], 'style':'text-align: center; width: 120px;', 'text': txt.TabEditRoads[2]},
 		]},
 		{'tag': 'div', 'id': DataHTML.RightBar.Contents[3], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none; text-align: center;', 'children': [

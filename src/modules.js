@@ -323,6 +323,18 @@ UI.getElement(DataHTML.Biomes.Buttons[1]).addEventListener("click", function(eve
 }, false);
 
 //handlers Edit Road
+UI.getElement(DataHTML.Road.Options[0]).addEventListener("change", function(event) {
+
+	UI.getElement(DataHTML.Road.Values[0]).innerHTML = event.srcElement.value;
+	//Preparation for implementation
+}, false);
+
+UI.getElement(DataHTML.Road.Options[1]).addEventListener("change", function(event) {
+
+	UI.getElement(DataHTML.Road.Values[1]).innerHTML = event.srcElement.value;
+	//Preparation for implementation
+}, false);
+
 UI.getElement(DataHTML.Road.Buttons[0]).addEventListener("click", function(event) {
 
 	Engenie.RoadGenerate(_UIFrame.CheckedWireframe());
