@@ -60,8 +60,9 @@ const lang = {
 		],
 		'TabEditRoads': [
 			'Редактор Дороги',
-			'',
+			'Ширина дороги:',
 			'Генерировать',
+			'Ширина обочины:',
 		],
 		'TabEditTexture': [
 			'Редактор текстур',
@@ -142,8 +143,9 @@ const lang = {
 		],
 		'TabEditRoads': [
 			'Editor Roads',
-			'Pen',
+			'Road width:',
 			'Generate',
+			'Shoulder width:',
 		],
 		'TabEditTexture': [
 			'Texture editor',
