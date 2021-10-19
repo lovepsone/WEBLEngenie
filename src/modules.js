@@ -36,7 +36,7 @@ AnimationFrame();
 function ControlBrush(currentTab) {
 
 	// controls material terrain
-	if (currentTab == 1) {
+	if (currentTab == 1 || currentTab == 0) {
 
 		Engenie.getTerrain().setDefaultMaterial(UI.getElement(DataHTML.Wireframe).checked);
 		Engenie.getTerrain().getOptions().road.WireFrame(UI.getElement(DataHTML.Wireframe).checked);
