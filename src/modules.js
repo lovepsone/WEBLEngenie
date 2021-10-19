@@ -395,7 +395,7 @@ window.addEventListener("wheel", function(event) {
 	if (UI.getElement(DataHTML.Brush).checked) {
 
 		const EventWheel = new Event('change');
-		event.deltaY > 0 ? UI.getElement(DataHTML.SizeBrush).value++ : UI.getElement(DataHTML.SizeBrush).value--;
+		event.deltaY > 0 ? UI.getElement(DataHTML.SizeBrush).value-- : UI.getElement(DataHTML.SizeBrush).value++;
 		UI.getElement(DataHTML.SizeBrush).dispatchEvent(EventWheel);
 	}
 }, false);
