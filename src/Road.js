@@ -3,12 +3,12 @@
 */
 
 import * as THREE from './../libs/three.module.js';
-import {COLORBOARDROAD, STEPSROAD, STEPSBOARDS} from './CONST.js';
+import {COLORBOARDROAD, STEPSROAD, STEPSBOARDS, MINSIZEBOARD, MINSIZEROAD} from './CONST.js';
 
 let _CounterBox = 0, _boxes = [], _lines = [], _roads = [];
 let _mesh = null, _camera = null, _scene = null;
 let _mouseVector = new THREE.Vector2(), _raycaster = new THREE.Raycaster();
-
+let _SizeRoad = MINSIZEROAD, _SizeBoard = MINSIZEBOARD;
 
 let bindMouseDown, bindMouseMove;
 let _brushMesh = null;
@@ -75,6 +75,18 @@ class Road {
 	setTerrain(mesh) {
 
 		_mesh = mesh;
+	}
+
+	setSize(val, type) {
+
+		switch(type) {
+			case 0:
+				_SizeRoad = val;
+				break;
+			case 1:
+				_SizeBoard = val;
+				break;
+		}
 	}
 
 	onDocumentMouseDown(event) {
@@ -218,11 +230,11 @@ class Road {
 
 		let shape = new THREE.Shape();
 		shape.moveTo(0, 0);
-		shape.lineTo(0, 5);
-		shape.moveTo(0, 5);
-		shape.lineTo(0.5, 5);
-		shape.moveTo(0.5, 5);
-		shape.lineTo(0.5, 0);
+		shape.lineTo(0, _SizeRoad);
+		shape.moveTo(0, _SizeRoad);
+		shape.lineTo(0, _SizeRoad);
+		shape.moveTo(0, _SizeRoad);
+		shape.lineTo(0, 0);
 
 		let extrudeSettings = {steps: STEPSROAD * points.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false), UVGenerator: WorldUVGenerator};
 		let extrudeGeometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
@@ -238,7 +250,7 @@ class Road {
 		_lines.length = 0;
 		_CounterBox = 0;
 
-		return {'points': _mesh.geometry.getAttribute('position'), 'ExtrudePoints': points};
+		return {'points': _mesh.geometry.getAttribute('position'), 'ExtrudePoints': points, 'Size':[_SizeRoad, _SizeBoard]};
 	}
 
 	WireFrame(value = true) {

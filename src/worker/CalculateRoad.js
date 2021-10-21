@@ -12,21 +12,13 @@ class CalculateRoad {
     constructor(size = 5) {
 
         this.ShapeTop = new THREE.Shape();
-        this.ShapeTop.moveTo(0, 0);
-        this.ShapeTop.lineTo(0, size);
-
-        this.ShapeLeft = new THREE.Shape();
-		this.ShapeLeft.moveTo(0, 0);
-        this.ShapeLeft.lineTo(20, 0);
-
-        this.ShapeRight = new THREE.Shape();
-        this.ShapeRight.moveTo(0, size);
-		this.ShapeRight.lineTo(20, size);
-
         this.ExtrudePoints = [];
     }
 
-    BuildTop(points, positions) {
+    BuildTop(points, positions, sizes = []) {
+
+        this.ShapeTop.moveTo(0, 0);
+        this.ShapeTop.lineTo(0, sizes[0]);
 
         for (let i = 0; i < positions.length; i++) {
 
@@ -63,7 +55,7 @@ class CalculateRoad {
             }
         }
 
-        for (let i = 0; i < MAXBOARDS; i++) this.addBoard(_PostData, size, i);
+        for (let i = 0; i < sizes[1]; i++) this.addBoard(_PostData, size, i);
 
         return _PostData;
     }

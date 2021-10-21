@@ -98,7 +98,7 @@ class MainEngenie {
 	RoadGenerate(wireframe) {
 
 		const buf = _terrain.getOptions().road.Generate(wireframe);
-		_worker.postMessage({'cmd': 'RoadGenerate', 'points': buf.points, 'ExtrudePoints': buf.ExtrudePoints, 'Wireframe': wireframe});
+		_worker.postMessage({'cmd': 'RoadGenerate', 'points': buf.points, 'ExtrudePoints': buf.ExtrudePoints, 'Wireframe': wireframe, 'Size': buf.Size});
 	}
 
 	HeightMapNoisePerlin() {
