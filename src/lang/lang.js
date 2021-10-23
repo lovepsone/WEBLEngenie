@@ -63,6 +63,7 @@ const lang = {
 			'Ширина дороги:',
 			'Генерировать',
 			'Ширина обочины:',
+			'Тип биома обочины: ',
 		],
 		'TabEditTexture': [
 			'Редактор текстур',
@@ -146,6 +147,7 @@ const lang = {
 			'Road width:',
 			'Generate',
 			'Shoulder width:',
+			'Type of curb biome: ',
 		],
 		'TabEditTexture': [
 			'Texture editor',

@@ -66,8 +66,8 @@ const DataHTML = {
 		'Canvas': 'CanvasGenNoise',
 	},
 	'Road': {
-		'Options': ['SizeRoad', 'SizeBoard'],
-		'Values': ['SizeRoadVal', 'SizeBoardVal'],
+		'Options': ['SizeRoad', 'SizeBoard', 'ColorBoard'],
+		'Values': ['SizeRoadVal', 'SizeBoardVal', 'vColorBoard'],
 		'Buttons': ['RoadGenerate'],
 	},
 	'Texture': {
@@ -198,7 +198,7 @@ let HTMLlist = [
 				{'tag':'option', 'value': 0, 'text': 'clay'},
 				{'tag':'option', 'value': 1, 'text': 'normal'},
 				{'tag':'option', 'value': 2, 'text': 'flatten'},
-			]}
+			]},
 		]},
 		{'tag': 'div', 'id': DataHTML.RightBar.Contents[1], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none; text-align: center;', 'children': [
 			{'tag': 'br'},
@@ -241,6 +241,25 @@ let HTMLlist = [
 			{'tag': 'br'},
 			{'tag': 'input', 'id': DataHTML.Road.Options[1],  'style':"font-size: 12px; border: 0px; margin: 5px;width: 270px;", 'type': 'range', 'value': 8, 'max': MAXSIZEBOARD, 'min': MINSIZEBOARD},
 			{'tag': 'div', 'id': DataHTML.Road.Values[1], 'text': 8, 'align': 'center'},
+			{'tag': 'label', 'for': DataHTML.Road.Options[2], 'text': txt.TabEditRoads[4]},
+			{'tag': 'select', 'id': DataHTML.Road.Options[2], 'style': 'background: #c9d29b;', 'children':[
+				{'tag':'option', 'value': '44447a', 'style':'text-align: center; width: 220px; background: #679459;', 'text': txt.TabEditBiomes[5]},
+				{'tag':'option', 'value': 'a09077', 'style':'text-align: center; width: 220px; background: #a09077;', 'text': txt.TabEditBiomes[6]},
+				{'tag':'option', 'value': '555555', 'style':'text-align: center; width: 220px; background: #555555;', 'text': txt.TabEditBiomes[7]},
+				{'tag':'option', 'value': '888888', 'style':'text-align: center; width: 220px; background: #888888;', 'text': txt.TabEditBiomes[8]},
+				{'tag':'option', 'value': 'bbbbaa', 'style':'text-align: center; width: 220px; background: #bbbbaa;', 'text': txt.TabEditBiomes[9]},
+				{'tag':'option', 'value': 'dddde4', 'style':'text-align: center; width: 220px; background: #dddde4;', 'text': txt.TabEditBiomes[10]},
+				{'tag':'option', 'value': 'c9d29b', 'selected': 'selected', 'style':'text-align: center; width: 220px; background: #c9d29b;', 'text': txt.TabEditBiomes[11]},
+				{'tag':'option', 'value': '99aa77', 'style':'text-align: center; width: 220px; background: #99aa77;', 'text': txt.TabEditBiomes[12]},
+				{'tag':'option', 'value': '88aa55', 'style':'text-align: center; width: 220px; background: #88aa55;', 'text': txt.TabEditBiomes[13]},
+				{'tag':'option', 'value': '679459', 'style':'text-align: center; width: 220px; background: #679459;', 'text': txt.TabEditBiomes[14]},
+				{'tag':'option', 'value': '448855', 'style':'text-align: center; width: 220px; background: #448855;', 'text': txt.TabEditBiomes[15]},
+				{'tag':'option', 'value': 'd2b98b', 'style':'text-align: center; width: 220px; background: #d2b98b;', 'text': txt.TabEditBiomes[16]},
+				{'tag':'option', 'value': '559944', 'style':'text-align: center; width: 220px; background: #559944;', 'text': txt.TabEditBiomes[17]},
+				{'tag':'option', 'value': '337755', 'style':'text-align: center; width: 220px; background: #337755;', 'text': txt.TabEditBiomes[18]},
+			]},
+			{'tag': 'br'},
+			{'tag': 'br'},
 			{'tag': 'button', 'id': DataHTML.Road.Buttons[0], 'style':'text-align: center; width: 120px;', 'text': txt.TabEditRoads[2]},
 		]},
 		{'tag': 'div', 'id': DataHTML.RightBar.Contents[3], 'style': 'display: none;padding: 6px 12px;border: 1px solid #888;border-top: none; text-align: center;', 'children': [

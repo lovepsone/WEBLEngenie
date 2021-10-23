@@ -335,6 +335,12 @@ UI.getElement(DataHTML.Road.Options[1]).addEventListener("change", function(even
 	Engenie.getTerrain().getOptions().road.setSize(Number(event.srcElement.value), 1);
 }, false);
 
+UI.getElement(DataHTML.Road.Options[2]).addEventListener("change", function(event) {
+
+	UI.getElement(DataHTML.Road.Options[2]).style.background = '#' + event.srcElement.value;
+	Engenie.getTerrain().getOptions().road.setColorBroad(event.srcElement.value);
+}, false);
+
 UI.getElement(DataHTML.Road.Buttons[0]).addEventListener("click", function(event) {
 
 	Engenie.RoadGenerate(_UIFrame.CheckedWireframe());

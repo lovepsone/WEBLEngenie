@@ -9,7 +9,7 @@ let _CounterBox = 0, _boxes = [], _lines = [], _roads = [];
 let _mesh = null, _camera = null, _scene = null;
 let _mouseVector = new THREE.Vector2(), _raycaster = new THREE.Raycaster();
 let _SizeRoad = MINSIZEROAD, _SizeBoard = MINSIZEBOARD;
-
+const _colorBoard = new THREE.Color(COLORBOARDROAD);
 let bindMouseDown, bindMouseMove;
 let _brushMesh = null;
 
@@ -89,6 +89,27 @@ class Road {
 		}
 	}
 
+	setColorBroad(string) {
+
+        switch(string) {
+
+            case '44447a': _colorBoard.set(0x44447a); break;
+            case 'a09077': _colorBoard.set(0xa09077); break;
+            case '555555': _colorBoard.set(0x555555); break;
+            case '888888': _colorBoard.set(0x888888); break;
+            case 'bbbbaa': _colorBoard.set(0xbbbbaa); break;
+            case 'dddde4': _colorBoard.set(0xdddde4); break;
+            case 'c9d29b': _colorBoard.set(0xc9d29b); break;
+            case '99aa77': _colorBoard.set(0x99aa77); break;
+            case '88aa55': _colorBoard.set(0x99aa77); break;
+            case '679459': _colorBoard.set(0x679459); break;
+            case '448855': _colorBoard.set(0x448855); break;
+            case 'd2b98b': _colorBoard.set(0xd2b98b); break;
+            case '559944': _colorBoard.set(0x559944); break;
+            case '337755': _colorBoard.set(0x337755); break;
+        }
+	}
+
 	onDocumentMouseDown(event) {
 
         event.preventDefault();
@@ -161,7 +182,6 @@ class Road {
 	Draw(dataRoad) {
 
 		const buff = dataRoad;
-		const colorBoard = new THREE.Color(COLORBOARDROAD);
 		const MaxBoards = buff.boards.length;
 		const nonIndexHeightCount = buff.boards[MaxBoards - 1].length + buff.boards[MaxBoards - 2].length + buff.boards[MaxBoards - 3].length + buff.boards[MaxBoards - 4].length;
 		let position = _mesh.geometry.getAttribute('position');
@@ -172,9 +192,9 @@ class Road {
 
 			if (i < buff.vertex.length - nonIndexHeightCount) position.array[buff.index[i] * 3 + 1] = buff.vertex[i].y;
 
-			color.array[buff.index[i] * 3] = colorBoard.r;
-			color.array[buff.index[i] * 3 + 1] = colorBoard.g;
-			color.array[buff.index[i] * 3 + 2] = colorBoard.b;
+			color.array[buff.index[i] * 3] = _colorBoard.r;
+			color.array[buff.index[i] * 3 + 1] = _colorBoard.g;
+			color.array[buff.index[i] * 3 + 2] = _colorBoard.b;
 		}
 
 		const unique =[
@@ -246,6 +266,7 @@ class Road {
 		_scene.add(_roads[_roads.length - 1]);
 		_roads[_roads.length - 1].position.y += 0.05;
 
+		_boxes = [];
 		_boxes.length = 0;
 		_lines.length = 0;
 		_CounterBox = 0;
