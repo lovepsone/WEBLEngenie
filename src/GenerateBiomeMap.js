@@ -177,7 +177,7 @@ class GenerateBiomeMap {
                     colorAttr.setXYZ(index, _ColorPen.r, _ColorPen.g, _ColorPen.b);
                     const x = index % _width;
                     const y = Math.floor(index/_width);
-                    _ctx.fillStyle = '#' + _ColorPen.getHexString();
+                    _ctx.fillStyle = `#${_ColorPen.getHexString()}`; 
                     _ctx.fillRect(x, y, 1, 1);
                 });
 				colorAttr.needsUpdate = true;
@@ -300,7 +300,7 @@ class GenerateBiomeMap {
     
             _matrix[y][x] = color.getHexString();
             this.GenerateMap(_matrix[y][x], x, y);
-            _ctx.fillStyle = '#' + _matrix[y][x];
+            _ctx.fillStyle = `#${ _matrix[y][x]}`;
             _ctx.fillRect(x, y, 1, 1);
             x++;
         }

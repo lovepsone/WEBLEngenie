@@ -337,7 +337,7 @@ UI.getElement(DataHTML.Road.Options[1]).addEventListener("change", function(even
 
 UI.getElement(DataHTML.Road.Options[2]).addEventListener("change", function(event) {
 
-	UI.getElement(DataHTML.Road.Options[2]).style.background = '#' + event.srcElement.value;
+	UI.getElement(DataHTML.Road.Options[2]).style.background = `#${event.srcElement.value}`;
 	Engenie.getTerrain().getOptions().road.setColorBroad(event.srcElement.value);
 }, false);
 
