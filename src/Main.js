@@ -128,7 +128,6 @@ class MainEngenie {
 				_terrain.UpdateDataColors();
 				_terrain.getOptions().texture.ChangeBiomes();
 				_terrain.getOptions().texture.setBiomeMap(_terrain.getOptions().biomeMap.getMapColors());
-				_terrain.getOptions().texture.GenerateMaterial(event.data.wireframe);
 				break;
 
 			case 'HeightMapPerlinGenerate':
