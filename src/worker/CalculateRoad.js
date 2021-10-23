@@ -119,6 +119,7 @@ class CalculateRoad {
 
     clearData() {
 
+        this.ExtrudePoints = [];
         _PostData = {vertex: [], index: [], boards: []};
     }
 }

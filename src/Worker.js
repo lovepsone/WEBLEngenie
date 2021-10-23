@@ -26,9 +26,9 @@ self.onmessage = function(event) {
             break;
 
         case 'RoadGenerate':
+            _CalculateRoad.clearData();
             tmp = _CalculateRoad.BuildTop(event.data.points, event.data.ExtrudePoints, event.data.Size);
             self.postMessage({'cmd':'RoadComplete', 'dataRoad': tmp, 'wireframe': event.data.Wireframe});
-            _CalculateRoad.clearData();
             tmp = null;
             break;
 
