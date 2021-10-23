@@ -54,7 +54,7 @@ class LoaderHTML5 {
 		if (this.getAttr(elems['name']))		element.setAttribute('name', elems['name']);
 		if (this.getAttr(elems['action']))		element.setAttribute('action', elems['action']);
 		// input
-		//checked
+		if (this.getAttr(elems['selected']))		element.setAttribute('selected', elems['selected']);
 		if (this.getAttr(elems['checked']))		element.setAttribute('checked', elems['checked']);
 		//disabled 
 		//form
