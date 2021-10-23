@@ -344,6 +344,9 @@ UI.getElement(DataHTML.Road.Options[2]).addEventListener("change", function(even
 UI.getElement(DataHTML.Road.Buttons[0]).addEventListener("click", function(event) {
 
 	Engenie.RoadGenerate(_UIFrame.CheckedWireframe());
+	const el = UI.getElement(DataHTML.Road.Options[3]);
+	const buff = Engenie.getTerrain().getOptions().road.getDataRoads();
+	el.options[el.options.length] = new Option(`Road (${buff.length - 1})`, buff.length - 1);
 }, false);
 
 //handlers Edit Biomes

@@ -5,6 +5,15 @@
 import * as THREE from './../libs/three.module.js';
 import {COLORBOARDROAD, STEPSROAD, STEPSBOARDS, MINSIZEBOARD, MINSIZEROAD} from './CONST.js';
 
+let DataRoad = {
+	Size: [], // 0 - BRUSH, 1 - BOARD
+	Color: '',
+	PointsExtrude: [],
+	Mesh: {},
+	StartPoint: [], // требует реализации
+};
+let Buffer = [];
+
 let _CounterBox = 0, _boxes = [], _lines = [], _roads = [];
 let _mesh = null, _camera = null, _scene = null;
 let _mouseVector = new THREE.Vector2(), _raycaster = new THREE.Raycaster();
@@ -110,6 +119,11 @@ class Road {
         }
 	}
 
+	getDataRoads() {
+
+		return Buffer;
+	}
+
 	onDocumentMouseDown(event) {
 
         event.preventDefault();
@@ -184,8 +198,8 @@ class Road {
 		const buff = dataRoad;
 		const MaxBoards = buff.boards.length;
 		const nonIndexHeightCount = buff.boards[MaxBoards - 1].length + buff.boards[MaxBoards - 2].length + buff.boards[MaxBoards - 3].length + buff.boards[MaxBoards - 4].length;
-		let position = _mesh.geometry.getAttribute('position');
-		let color = _mesh.geometry.getAttribute('color');
+		const position = _mesh.geometry.getAttribute('position');
+		const color = _mesh.geometry.getAttribute('color');
 		const size = Math.sqrt(position.count);
 
 		for (let i = 0; i < buff.vertex.length; i++) {
@@ -237,6 +251,7 @@ class Road {
 	
 		for (let i = 0; i < _boxes.length; i++) {
 
+			DataRoad.PointsExtrude.push(new THREE.Vector3().copy(_boxes[i].position));
 			points.push(new THREE.Vector3().copy(_boxes[i].position));
 			_scene.remove(_boxes[i]);
 			if (i < _lines.length) _scene.remove(_lines[i]);
@@ -255,6 +270,9 @@ class Road {
 		shape.lineTo(0, _SizeRoad);
 		shape.moveTo(0, _SizeRoad);
 		shape.lineTo(0, 0);
+		DataRoad.Size[0] = _SizeRoad;
+		DataRoad.Size[1] = _SizeBoard;
+		DataRoad.Color = _colorBoard.getHexString();
 
 		let extrudeSettings = {steps: STEPSROAD * points.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false), UVGenerator: WorldUVGenerator};
 		let extrudeGeometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
@@ -264,7 +282,9 @@ class Road {
 
 		_roads.push(new THREE.Mesh(extrudeGeometry, new THREE.MeshPhongMaterial({map: texture, wireframe: wireframe})));
 		_scene.add(_roads[_roads.length - 1]);
+		DataRoad.Mesh = _roads[_roads.length - 1];
 		_roads[_roads.length - 1].position.y += 0.05;
+		Buffer.push(DataRoad);
 
 		_boxes = [];
 		_boxes.length = 0;
