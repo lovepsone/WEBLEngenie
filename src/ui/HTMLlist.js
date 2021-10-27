@@ -338,20 +338,20 @@ let HTMLlist = [
 			]},
 		]},
 	]},
-	{'tag': 'div', 'style': "position: absolute;top: 36px; right: 310px;", 'children': [
+	{'tag': 'div', 'id': 'opt1bar','style': "position: absolute;top: 36px; right: 310px;", 'children': [
 		{'tag': 'label', 'for': DataHTML.SizeBrush, 'style':"font-size: 14px; color: #eee;", 'text': txt.SizeBrush},
 		{'tag': 'label', 'id': DataHTML.ValBrush, 'for': DataHTML.SizeBrush, 'style':"font-size: 14px; color: #eee;", 'text': '10'},
 		{'tag': 'input', 'id': DataHTML.SizeBrush, 'type': 'range', 'style':"width: 200px;",'value': 10, 'max': MAXSIZEBRUSH, 'min': MINSIZEBRUSH},
 	]},
-	{'tag': 'div', 'style': "position: absolute;top: 60px; right: 310px;", 'children': [
+	{'tag': 'div', 'id': 'opt2bar', 'style': "position: absolute;top: 60px; right: 310px;", 'children': [
 		{'tag': 'label', 'for': DataHTML.Brush, 'style':"font-size: 14px; color: #eee;", 'text': txt.Brush},
 		{'tag': 'input', 'id': DataHTML.Brush, 'type': 'checkbox'},
 	]},
-	{'tag': 'div', 'style': "position: absolute;top: 84px; right: 310px;", 'children': [
+	{'tag': 'div', 'id': 'opt3bar', 'style': "position: absolute;top: 84px; right: 310px;", 'children': [
 		{'tag': 'label', 'for': DataHTML.Camera, 'style':"font-size: 14px; color: #eee;", 'text': txt.Camera},
 		{'tag': 'input', 'id': DataHTML.Camera, 'type': 'checkbox'},
 	]},
-	{'tag': 'div', 'style': "position: absolute;top: 108px; right: 310px;", 'children': [
+	{'tag': 'div', 'id': 'opt4bar', 'style': "position: absolute;top: 108px; right: 310px;", 'children': [
 		{'tag': 'label', 'for': DataHTML.Wireframe, 'style':"font-size: 14px; color: #eee;", 'text': 'WireFrame'},
 		{'tag': 'input', 'id': DataHTML.Wireframe, 'type': 'checkbox'},
 	]},

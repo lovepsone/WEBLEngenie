@@ -32,6 +32,70 @@ let AnimationFrame = function(frame) {
 
 AnimationFrame();
 
+// key event
+window.addEventListener("wheel", function(event) {
+
+	if (UI.getElement(DataHTML.Brush).checked) {
+
+		const EventWheel = new Event('change');
+		event.deltaY > 0 ? UI.getElement(DataHTML.SizeBrush).value-- : UI.getElement(DataHTML.SizeBrush).value++;
+		UI.getElement(DataHTML.SizeBrush).dispatchEvent(EventWheel);
+	}
+}, false);
+
+const bindKeyDown = function(event) {
+
+	switch(event.keyCode) {
+
+		case 87:
+			const Event87 = new Event('change');
+			UI.getElement(DataHTML.Wireframe).checked = !UI.getElement(DataHTML.Wireframe).checked;
+			UI.getElement(DataHTML.Wireframe).dispatchEvent(Event87);
+			break;
+
+		case 69:
+			const Event69 = new Event('change');
+			if (UI.getElement(DataHTML.Camera).checked) Engenie.getControlsCamera().dispose(); else Engenie.getControlsCamera().UpdateEvents();
+			UI.getElement(DataHTML.Camera).checked = !UI.getElement(DataHTML.Camera).checked;
+			UI.getElement(DataHTML.Brush).checked = !UI.getElement(DataHTML.Brush).checked;
+			ControlBrush(_UIFrame.getCurrentTab());
+			UI.getElement(DataHTML.Wireframe).dispatchEvent(Event69);
+			break;
+
+		case 81:
+			if(_UIFrame.getCurrentTab()) break;
+			const Event81 = new Event('change');
+
+			if (event.altKey) {
+
+				if (UI.getElement(DataHTML.Pressuere.Options[1]).value > 1) break;
+				UI.getElement(DataHTML.Pressuere.Options[1]).value++;
+				UI.getElement(DataHTML.Pressuere.Options[1]).dispatchEvent(Event81);
+			} else {
+
+				UI.getElement(DataHTML.Pressuere.Options[0]).value++;
+				UI.getElement(DataHTML.Pressuere.Options[0]).dispatchEvent(Event81);
+			}
+			break;
+
+		case 65:
+			if(_UIFrame.getCurrentTab()) break;
+			const Event65 = new Event('change');
+
+			if (event.altKey) {
+
+				if (UI.getElement(DataHTML.Pressuere.Options[1]).value < 1) break;
+				UI.getElement(DataHTML.Pressuere.Options[1]).value--;
+				UI.getElement(DataHTML.Pressuere.Options[1]).dispatchEvent(Event65);
+			} else {
+				UI.getElement(DataHTML.Pressuere.Options[0]).value--;
+				UI.getElement(DataHTML.Pressuere.Options[0]).dispatchEvent(Event65);
+			}
+			break;
+	}
+};
+
+document.addEventListener("keydown", bindKeyDown, false);
 
 function ControlBrush(currentTab) {
 
@@ -134,8 +198,20 @@ UI.getElement(DataHTML.MenuBar.CreateTerrain).addEventListener("click", function
 // play simulatuon
 UI.getElement(DataHTML.MenuBar.PlaySimulation).addEventListener("click", function() {
 
-	Engenie.getTerrain().getMesh().geometry.computeVertexNormals();
+	document.removeEventListener("keydown", bindKeyDown, false);
+
+	UI.getElement("menubar").style.visibility = "hidden";
+	UI.getElement("sidebar").style.visibility = "hidden";
+	UI.getElement("opt1bar").style.visibility = "hidden";
+	UI.getElement("opt2bar").style.visibility = "hidden";
+	UI.getElement("opt3bar").style.visibility = "hidden";
+	UI.getElement("opt4bar").style.visibility = "hidden";
+
 	Engenie.getControlsCamera().dispose();
+	Engenie.getTerrain().getOptions().pressure.DisposeEvents();
+	Engenie.getTerrain().getOptions().biomeMap.DisposeEvents();
+	Engenie.getTerrain().getOptions().road.DisposeEvents();
+
 	Engenie.startCharacterControl();
 	Engenie.getPointerLockControls().start();
 	UI.getElement(DataHTML.Camera).checked = false;
@@ -146,8 +222,17 @@ UI.getElement(DataHTML.MenuBar.PlaySimulation).addEventListener("click", functio
 // exit simulation
 UI.getElement("Window").addEventListener("ExitPointerLock", function() {
 
+	document.addEventListener("keydown", bindKeyDown, false);
+	UI.getElement("menubar").style.visibility = "visible";
+	UI.getElement("sidebar").style.visibility = "visible";
+	UI.getElement("opt1bar").style.visibility = "visible";
+	UI.getElement("opt2bar").style.visibility = "visible";
+	UI.getElement("opt3bar").style.visibility = "visible";
+	UI.getElement("opt4bar").style.visibility = "visible";
+
 	Engenie.getPointerLockControls().dispose();
 	UI.getElement(DataHTML.Camera).checked = true;
+	UI.getElement(DataHTML.Brush).checked = false;
 }, false);
 
 UI.getElement(DataHTML.MenuBar.SaveTerrain).addEventListener("click", function() {
@@ -409,66 +494,3 @@ for (let i = 0; i < DataHTML.Texture.Options.length; i++) {
 
 // start ToolTips
 UI.ToolTip.Int();
-
-// key event
-window.addEventListener("wheel", function(event) {
-
-	if (UI.getElement(DataHTML.Brush).checked) {
-
-		const EventWheel = new Event('change');
-		event.deltaY > 0 ? UI.getElement(DataHTML.SizeBrush).value-- : UI.getElement(DataHTML.SizeBrush).value++;
-		UI.getElement(DataHTML.SizeBrush).dispatchEvent(EventWheel);
-	}
-}, false);
-
-window.addEventListener("keydown", function(event) {
-
-	switch(event.keyCode) {
-
-		case 87:
-			const Event87 = new Event('change');
-			UI.getElement(DataHTML.Wireframe).checked = !UI.getElement(DataHTML.Wireframe).checked;
-			UI.getElement(DataHTML.Wireframe).dispatchEvent(Event87);
-			break;
-
-		case 69:
-			const Event69 = new Event('change');
-			if (UI.getElement(DataHTML.Camera).checked) Engenie.getControlsCamera().dispose(); else Engenie.getControlsCamera().UpdateEvents();
-			UI.getElement(DataHTML.Camera).checked = !UI.getElement(DataHTML.Camera).checked;
-			UI.getElement(DataHTML.Brush).checked = !UI.getElement(DataHTML.Brush).checked;
-			ControlBrush(_UIFrame.getCurrentTab());
-			UI.getElement(DataHTML.Wireframe).dispatchEvent(Event69);
-			break;
-
-		case 81:
-			if(_UIFrame.getCurrentTab()) break;
-			const Event81 = new Event('change');
-
-			if (event.altKey) {
-
-				if (UI.getElement(DataHTML.Pressuere.Options[1]).value > 1) break;
-				UI.getElement(DataHTML.Pressuere.Options[1]).value++;
-				UI.getElement(DataHTML.Pressuere.Options[1]).dispatchEvent(Event81);
-			} else {
-
-				UI.getElement(DataHTML.Pressuere.Options[0]).value++;
-				UI.getElement(DataHTML.Pressuere.Options[0]).dispatchEvent(Event81);
-			}
-			break;
-
-		case 65:
-			if(_UIFrame.getCurrentTab()) break;
-			const Event65 = new Event('change');
-
-			if (event.altKey) {
-
-				if (UI.getElement(DataHTML.Pressuere.Options[1]).value < 1) break;
-				UI.getElement(DataHTML.Pressuere.Options[1]).value--;
-				UI.getElement(DataHTML.Pressuere.Options[1]).dispatchEvent(Event65);
-			} else {
-				UI.getElement(DataHTML.Pressuere.Options[0]).value--;
-				UI.getElement(DataHTML.Pressuere.Options[0]).dispatchEvent(Event65);
-			}
-			break;
-	}
-}, false);
