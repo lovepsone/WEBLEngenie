@@ -14,7 +14,7 @@ let DataRoad = {
 };
 let Buffer = [];
 
-let _CounterBox = 0, _boxes = [], _lines = [], _roads = [];
+let _CounterBox = 0, _boxes = [], _lines = [];
 let _mesh = null, _camera = null, _scene = null;
 let _mouseVector = new THREE.Vector2(), _raycaster = new THREE.Raycaster();
 let _SizeRoad = MINSIZEROAD, _SizeBoard = MINSIZEBOARD;
@@ -122,6 +122,24 @@ class Road {
 	getDataRoads() {
 
 		return Buffer;
+	}
+
+	Select(id) {
+
+		if (id < Buffer.length) {
+
+			Buffer[id].Mesh.material.vertexColors = true;
+			Buffer[id].Mesh.material.needsUpdate = true;
+		}
+	}
+
+	UnSelect() {
+
+		for (let i = 0; i < Buffer.length; i++) {
+
+			Buffer[i].Mesh.material.vertexColors = false;
+			Buffer[i].Mesh.material.needsUpdate = true;
+		}
 	}
 
 	onDocumentMouseDown(event) {
@@ -266,10 +284,12 @@ class Road {
 		let shape = new THREE.Shape();
 		shape.moveTo(0, 0);
 		shape.lineTo(0, _SizeRoad);
-		shape.moveTo(0, _SizeRoad);
-		shape.lineTo(0, _SizeRoad);
-		shape.moveTo(0, _SizeRoad);
+		//shape.moveTo(0, _SizeRoad);
+		shape.lineTo(0.1, _SizeRoad);
+		//shape.moveTo(0.1, _SizeRoad);
+		shape.lineTo(0.1, 0);
 		shape.lineTo(0, 0);
+
 		DataRoad.Size[0] = _SizeRoad;
 		DataRoad.Size[1] = _SizeBoard;
 		DataRoad.Color = _colorBoard.getHexString();
@@ -280,12 +300,12 @@ class Road {
 		let texture = new THREE.TextureLoader().load("texture/roads/asphalt3.jpg");
 		texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 
-		_roads.push(new THREE.Mesh(extrudeGeometry, new THREE.MeshPhongMaterial({map: texture, wireframe: wireframe})));
-		_scene.add(_roads[_roads.length - 1]);
-		DataRoad.Mesh = _roads[_roads.length - 1];
-		_roads[_roads.length - 1].position.y += 0.05;
+		DataRoad.Mesh = new THREE.Mesh(extrudeGeometry, new THREE.MeshPhongMaterial({map: texture, wireframe: wireframe}));
 		Buffer.push(DataRoad);
+		Buffer[Buffer.length - 1].Mesh.position.y += 0.07;
+		_scene.add(Buffer[Buffer.length - 1].Mesh);
 
+		DataRoad = {Size: [], Color: '', PointsExtrude: [], Mesh: {}, StartPoint: [] };
 		_boxes = [];
 		_boxes.length = 0;
 		_lines.length = 0;
@@ -296,25 +316,25 @@ class Road {
 
 	WireFrame(value = true) {
 
-		if (_roads.length > 0) {
+		if (Buffer.length > 0) {
 
-			for (let i = 0; i < _roads.length; i++) {
+			for (let i = 0; i < Buffer.length; i++) {
 
-				_roads[i].material.wireframe = value;
+				Buffer[i].Mesh.material.wireframe = value;
 			}
 		}
 	}
 
 	Remove() {
 
-		if (_roads.length > 0) {
+		if (Buffer.length > 0) {
 
-			for (let i = 0; i < _roads.length; i++) {
+			for (let i = 0; i < Buffer.length; i++) {
 
-				_scene.remove(_roads[i]);
+				_scene.remove(Buffer[i].Mesh);
 			}
 
-			_roads = [];
+			Buffer = [];
 		}
 	}
 }
