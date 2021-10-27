@@ -1,7 +1,7 @@
 import {
 	BufferGeometry,
 	BufferAttribute,
-} from './../../three.module.js';
+} from 'three';
 import { MeshBVH } from '../core/MeshBVH.js';
 
 global.onmessage = function ( { data } ) {
