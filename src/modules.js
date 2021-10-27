@@ -434,6 +434,11 @@ UI.getElement(DataHTML.Road.Buttons[0]).addEventListener("click", function(event
 	el.options[el.options.length] = new Option(`Road (${buff.length - 1})`, buff.length - 1);
 }, false);
 
+UI.getElement(DataHTML.Road.Options[3]).addEventListener("click", function(event) {
+
+	Engenie.getTerrain().getOptions().road.UnSelect();
+	if (event.target.value != '') Engenie.getTerrain().getOptions().road.Select(Number(event.target.value));
+}, false);
 //handlers Edit Biomes
 for (let i = 2; i < 16; i++) {
 
