@@ -23,7 +23,7 @@ Direct port of the Bullet physics engine to JavaScript using Emscripten.
 
 - Adjustable skybox
 - Adjustable lighting
-- Add options for road editor
+- Add options for road editor - implementation in next commits: 316, 318-320, 323, 325-331, 334-335
 - Add physics options
 - Add vegetation generator
 - Optimization and optimization again
