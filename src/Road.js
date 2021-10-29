@@ -10,7 +10,7 @@ let DataRoad = {
 	Color: '',
 	PointsExtrude: [],
 	Mesh: {},
-	StartPoint: [], // требует реализации
+	StartPoint: {index: [], y : []},
 };
 let Buffer = [];
 
@@ -222,6 +222,9 @@ class Road {
 
 		for (let i = 0; i < buff.vertex.length; i++) {
 
+			Buffer[Buffer.length - 1].StartPoint.index.push(buff.index[i]);
+			Buffer[Buffer.length - 1].StartPoint.y.push(position.array[buff.index[i] * 3 + 1]);
+
 			if (i < buff.vertex.length - nonIndexHeightCount) position.array[buff.index[i] * 3 + 1] = buff.vertex[i].y;
 
 			color.array[buff.index[i] * 3] = _colorBoard.r;
@@ -305,7 +308,7 @@ class Road {
 		Buffer[Buffer.length - 1].Mesh.position.y += 0.07;
 		_scene.add(Buffer[Buffer.length - 1].Mesh);
 
-		DataRoad = {Size: [], Color: '', PointsExtrude: [], Mesh: {}, StartPoint: [] };
+		DataRoad = {Size: [], Color: '', PointsExtrude: [], Mesh: {}, StartPoint: {index: [], y: []}};
 		_boxes = [];
 		_boxes.length = 0;
 		_lines.length = 0;
