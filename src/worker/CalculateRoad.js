@@ -17,13 +17,8 @@ class CalculateRoad {
 
     BuildTop(points, positions, sizes = []) {
 
-        //this.ShapeTop.moveTo(0, 0);
-        //this.ShapeTop.lineTo(0, sizes[0]);
-		this.ShapeTop.moveTo(0, 0);
-		this.ShapeTop.lineTo(0, _SizeRoad);
-		this.ShapeTop.lineTo(0.1, _SizeRoad);
-		this.ShapeTop.lineTo(0.1, 0);
-		this.ShapeTop.lineTo(0, 0);
+        this.ShapeTop.moveTo(0, 0);
+        this.ShapeTop.lineTo(0, sizes[0]);
 
         for (let i = 0; i < positions.length; i++) {
 
