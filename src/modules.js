@@ -439,6 +439,21 @@ UI.getElement(DataHTML.Road.Options[3]).addEventListener("click", function(event
 	Engenie.getTerrain().getOptions().road.UnSelect();
 	if (event.target.value != '') Engenie.getTerrain().getOptions().road.Select(Number(event.target.value));
 }, false);
+
+UI.getElement(DataHTML.Road.Buttons[1]).addEventListener("click", function(event) {
+
+	if (UI.getElement(DataHTML.Road.Options[3]).selectedIndex != -1) console.log('Update Road in developing');
+}, false);
+
+UI.getElement(DataHTML.Road.Buttons[2]).addEventListener("click", function(event) {
+
+	if (UI.getElement(DataHTML.Road.Options[3]).selectedIndex != -1) {
+
+		const id = UI.getElement(DataHTML.Road.Options[3]).options[UI.getElement(DataHTML.Road.Options[3]).selectedIndex].value;
+		console.log('Update Road in developing');
+	}
+}, false);
+
 //handlers Edit Biomes
 for (let i = 2; i < 16; i++) {
 
