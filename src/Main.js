@@ -162,6 +162,8 @@ class MainEngenie {
 		* total = 3 + points + color
 		*/
 
+		if (_terrain.getMesh() == 0) return;
+
 		const ver = 1; // 1 byte (Uint8)
 		const size = _terrain.getSize(); // 2 byte (Uint16)
 		const points = _terrain.getMesh().geometry.getAttribute('position');

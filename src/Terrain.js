@@ -282,7 +282,7 @@ class Terrain {
 			return _mesh;
 		}
 
-		alert('Terrain.js: mesh was not created !!!');
+		console.warn('Terrain.js: mesh was not created !!!');
 		return 0;
 	}
 }
