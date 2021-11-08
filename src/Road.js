@@ -11,6 +11,7 @@ let DataRoad = {
 	PointsExtrude: [],
 	Mesh: {},
 	StartPoint: {index: [], y : []},
+	isDel: false
 };
 let Buffer = [];
 
@@ -311,7 +312,7 @@ class Road {
 		Buffer[Buffer.length - 1].Mesh.position.y += 0.07;
 		_scene.add(Buffer[Buffer.length - 1].Mesh);
 
-		DataRoad = {Size: [], Color: '', PointsExtrude: [], Mesh: {}, StartPoint: {index: [], y: []}};
+		DataRoad = {Size: [], Color: '', PointsExtrude: [], Mesh: {}, StartPoint: {index: [], y: []}, isDel: false};
 		_boxes = [];
 		_boxes.length = 0;
 		_lines.length = 0;
@@ -336,7 +337,6 @@ class Road {
 
 		if (!Buffer[id].isDel) {
 
-			console.log(Buffer[id].StartPoint)
 			_scene.remove(Buffer[id].Mesh);
 			const position = _mesh.geometry.getAttribute('position');
 
