@@ -209,6 +209,9 @@ class MainEngenie {
 			for (let i = 0; i < size * size * 3; i++) colors.array[i] = data.getFloat32(i * 4 + byte);
 			colors.needUpdate = true;
 			byte = byte + size * size * 4 * 3;
+			_terrain.UpdateDataColors();
+			_terrain.getOptions().texture.ChangeBiomes();
+			_terrain.getOptions().texture.setBiomeMap(_terrain.getOptions().biomeMap.getMapColors());
 		}
 
 		reader.onerror = function(err) {
