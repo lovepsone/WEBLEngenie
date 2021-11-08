@@ -70,11 +70,7 @@ class PressureTerrain {
 
 	onDocumentMouseMove(event) {
 
-        if (!(_mesh instanceof THREE.Mesh)) {
-
-            console.warn('PressureTerrain.js: Create geometry before overlaying pen.');
-            return;
-		}
+        if (!(_mesh instanceof THREE.Mesh)) return;
 
 		_mouseVector.x = (event.layerX / window.innerWidth ) * 2 - 1;
 		_mouseVector.y = - (event.layerY / window.innerHeight ) * 2 + 1;
@@ -329,6 +325,7 @@ class PressureTerrain {
 
 	needUpdate() {
 
+		if (!(_mesh instanceof THREE.Mesh)) return;
 		_brushMesh.visible = false;
 		if (_brushActive) {
 

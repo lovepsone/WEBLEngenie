@@ -101,11 +101,7 @@ class GenerateBiomeMap {
 
     onDocumentMouseMove(event) {
 
-        if (!(_mesh instanceof THREE.Mesh)) {
-
-            console.warn('GenerateBiomeMap.js: Create geometry before overlaying color.');
-            return;
-        }
+        if (!(_mesh instanceof THREE.Mesh)) return;
 
 		_mouseVector.x = (event.layerX / window.innerWidth) * 2 - 1;
         _mouseVector.y = - (event.layerY / window.innerHeight) * 2 + 1;
@@ -195,7 +191,7 @@ class GenerateBiomeMap {
 		this.element.addEventListener("mousedown", bindMouseDown, false);
         this.element.addEventListener("mousemove", bindMouseMove, false);
         this.element.addEventListener("mouseup", bindMouseUp, false);
-        _mesh.geometry.computeBoundsTree();
+        if (_mesh instanceof THREE.Mesh) _mesh.geometry.computeBoundsTree();
 	}
 	
 	DisposeEvents() {

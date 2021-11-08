@@ -146,6 +146,8 @@ class Road {
 
 	onDocumentMouseDown(event) {
 
+		if (!(_mesh instanceof THREE.Mesh)) return;
+
         event.preventDefault();
 
         _mouseVector.x = (event.layerX / window.innerWidth) * 2 - 1;
@@ -176,6 +178,8 @@ class Road {
 	}
 	
 	onDocumentMouseMove(event) {
+
+		if (!(_mesh instanceof THREE.Mesh)) return;
 
 		event.preventDefault();
 
