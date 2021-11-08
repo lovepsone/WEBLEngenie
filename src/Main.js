@@ -155,22 +155,34 @@ class MainEngenie {
 
 	SaveProject(link) {
 		/* structure
-		* version = 1 byte (Uint8Array)
-		* size = 2 byte (Uint16Array)
-		* total = 3 byte
+		* version 		= 1 byte (Uint8)
+		* size_terrain 	= 2 byte (Uint16)
+		* points		= 4 *  size_trrain_value bytes (Float32)
+		* color			= 4 *  size_trrain_value bytes (Float32) * 3
+		* total = 3 + points + color
 		*/
-		const total = 3;
-		const ver = 1;
-		const size = _terrain.getSize();
 
+		const ver = 1; // 1 byte (Uint8)
+		const size = _terrain.getSize(); // 2 byte (Uint16)
+		const points = _terrain.getMesh().geometry.getAttribute('position');
+		const colors = _terrain.getMesh().geometry.getAttribute('color');
+		const total = 3 + 4 * size * size + 4 * size * size * 3;
+
+		/* generate data */
+		let byte = 0;
 		const data = new DataView(new ArrayBuffer(total));
-		data.setUint8(0, ver)
-		data.setUint16(1, size);
-
+		data.setUint8(byte, ver);
+		byte ++;
+		data.setUint16(byte, size);
+		byte += 2;
+		for (let i = 0; i < size * size; i++) data.setFloat32(i * 4 + byte, points.getY(i));
+		byte = byte + size * size * 4;
+		for (let i = 0; i < size * size * 3; i++) data.setFloat32(i * 4 + byte, colors.array[i]);
+		byte = byte + size * size * 4 * 3;
+	
 		link.href = URL.createObjectURL(new Blob([data], {type: 'application/octet-stream'}));
 		link.download = 'Project.wgle';
 		link.click();
-		//console.log(data.getUint16(1));
 		URL.revokeObjectURL(link.href);
 	}
 
@@ -181,9 +193,20 @@ class MainEngenie {
 
 		reader.onload = function(event) {
 
+			let byte = 0;
 			const data = new DataView(event.target.result);
-			//console.log(data.getUint8(0));
-			//console.log(data.getUint16(1));
+			const ver = data.getUint8(byte); byte ++;
+			const size = data.getUint16(byte); byte = byte + 2;
+
+			_terrain.Create(size);
+			const points = _terrain.getMesh().geometry.getAttribute('position');
+			for (let i = 0; i < size * size; i++) points.setY(i, data.getFloat32(i * 4 + byte));
+			points.needUpdate = true;
+			byte = byte + size * size * 4;
+			const colors = _terrain.getMesh().geometry.getAttribute('color');
+			for (let i = 0; i < size * size * 3; i++) colors.array[i] = data.getFloat32(i * 4 + byte);
+			colors.needUpdate = true;
+			byte = byte + size * size * 4 * 3;
 		}
 
 		reader.onerror = function(err) {
