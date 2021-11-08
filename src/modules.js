@@ -235,18 +235,34 @@ UI.getElement("Window").addEventListener("ExitPointerLock", function() {
 	UI.getElement(DataHTML.Brush).checked = false;
 }, false);
 
+const linkSave = UI.createElement('a');
+linkSave.style.display = 'none';
+UI.body.appendChild(linkSave);
+
+const formLoad = UI.createElement('form');
+formLoad.style.display = 'none';
+UI.body.appendChild(formLoad);
+
+const fileInput = document.createElement('input');
+fileInput.multiple = true;
+fileInput.type = 'file';
+
+formLoad.appendChild(fileInput);
+
+fileInput.addEventListener('change', function() {
+
+	Engenie.LoadProject(fileInput.files[0]);
+	formLoad.reset();
+});
+
 UI.getElement(DataHTML.MenuBar.SaveTerrain).addEventListener("click", function() {
 
-	const link = UI.createElement('a');
-	link.style.display = 'none';
-	UI.body.appendChild(link);
-	Engenie.exportGLTF(link);
+	Engenie.SaveProject(linkSave);
 }, false);
 
 UI.getElement(DataHTML.MenuBar.LoadTerrain).addEventListener("click", function() {
 
-	Engenie.importGLTF();
-	console.log('Loading terrain in developing');
+	fileInput.click();
 }, false);
 
 // handlers dialog load height map

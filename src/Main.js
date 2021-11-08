@@ -153,6 +153,45 @@ class MainEngenie {
 		_scene.add(_physics.addCharacter({}, _pointerLockControls));
 	}
 
+	SaveProject(link) {
+		/* structure
+		* version = 1 byte (Uint8Array)
+		* size = 2 byte (Uint16Array)
+		* total = 3 byte
+		*/
+		const total = 3;
+		const ver = 1;
+		const size = _terrain.getSize();
+
+		const data = new DataView(new ArrayBuffer(total));
+		data.setUint8(0, ver)
+		data.setUint16(1, size);
+
+		link.href = URL.createObjectURL(new Blob([data], {type: 'application/octet-stream'}));
+		link.download = 'Project.wgle';
+		link.click();
+		//console.log(data.getUint16(1));
+		URL.revokeObjectURL(link.href);
+	}
+
+	LoadProject(file) {
+
+		const reader = new FileReader();
+		reader.readAsArrayBuffer(file);
+
+		reader.onload = function(event) {
+
+			const data = new DataView(event.target.result);
+			//console.log(data.getUint8(0));
+			//console.log(data.getUint16(1));
+		}
+
+		reader.onerror = function(err) {
+
+			console.log(err);
+		}
+	}
+
 	//exports only without roads
 	exportGLTF(link) {
 
