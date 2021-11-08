@@ -328,7 +328,7 @@ class Road {
 		}
 	}
 
-	Remove() {
+	RemoveAll() {
 
 		if (Buffer.length > 0) {
 
