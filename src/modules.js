@@ -256,7 +256,9 @@ fileInput.addEventListener('change', function() {
 	UI.getElement(DataHTML.Wireframe).checked = false;
 	UI.getElement(DataHTML.Camera).checked = true;
 	UI.getElement(DataHTML.Brush).checked = false;
-	Engenie.getControlsCamera().UpdateEvents();
+	// delete list roads
+	for (let i = 0; i < UI.getElement(DataHTML.Road.Options[3]).options.length; i++)
+		UI.getElement(DataHTML.Road.Options[3]).options[i].remove();
 });
 
 UI.getElement(DataHTML.MenuBar.SaveTerrain).addEventListener("click", function() {
@@ -380,6 +382,9 @@ UI.getElement(DataHTML.DialogCreateTerrain.Buttons[0]).addEventListener("click",
 	UI.getElement(DataHTML.DialogCreateTerrain.widjet).close();
 	ControlBrush(_UIFrame.getCurrentTab());
 
+	// delete list roads
+	for (let i = 0; i < UI.getElement(DataHTML.Road.Options[3]).options.length; i++)
+		UI.getElement(DataHTML.Road.Options[3]).options[i].remove();
 }, false);
 
 UI.getElement(DataHTML.DialogCreateTerrain.Buttons[1]).addEventListener("click", function() {
