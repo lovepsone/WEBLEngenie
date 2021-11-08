@@ -7,6 +7,7 @@ import {CameraControls} from './CameraControls.js';
 import {PointerLockControls} from './ui/PointerLockControls.js';
 import * as THREE from './../libs/three.module.js';
 import {Physics} from './physics/physics.js';
+import {FilerProject} from './FilerProject.js';
 import {GLTFExporter} from './../libs/GLTFExporter.js';
 import {GLTFLoader} from './../libs/GLTFLoader.js';
 import {SunLight} from './SunLight.js';
@@ -154,35 +155,23 @@ class MainEngenie {
 	}
 
 	SaveProject(link) {
-		/* structure
-		* version 		= 1 byte (Uint8)
-		* size_terrain 	= 2 byte (Uint16)
-		* points		= 4 *  size_trrain_value bytes (Float32)
-		* color			= 4 *  size_trrain_value bytes (Float32) * 3
-		* total = 3 + points + color
-		*/
 
 		if (_terrain.getMesh() == 0) return;
 
-		const ver = 1; // 1 byte (Uint8)
-		const size = _terrain.getSize(); // 2 byte (Uint16)
+		const size = _terrain.getSize();
 		const points = _terrain.getMesh().geometry.getAttribute('position');
 		const colors = _terrain.getMesh().geometry.getAttribute('color');
-		const total = 3 + 4 * size * size + 4 * size * size * 3;
+		const roads = _terrain.getOptions().road.getDataRoads();
+		const filer = new FilerProject(size);
+		filer.newData();
 
-		/* generate data */
-		let byte = 0;
-		const data = new DataView(new ArrayBuffer(total));
-		data.setUint8(byte, ver);
-		byte ++;
-		data.setUint16(byte, size);
-		byte += 2;
-		for (let i = 0; i < size * size; i++) data.setFloat32(i * 4 + byte, points.getY(i));
-		byte = byte + size * size * 4;
-		for (let i = 0; i < size * size * 3; i++) data.setFloat32(i * 4 + byte, colors.array[i]);
-		byte = byte + size * size * 4 * 3;
-	
-		link.href = URL.createObjectURL(new Blob([data], {type: 'application/octet-stream'}));
+		for (let i = 0; i < points.count; i++)
+			filer.setChunk('points', points.getY(i), i);
+
+		for (let i = 0; i <  colors.count * 3; i++)
+			filer.setChunk('colors', colors.array[i], i);
+
+		link.href = URL.createObjectURL(new Blob([filer.getData()], {type: 'application/octet-stream'}));
 		link.download = 'Project.wgle';
 		link.click();
 		URL.revokeObjectURL(link.href);
@@ -195,20 +184,19 @@ class MainEngenie {
 
 		reader.onload = function(event) {
 
-			let byte = 0;
-			const data = new DataView(event.target.result);
-			const ver = data.getUint8(byte); byte ++;
-			const size = data.getUint16(byte); byte = byte + 2;
+			const filer = new FilerProject();
+			const size = filer.setBytes(event.target.result);
 
 			_terrain.Create(size);
 			const points = _terrain.getMesh().geometry.getAttribute('position');
-			for (let i = 0; i < size * size; i++) points.setY(i, data.getFloat32(i * 4 + byte));
-			points.needUpdate = true;
-			byte = byte + size * size * 4;
 			const colors = _terrain.getMesh().geometry.getAttribute('color');
-			for (let i = 0; i < size * size * 3; i++) colors.array[i] = data.getFloat32(i * 4 + byte);
+	
+			for (let i = 0; i < size * size; i++) points.setY(i, filer.readChunk('points',  i));
+			for (let i = 0; i < size * size * 3; i++) colors.array[i] = filer.readChunk('colors',  i);
+
 			colors.needUpdate = true;
-			byte = byte + size * size * 4 * 3;
+			points.needUpdate = true;
+
 			_terrain.UpdateDataColors();
 			_terrain.getOptions().texture.ChangeBiomes();
 			_terrain.getOptions().texture.setBiomeMap(_terrain.getOptions().biomeMap.getMapColors());
