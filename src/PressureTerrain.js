@@ -131,8 +131,8 @@ class PressureTerrain {
 		// Collect the intersected vertices
 		const indices = new Set(), tempVec = new THREE.Vector3(), normal = new THREE.Vector3();
 		const indexAttr = _mesh.geometry.index;
-		const posAttr = _mesh.geometry.attributes.position;
-		const normalAttr = _mesh.geometry.attributes.normal;
+		const posAttr = _mesh.geometry.getAttribute('position');
+		const normalAttr = _mesh.geometry.getAttribute('normal');
 		const triangles = new Set();
 		const bvh = _mesh.geometry.boundsTree;
 
@@ -275,8 +275,8 @@ class PressureTerrain {
 		const tempVec = new THREE.Vector3();
 		const tempVec2 = new THREE.Vector3();
 		const indexAttr = _mesh.geometry.index;
-		const posAttr =  _mesh.geometry.attributes.position;
-		const normalAttr =  _mesh.geometry.attributes.normal;
+		const posAttr =  _mesh.geometry.getAttribute('position');
+		const normalAttr =  _mesh.geometry.getAttribute('normal');
 
 		// accumulate the normals in place in the normal buffer
 		const triangle = new THREE.Triangle();
