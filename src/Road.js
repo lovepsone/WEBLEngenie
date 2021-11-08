@@ -63,6 +63,7 @@ class Road {
 		bindMouseMove = this.onDocumentMouseMove.bind(this);
 
 		const brushSegments = [new THREE.Vector3(), new THREE.Vector3(0, 1, 0)];
+
 		for (let i = 0; i < 50; i ++) {
 	
 			const nexti = i + 1;
@@ -225,13 +226,9 @@ class Road {
 		for (let i = 0; i < buff.vertex.length; i++) {
 
 			Buffer[Buffer.length - 1].StartPoint.index.push(buff.index[i]);
-			Buffer[Buffer.length - 1].StartPoint.y.push(bufPoints.array[buff.index[i] * 3 + 1]);
-
-			if (i < buff.vertex.length - nonIndexHeightCount) position.array[buff.index[i] * 3 + 1] = buff.vertex[i].y;
-
-			color.array[buff.index[i] * 3] = _colorBoard.r;
-			color.array[buff.index[i] * 3 + 1] = _colorBoard.g;
-			color.array[buff.index[i] * 3 + 2] = _colorBoard.b;
+			Buffer[Buffer.length - 1].StartPoint.y.push(bufPoints.getY(buff.index[i]));
+			if (i < buff.vertex.length - nonIndexHeightCount) position.setY(buff.index[i], buff.vertex[i].y);
+			color.setXYZ(buff.index[i],  _colorBoard.r, _colorBoard.g, _colorBoard.b);
 		}
 
 		const unique =[
@@ -256,14 +253,14 @@ class Road {
 
 			for (let j = 0; j < indx[i].length; j++) {
 
-				const a = point.array[indx[i][j] * 3 + 1];
-				const b = point.array[(indx[i][j] - 1) * 3 + 1];
-				const c = point.array[(indx[i][j] + 1) * 3 + 1];
-				const d = point.array[(indx[i][j] + cout) * 3 + 1];
-				const e = point.array[(indx[i][j] - cout) * 3 + 1];
-				point.array[indx[i][j] * 3 + 1] = (0.5 * (a + b) + 0.5 * (a + c)) * 0.5;
-				const f = point.array[indx[i][j] * 3 + 1];
-				point.array[indx[i][j] * 3 + 1] = (0.5 * (f + d) + 0.5 * (f + e)) * 0.5;
+				const a = point.getY(indx[i][j]);
+				const b = point.getY(indx[i][j] - 1);
+				const c = point.getY(indx[i][j] + 1);
+				const d = point.getY(indx[i][j] + cout);
+				const e = point.getY(indx[i][j] - cout);
+				point.setY(indx[i][j], (0.5 * (a + b) + 0.5 * (a + c)) * 0.5);
+				const f = point.getY(indx[i][j]);
+				point.setY(indx[i][j], (0.5 * (f + d) + 0.5 * (f + e)) * 0.5);
 			}
 		}
 	}
@@ -341,7 +338,7 @@ class Road {
 
 			for (let i = 0; i < Buffer[id].StartPoint.index.length; i++) {
 
-				position.array[Buffer[id].StartPoint.index[i] * 3 + 1] = Buffer[id].StartPoint.y[i];
+				position.setY(Buffer[id].StartPoint.index[i], Buffer[id].StartPoint.y[i]);
 			}
 
 			position.needsUpdate = true;
