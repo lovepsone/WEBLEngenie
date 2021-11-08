@@ -67,7 +67,7 @@ class Terrain {
 
 		let colors = [];
 
-		for (let i = 0, n = geometry.attributes.position.count; i < n; ++ i) {
+		for (let i = 0, n = geometry.getAttribute('position').count; i < n; ++ i) {
 
 			colors[i * 3] = 0;
 			colors[i * 3 + 1] = 0;
@@ -75,7 +75,7 @@ class Terrain {
 		}
 
 		geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-		geometry.attributes.color.needsUpdate = true;
+		geometry.getAttribute('color').needsUpdate = true;
 
 		_mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({side: THREE.DoubleSide, vertexColors: THREE.VertexColors}));
 		_mesh.name = 'Terrain';
@@ -131,14 +131,14 @@ class Terrain {
 			return;
 		}
 
-		for (let i = 0, n = _mesh.geometry.attributes.position.count; i < n; ++ i) {
+		for (let i = 0, n = _mesh.geometry.getAttribute('position').count; i < n; ++ i) {
 
 			if (_roughness  == 0) _roughness = 1;
 			const tmp = (_pixel.data[i * 4] + _pixel.data[i * 4 + 1] + _pixel.data[i * 4 + 2]) / 3;
-			_mesh.geometry.attributes.position.array[i * 3 + 1] = (tmp / 255) * _roughness;
-			_mesh.geometry.attributes.position.needsUpdate = true;
+			_mesh.geometry.getAttribute('position').setY(i,  (tmp / 255) * _roughness);
 		}
 
+		_mesh.geometry.getAttribute('position').needsUpdate = true;
 		_mesh.geometry.computeVertexNormals();
 		_mesh.geometry.normalizeNormals();
 		_mesh.geometry.computeBoundsTree();
@@ -159,7 +159,7 @@ class Terrain {
 			console.warn('Terrain.js: create a terrain before doing this.');
 			return;
 		}
-		_Optons.biomeMap.setColorsDataBiomes(_mesh.geometry.attributes.color);
+		_Optons.biomeMap.setColorsDataBiomes(_mesh.geometry.getAttribute('color'));
 	}
 
 	getOptions() {
@@ -182,10 +182,10 @@ class Terrain {
 			return;
 		}
 
-		for (let i = 0; i < _mesh.geometry.attributes.position.count; i++) {
+		for (let i = 0; i < _mesh.geometry.getAttribute('position').count; i++) {
 
-			if (_max < _mesh.geometry.attributes.position.array[i * 3 + 1]) _max = _mesh.geometry.attributes.position.array[i * 3 + 1];
-			if (_min > _mesh.geometry.attributes.position.array[i * 3 + 1]) _min = _mesh.geometry.attributes.position.array[i * 3 + 1];
+			if (_max < _mesh.geometry.getAttribute('position').getY(i)) _max = _mesh.geometry.getAttribute('position').getY(i);
+			if (_min > _mesh.geometry.getAttribute('position').getY(i)) _min = _mesh.geometry.getAttribute('position').getY(i);
 		}
 
 		/* fix ?
@@ -193,26 +193,23 @@ class Terrain {
 		_max = _mesh.geometry.boundingBox.max.y;
 		_min = _mesh.geometry.boundingBox.min.y;*/
 
-		for (let i = 0; i < _mesh.geometry.attributes.position.count; i++) {
+		for (let i = 0; i < _mesh.geometry.getAttribute('position').count; i++) {
 
 			const bufcolor =  new THREE.Color().fromArray(_mesh.geometry.attributes.color.array, i * 3);
 
 			if (
-				Math.fround(_mesh.geometry.attributes.color.array[i * 3]) == Math.fround(cBoard.r) &&
-				Math.fround(_mesh.geometry.attributes.color.array[i * 3 + 1]) == Math.fround(cBoard.g) &&
-				Math.fround(_mesh.geometry.attributes.color.array[i * 3 + 2]) == Math.fround(cBoard.b)
+				Math.fround(_mesh.geometry.getAttribute('color').getX(i)) == Math.fround(cBoard.r) &&
+				Math.fround(_mesh.geometry.getAttribute('color').getY(i)) == Math.fround(cBoard.g) &&
+				Math.fround(_mesh.geometry.getAttribute('color').getZ(i)) == Math.fround(cBoard.b)
 			) continue;
-			const y = _mesh.geometry.attributes.position.array[i * 3 + 1];
+			const y = _mesh.geometry.getAttribute('position').getY(i);
 			const height = (y - _min) / (_max - _min);
 
 			const color = new THREE.Color(_Optons.biomes.get(height, i));
-
-			_mesh.geometry.attributes.color.array[i * 3] = color.r;
-			_mesh.geometry.attributes.color.array[i * 3 + 1] = color.g;
-			_mesh.geometry.attributes.color.array[i * 3 + 2] = color.b;
+			_mesh.geometry.getAttribute('color').setXYZ(i, color.r, color.g, color.b);
 		}
 
-		_mesh.geometry.attributes.color.needsUpdate = true;
+		_mesh.geometry.getAttribute('color').needsUpdate = true;
 		this.UpdateDataColors();
 	}
 
@@ -232,7 +229,7 @@ class Terrain {
 
 	Smoothing() {
 
-		const count = _mesh.geometry.attributes.position.count - _size - 1;
+		const count = _mesh.geometry.getAttribute('position').count - _size - 1;
 
 		for (let i = _size; i < count; i++) {
 
@@ -240,25 +237,25 @@ class Terrain {
 
 			if (i % _size != 0 && l != (_size - 1)) {
 
-				const a = _mesh.geometry.attributes.position.array[i * 3 + 1];
-				const b = _mesh.geometry.attributes.position.array[(i - 1) * 3 + 1];
-				const c = _mesh.geometry.attributes.position.array[(i + 1) * 3 + 1];
-				_mesh.geometry.attributes.position.array[i * 3 + 1] = 0.5 * (0.5 * (b + c) + a);
+				const a = _mesh.geometry.getAttribute('position').getY(i);
+				const b = _mesh.geometry.getAttribute('position').getY(i - 1)
+				const c = _mesh.geometry.getAttribute('position').getY(i + 1);
+				_mesh.geometry.getAttribute('position').setY(i, 0.5 * (0.5 * (b + c) + a));
 
 				if (i < _size * 2) {
 
 					for (let j = i; j < count; j += _size) {
 
-						const aa = _mesh.geometry.attributes.position.array[j * 3 + 1];
-						const bb = _mesh.geometry.attributes.position.array[(j - _size) * 3 + 1];
-						const cc = _mesh.geometry.attributes.position.array[(j + _size) * 3 + 1];
-						_mesh.geometry.attributes.position.array[j * 3 + 1] = 0.5 * (0.5 * (bb + cc) + aa);
+						const aa = _mesh.geometry.getAttribute('position').getY(j);
+						const bb = _mesh.geometry.getAttribute('position').getY(j - _size);
+						const cc = _mesh.geometry.getAttribute('position').getY(j + _size);
+						_mesh.geometry.getAttribute('position').setY(j, 0.5 * (0.5 * (bb + cc) + aa));
 					}
 				}
 			}
 		}
 
-		_mesh.geometry.attributes.position.needsUpdate = true;
+		_mesh.geometry.getAttribute('position').needsUpdate = true;
 	}
 
 	WireFrame(value = true) {
