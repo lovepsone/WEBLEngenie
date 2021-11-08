@@ -450,7 +450,8 @@ UI.getElement(DataHTML.Road.Buttons[2]).addEventListener("click", function(event
 	if (UI.getElement(DataHTML.Road.Options[3]).selectedIndex != -1) {
 
 		const id = UI.getElement(DataHTML.Road.Options[3]).options[UI.getElement(DataHTML.Road.Options[3]).selectedIndex].value;
-		console.log('Update Road in developing');
+		Engenie.getTerrain().getOptions().road.Remove(id);
+		UI.getElement(DataHTML.Road.Options[3]).options[id].text = 'Deleted';
 	}
 }, false);
 

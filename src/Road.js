@@ -126,7 +126,7 @@ class Road {
 
 	Select(id) {
 
-		if (id < Buffer.length) {
+		if (id < Buffer.length && !Buffer[id].isDel) {
 
 			Buffer[id].Mesh.material.vertexColors = true;
 			Buffer[id].Mesh.material.needsUpdate = true;
@@ -137,6 +137,7 @@ class Road {
 
 		for (let i = 0; i < Buffer.length; i++) {
 
+			if(Buffer[i].isDel) continue;
 			Buffer[i].Mesh.material.vertexColors = false;
 			Buffer[i].Mesh.material.needsUpdate = true;
 		}
@@ -219,11 +220,12 @@ class Road {
 		const position = _mesh.geometry.getAttribute('position');
 		const color = _mesh.geometry.getAttribute('color');
 		const size = Math.sqrt(position.count);
+		const bufPoints = position.clone();
 
 		for (let i = 0; i < buff.vertex.length; i++) {
 
 			Buffer[Buffer.length - 1].StartPoint.index.push(buff.index[i]);
-			Buffer[Buffer.length - 1].StartPoint.y.push(position.array[buff.index[i] * 3 + 1]);
+			Buffer[Buffer.length - 1].StartPoint.y.push(bufPoints.array[buff.index[i] * 3 + 1]);
 
 			if (i < buff.vertex.length - nonIndexHeightCount) position.array[buff.index[i] * 3 + 1] = buff.vertex[i].y;
 
@@ -323,8 +325,32 @@ class Road {
 
 			for (let i = 0; i < Buffer.length; i++) {
 
+				if (Buffer[i].isDel) continue;
 				Buffer[i].Mesh.material.wireframe = value;
 			}
+		}
+	}
+
+	Remove(id) {
+
+		if (!Buffer[id].isDel) {
+
+			console.log(Buffer[id].StartPoint)
+			_scene.remove(Buffer[id].Mesh);
+			const position = _mesh.geometry.getAttribute('position');
+
+			for (let i = 0; i < Buffer[id].StartPoint.index.length; i++) {
+
+				position.array[Buffer[id].StartPoint.index[i] * 3 + 1] = Buffer[id].StartPoint.y[i];
+			}
+
+			position.needsUpdate = true;
+			Buffer[id].isDel = true;
+			Buffer[id].Mesh = {};
+			Buffer[id].Size = [];
+			Buffer[id].Color = '';
+			Buffer[id].PointsExtrude = [];
+			Buffer[id].StartPoint = {index: [], y: []};
 		}
 	}
 
