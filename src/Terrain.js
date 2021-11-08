@@ -45,6 +45,7 @@ class Terrain {
 			_mesh = null;
 			_Optons.pressure.DisposeEvents();
 			_Optons.road.DisposeEvents();
+			_Optons.biomeMap.DisposeEvents();
 			_max = 0.0;
 			_min = 0.0;
 			_Optons.road.RemoveAll();
@@ -84,6 +85,7 @@ class Terrain {
 
 		_Optons.pressure.setTerrain(_mesh);
 		_Optons.pressure.AddEvents();
+		_Optons.pressure.DisposeEvents();
 
 		_Optons.biomeMap.setSize(_size, _size);
 		_Optons.biomeMap.setTerrain(_mesh);

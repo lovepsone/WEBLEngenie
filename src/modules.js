@@ -253,6 +253,10 @@ fileInput.addEventListener('change', function() {
 
 	Engenie.LoadProject(fileInput.files[0]);
 	formLoad.reset();
+	UI.getElement(DataHTML.Wireframe).checked = false;
+	UI.getElement(DataHTML.Camera).checked = true;
+	UI.getElement(DataHTML.Brush).checked = false;
+	Engenie.getControlsCamera().UpdateEvents();
 });
 
 UI.getElement(DataHTML.MenuBar.SaveTerrain).addEventListener("click", function() {
@@ -263,6 +267,7 @@ UI.getElement(DataHTML.MenuBar.SaveTerrain).addEventListener("click", function()
 UI.getElement(DataHTML.MenuBar.LoadTerrain).addEventListener("click", function() {
 
 	fileInput.click();
+
 }, false);
 
 // handlers dialog load height map
@@ -369,21 +374,12 @@ for (let i = 0; i < DataHTML.RightBar.Buttons.length; i++) {
 
 // handlers Dialog Create Terrain
 UI.getElement(DataHTML.DialogCreateTerrain.Buttons[0]).addEventListener("click", function() {
-// баг, если находишься в другой вкладке(переключение на стартоваю вкладку)
+
 	Engenie.getTerrain().Create(UI.getElement(DataHTML.DialogCreateTerrain.Options[0]).value);
 	Engenie.getTerrain().WireFrame(_UIFrame.CheckedWireframe());
-
-	if (_UIFrame.CheckedCamera()) {
-
-		Engenie.getControlsCamera().UpdateEvents();
-		Engenie.getTerrain().getOptions().pressure.DisposeEvents();
-	} else {
-
-		Engenie.getControlsCamera().dispose();
-		Engenie.getTerrain().getOptions().pressure.AddEvents();
-	}
-
 	UI.getElement(DataHTML.DialogCreateTerrain.widjet).close();
+	ControlBrush(_UIFrame.getCurrentTab());
+
 }, false);
 
 UI.getElement(DataHTML.DialogCreateTerrain.Buttons[1]).addEventListener("click", function() {
