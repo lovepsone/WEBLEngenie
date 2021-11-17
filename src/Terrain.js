@@ -41,11 +41,11 @@ class Terrain {
 		if (_mesh instanceof THREE.Mesh) {
 
 			_mesh.geometry.dispose();
-			_scope.scene.remove(_mesh);
-			_mesh = null;
 			_Optons.pressure.DisposeEvents();
 			_Optons.road.DisposeEvents();
 			_Optons.biomeMap.DisposeEvents();
+			_scope.scene.remove(_mesh);
+			_mesh = null;
 			_max = 0.0;
 			_min = 0.0;
 			_Optons.road.RemoveAll();

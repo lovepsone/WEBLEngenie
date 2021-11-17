@@ -269,7 +269,6 @@ UI.getElement(DataHTML.MenuBar.SaveTerrain).addEventListener("click", function()
 UI.getElement(DataHTML.MenuBar.LoadTerrain).addEventListener("click", function() {
 
 	fileInput.click();
-
 }, false);
 
 // handlers dialog load height map

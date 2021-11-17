@@ -190,13 +190,15 @@ class MainEngenie {
 			_terrain.Create(size);
 			const points = _terrain.getMesh().geometry.getAttribute('position');
 			const colors = _terrain.getMesh().geometry.getAttribute('color');
-	
+
 			for (let i = 0; i < size * size; i++) points.setY(i, filer.readChunk('points',  i));
 			for (let i = 0; i < size * size * 3; i++) colors.array[i] = filer.readChunk('colors',  i);
 
-			colors.needUpdate = true;
-			points.needUpdate = true;
-
+			_terrain.getMesh().geometry.getAttribute('position').needsUpdate = true;
+			_terrain.getMesh().geometry.getAttribute('color').needsUpdate = true;
+			_terrain.getMesh().geometry.computeVertexNormals();
+			_terrain.getMesh().geometry.normalizeNormals();
+			_terrain.getMesh().geometry.computeBoundsTree();
 			_terrain.UpdateDataColors();
 			_terrain.getOptions().texture.ChangeBiomes();
 			_terrain.getOptions().texture.setBiomeMap(_terrain.getOptions().biomeMap.getMapColors());

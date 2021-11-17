@@ -182,26 +182,21 @@ class Road {
 
 		if (!(_mesh instanceof THREE.Mesh)) return;
 
-		event.preventDefault();
-
 		_mouseVector.x = (event.layerX / window.innerWidth) * 2 - 1;
         _mouseVector.y = - (event.layerY / window.innerHeight) * 2 + 1;
-        
+
 		_raycaster.setFromCamera(_mouseVector, _camera);
 		_raycaster.firstHitOnly = true;
 
-		let intersects = _raycaster.intersectObject(_mesh);
-		let bvh = _mesh.geometry.boundsTree;
+		const intersects = _raycaster.intersectObject(_mesh, true)[0];
+		_brushMesh.visible = false;
         _brushMesh.scale.setScalar(1.5);
 
-		if (intersects.length > 0) {
+		if (intersects) {
 
+			_brushMesh.position.copy(intersects.point);
             _brushMesh.visible = true;
-			_brushMesh.position.copy(intersects[0].point);
-        } else {
-
-            _brushMesh.visible = false;
-        }
+		}
 	}
 
 	AddEvents() {
