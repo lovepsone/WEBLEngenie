@@ -126,6 +126,23 @@ class Road {
 		return Buffer;
 	}
 
+	getDataFile() {
+
+		let tmp = [], countPoints = 0;
+
+		for(let i = 0; i < Buffer.length; i++) {
+
+			if (!Buffer[i].isDel) {
+
+				countPoints +=  Buffer[i].PointsExtrude.length;
+				tmp[i] = {point: Buffer[i].PointsExtrude, color: 0, length: countPoints};
+			}
+		}
+
+		tmp[0].length = countPoints;
+		return tmp;
+	}
+
 	Select(id) {
 
 		if (id < Buffer.length && !Buffer[id].isDel) {
@@ -361,6 +378,16 @@ class Road {
 
 			Buffer = [];
 		}
+	}
+
+	Count() {
+
+		let count = 0;
+
+		for(let i = 0; i < Buffer.length; i++)
+			if (!Buffer[i].isDel) count++;
+
+		return count;
 	}
 }
 

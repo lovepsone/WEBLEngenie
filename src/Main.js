@@ -161,15 +161,21 @@ class MainEngenie {
 		const size = _terrain.getSize();
 		const points = _terrain.getMesh().geometry.getAttribute('position');
 		const colors = _terrain.getMesh().geometry.getAttribute('color');
-		const roads = _terrain.getOptions().road.getDataRoads();
+		const roads = _terrain.getOptions().road.getDataFile();
+		const CountRoads = _terrain.getOptions().road.Count();
+
 		const filer = new FilerProject(size);
-		filer.newData();
+		filer.newData(CountRoads, roads[0].length * 3);
 
 		for (let i = 0; i < points.count; i++)
 			filer.setChunk('points', points.getY(i), i);
 
 		for (let i = 0; i <  colors.count * 3; i++)
 			filer.setChunk('colors', colors.array[i], i);
+
+		filer.setChunk('countroads', CountRoads);
+
+		if (CountRoads > 0) filer.setDataRoadsChunk(roads);
 
 		link.href = URL.createObjectURL(new Blob([filer.getData()], {type: 'application/octet-stream'}));
 		link.download = 'Project.wgle';
@@ -187,21 +193,24 @@ class MainEngenie {
 			const filer = new FilerProject();
 			const size = filer.setBytes(event.target.result);
 
-			_terrain.Create(size);
-			const points = _terrain.getMesh().geometry.getAttribute('position');
-			const colors = _terrain.getMesh().geometry.getAttribute('color');
+			if (filer.getVersionReader()) {
 
-			for (let i = 0; i < size * size; i++) points.setY(i, filer.readChunk('points',  i));
-			for (let i = 0; i < size * size * 3; i++) colors.array[i] = filer.readChunk('colors',  i);
-
-			_terrain.getMesh().geometry.getAttribute('position').needsUpdate = true;
-			_terrain.getMesh().geometry.getAttribute('color').needsUpdate = true;
-			_terrain.getMesh().geometry.computeVertexNormals();
-			_terrain.getMesh().geometry.normalizeNormals();
-			_terrain.getMesh().geometry.computeBoundsTree();
-			_terrain.UpdateDataColors();
-			_terrain.getOptions().texture.ChangeBiomes();
-			_terrain.getOptions().texture.setBiomeMap(_terrain.getOptions().biomeMap.getMapColors());
+				_terrain.Create(size);
+				const points = _terrain.getMesh().geometry.getAttribute('position');
+				const colors = _terrain.getMesh().geometry.getAttribute('color');
+	
+				for (let i = 0; i < size * size; i++) points.setY(i, filer.readChunk('points',  i));
+				for (let i = 0; i < size * size * 3; i++) colors.array[i] = filer.readChunk('colors',  i);
+	
+				_terrain.getMesh().geometry.getAttribute('position').needsUpdate = true;
+				_terrain.getMesh().geometry.getAttribute('color').needsUpdate = true;
+				_terrain.getMesh().geometry.computeVertexNormals();
+				_terrain.getMesh().geometry.normalizeNormals();
+				_terrain.getMesh().geometry.computeBoundsTree();
+				_terrain.UpdateDataColors();
+				_terrain.getOptions().texture.ChangeBiomes();
+				_terrain.getOptions().texture.setBiomeMap(_terrain.getOptions().biomeMap.getMapColors());
+			} else console.warn('The version of the download file is not supported !!!');
 		}
 
 		reader.onerror = function(err) {
