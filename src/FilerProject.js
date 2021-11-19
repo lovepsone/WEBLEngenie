@@ -27,9 +27,10 @@ let PosByte = {
     CountRoads: 0
 };
 
-let BytesRoad = { //structure of one road
+const BytesRoad = { //structure of one road
 
     Color: 1, // Uint8
+    CountPoints: 2, // Uint16
     Points: 4, // Float32
 }
 
@@ -54,7 +55,8 @@ class FilerProject {
     newData(CountRoads = 0, CountPoints = 0) {
 
         this.data = null;
-        this.data = new DataView(new ArrayBuffer(bytes.total + BytesRoad.Color * CountRoads + BytesRoad.Points * CountPoints));
+        const fullBR = BytesRoad.Color * CountRoads + BytesRoad.Points * CountPoints + BytesRoad.CountPoints * CountRoads;
+        this.data = new DataView(new ArrayBuffer(bytes.total + fullBR));
         this.setChunk('type');
         this.setChunk('version');
         this.setChunk('size');
@@ -64,10 +66,55 @@ class FilerProject {
 
         // data[...]  = point: [...], color: value, length: value
         // point[i] = vaector3d
+        let LastPosByte = PosByte.CountRoads + bytes.CountRoads;
+
+        for (let i = 0; i < data.length - 1; i++) {
+
+            this.data.setUint8(LastPosByte, data[i].color);
+            LastPosByte = LastPosByte + BytesRoad.Color;
+
+            this.data.setUint16(LastPosByte, data[i].length);
+            LastPosByte = LastPosByte + BytesRoad.CountPoints;
+
+            // data[j].point = 4 * 3 byte
+            for (let j = 0; j < data[i].length; j++) {
+
+                this.data.setFloat32(LastPosByte, data[i].point[j].x);
+                LastPosByte += 4;
+                this.data.setFloat32(LastPosByte, data[i].point[j].y);
+                LastPosByte += 4;
+                this.data.setFloat32(LastPosByte, data[i].point[j].z);
+                LastPosByte += 4;
+            }
+        }
     }
 
     readDataRoadsChunk() {
 
+        let LastPosByte = PosByte.CountRoads + bytes.CountRoads;
+        let data = [];
+
+        for (let i = 0; i < _countRoads; i++) {
+
+            data[i] = {point: [], color: 0, length: 0};
+            data[i].color = this.data.getUint8(LastPosByte);
+            LastPosByte = LastPosByte + BytesRoad.Color;
+
+            data[i].length = this.data.getUint16(LastPosByte);
+            LastPosByte = LastPosByte + BytesRoad.CountPoints;
+
+            for (let j = 0; j < data[i].length; j++) {
+
+                data[i].point.push(this.data.getFloat32(LastPosByte)); // x
+                LastPosByte += 4;
+                data[i].point.push(this.data.getFloat32(LastPosByte)); // y
+                LastPosByte += 4;
+                data[i].point.push(this.data.getFloat32(LastPosByte)); // z
+                LastPosByte += 4;
+            }
+        }
+
+        return data;
     }
 
     setChunk(name, value = 0, offset = 0) {

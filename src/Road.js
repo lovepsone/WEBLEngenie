@@ -135,11 +135,11 @@ class Road {
 			if (!Buffer[i].isDel) {
 
 				countPoints +=  Buffer[i].PointsExtrude.length;
-				tmp[i] = {point: Buffer[i].PointsExtrude, color: 0, length: countPoints};
+				tmp[i] = {point: Buffer[i].PointsExtrude, color: 0, length: Buffer[i].PointsExtrude.length};
 			}
 		}
 
-		tmp[0].length = countPoints;
+		tmp[tmp.length] = {length : countPoints};
 		return tmp;
 	}
 
@@ -282,16 +282,30 @@ class Road {
 		}
 	}
 
-	Generate(wireframe) {
+	Generate(wireframe, isBoxes = true, newPoint = []) {
 
 		let points = [];
-	
-		for (let i = 0; i < _boxes.length; i++) {
 
-			DataRoad.PointsExtrude.push(new THREE.Vector3().copy(_boxes[i].position));
-			points.push(new THREE.Vector3().copy(_boxes[i].position));
-			_scene.remove(_boxes[i]);
-			if (i < _lines.length) _scene.remove(_lines[i]);
+		if (isBoxes) {
+
+			for (let i = 0; i < _boxes.length; i++) {
+
+				DataRoad.PointsExtrude.push(new THREE.Vector3().copy(_boxes[i].position));
+				points.push(new THREE.Vector3().copy(_boxes[i].position));
+				_scene.remove(_boxes[i]);
+				if (i < _lines.length) _scene.remove(_lines[i]);
+			}
+		} else {
+
+			for (let i = 0; i < newPoint.length / 3; i++) {
+
+				const tmp = new THREE.Vector3(
+					newPoint[i * 3],
+					newPoint[i * 3 + 1],
+					newPoint[i * 3 + 2]);
+
+				points.push(tmp);
+			}
 		}
 
 		if (points.length == 0) {

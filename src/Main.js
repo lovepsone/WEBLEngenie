@@ -165,7 +165,7 @@ class MainEngenie {
 		const CountRoads = _terrain.getOptions().road.Count();
 
 		const filer = new FilerProject(size);
-		filer.newData(CountRoads, roads[0].length * 3);
+		filer.newData(CountRoads, roads[roads.length - 1].length * 3);
 
 		for (let i = 0; i < points.count; i++)
 			filer.setChunk('points', points.getY(i), i);
@@ -198,10 +198,21 @@ class MainEngenie {
 				_terrain.Create(size);
 				const points = _terrain.getMesh().geometry.getAttribute('position');
 				const colors = _terrain.getMesh().geometry.getAttribute('color');
-	
+
 				for (let i = 0; i < size * size; i++) points.setY(i, filer.readChunk('points',  i));
 				for (let i = 0; i < size * size * 3; i++) colors.array[i] = filer.readChunk('colors',  i);
+
+				const CountRoads = filer.readChunk('countroads');
+
+				if (CountRoads > 0) {
 	
+					const roads = filer.readDataRoadsChunk();
+
+					for (let i = 0; i < CountRoads; i++) {
+
+						_terrain.getOptions().road.Generate(false, false, roads[i].point);
+					}
+				}
 				_terrain.getMesh().geometry.getAttribute('position').needsUpdate = true;
 				_terrain.getMesh().geometry.getAttribute('color').needsUpdate = true;
 				_terrain.getMesh().geometry.computeVertexNormals();
@@ -210,7 +221,7 @@ class MainEngenie {
 				_terrain.UpdateDataColors();
 				_terrain.getOptions().texture.ChangeBiomes();
 				_terrain.getOptions().texture.setBiomeMap(_terrain.getOptions().biomeMap.getMapColors());
-			} else console.warn('The version of the download file is not supported !!!');
+			} else alert('The version of the download file is not supported !!!');
 		}
 
 		reader.onerror = function(err) {
