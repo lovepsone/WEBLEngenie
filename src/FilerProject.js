@@ -54,6 +54,8 @@ class FilerProject {
 
     newData(CountRoads = 0, CountPoints = 0) {
 
+        // есть баг сохранения, если рамер терраина был изменен
+        this.clearBytes();
         this.data = null;
         const fullBR = BytesRoad.Color * CountRoads + BytesRoad.Points * CountPoints + BytesRoad.CountPoints * CountRoads;
         this.data = new DataView(new ArrayBuffer(bytes.total + fullBR));
@@ -214,6 +216,7 @@ class FilerProject {
 
     setBytes(byteArray) {
 
+        this.clearBytes();
         bytes.Points = 4;
         bytes.Colors = 4 * 3;
         this.data = null;
@@ -221,6 +224,38 @@ class FilerProject {
         this.readChunk('type');
         this.readChunk('size');
         return _sizeTerrain;
+    }
+
+    clearBytes() {
+
+        bytes = {
+            Type: 4, // Uint8 * 4
+            Version: 1, // Uint8
+            Size: 2, // Uint16
+            Points: 4, // Float32
+            Colors: 4 * 3, // Float32
+            CountRoads: 2, // Uint16
+            total: 0
+        };
+
+        PosByte = {
+            Type: 0,
+            Version: 0,
+            Size: 0,
+            Points: 0,
+            Colors: 0,
+            CountRoads: 0
+        };
+
+        bytes.Points = bytes.Points * _count;
+        bytes.Colors = bytes.Colors * _count;
+        bytes.total =  bytes.Type + bytes.Version +  bytes.Size +  bytes.Points + bytes.Colors + bytes.CountRoads;
+
+        PosByte.Version += bytes.Type;
+        PosByte.Size =  PosByte.Version + bytes.Version;
+        PosByte.Points = PosByte.Size + bytes.Size;
+        PosByte.Colors = PosByte.Points + bytes.Points;
+        PosByte.CountRoads = PosByte.Colors + bytes.Colors;
     }
 }
 
