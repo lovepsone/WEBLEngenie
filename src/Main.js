@@ -183,7 +183,7 @@ class MainEngenie {
 		URL.revokeObjectURL(link.href);
 	}
 
-	LoadProject(file) {
+	LoadProject(file, UIOptionRoad) {
 
 		const reader = new FileReader();
 		reader.readAsArrayBuffer(file);
@@ -211,6 +211,7 @@ class MainEngenie {
 					for (let i = 0; i < CountRoads; i++) {
 
 						_terrain.getOptions().road.Generate(false, false, roads[i].point);
+						UIOptionRoad.options[UIOptionRoad.options.length] = new Option(`Road (${i})`, i);
 					}
 				}
 				_terrain.getMesh().geometry.getAttribute('position').needsUpdate = true;

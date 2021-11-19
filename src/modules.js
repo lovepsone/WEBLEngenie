@@ -251,7 +251,7 @@ formLoad.appendChild(fileInput);
 
 fileInput.addEventListener('change', function() {
 
-	Engenie.LoadProject(fileInput.files[0]);
+	Engenie.LoadProject(fileInput.files[0], UI.getElement(DataHTML.Road.Options[3]));
 	formLoad.reset();
 	UI.getElement(DataHTML.Wireframe).checked = false;
 	UI.getElement(DataHTML.Camera).checked = true;
@@ -268,7 +268,7 @@ UI.getElement(DataHTML.MenuBar.SaveTerrain).addEventListener("click", function()
 
 UI.getElement(DataHTML.MenuBar.LoadTerrain).addEventListener("click", function() {
 
-	fileInput.click();
+	fileInput.click(1);
 }, false);
 
 // handlers dialog load height map
