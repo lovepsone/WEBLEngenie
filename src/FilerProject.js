@@ -40,16 +40,7 @@ class FilerProject {
 
         _sizeTerrain = SizeTerain;
         _count = SizeTerain * SizeTerain;
-
-        bytes.Points = bytes.Points * _count;
-        bytes.Colors = bytes.Colors * _count;
-        bytes.total =  bytes.Type + bytes.Version +  bytes.Size +  bytes.Points + bytes.Colors + bytes.CountRoads;
-
-        PosByte.Version += bytes.Type;
-        PosByte.Size =  PosByte.Version + bytes.Version;
-        PosByte.Points = PosByte.Size + bytes.Size;
-        PosByte.Colors = PosByte.Points + bytes.Points;
-        PosByte.CountRoads = PosByte.Colors + bytes.Colors;
+        this.clearBytes();
     }
 
     newData(CountRoads = 0, CountPoints = 0) {
