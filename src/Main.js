@@ -232,68 +232,11 @@ class MainEngenie {
 		}
 	}
 
-	//exports only without roads
 	exportGLTF(link) {
 
-		const gltfExporter = new GLTFExporter();
-
-		gltfExporter.parse(_terrain.getMesh(), function(result) {
-
-			if (result.images.length > 0) {
-
-				link.href = result.images[0].uri;
-				link.download = 'terrain_map.png';
-				link.click();
-				link.href = result.images[1].uri;
-				link.download = 'terrain_normal.png';
-				link.click();
-
-				result.images = [
-					{"uri": "./terrain_map.png"},
-					{"uri": "./terrain_normal.png"}
-				];
-			}
-
-			if (result instanceof ArrayBuffer) {
-
-				link.href = URL.createObjectURL(new Blob([result], {type: 'application/octet-stream'}));
-				link.download = 'terrain.glb';
-				link.click();
-			} else {
-
-				const output = JSON.stringify(result, null, 2);
-				link.href = URL.createObjectURL(new Blob([output], {type: 'text/plain'}));
-				link.download = 'terrain.gltf';
-				link.click();
-			}
-		}, {embedImages: true, binary: false});
 	}
 
-	// imports only without roads
 	importGLTF() {
-
-		const loader = new GLTFLoader().setPath( './');
-
-		loader.load('terrain.gltf', function(gltf) {
-
-			gltf.scene.traverse(function (child) {
-
-				if (child.isMesh) {
-
-					_scene.add(child);
-				}
-			});
-		},
-
-		function(xhr) {
-
-			console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-		},
-
-		function (error) {
-
-			console.log('An error happened' + error);
-		});
 	}
 };
 
