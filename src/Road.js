@@ -324,9 +324,9 @@ class Road {
 		shape.moveTo(0, 0);
 		shape.lineTo(0, _SizeRoad);
 		//shape.moveTo(0, _SizeRoad);
-		shape.lineTo(0.1, _SizeRoad);
+		shape.lineTo(1.0, _SizeRoad);
 		//shape.moveTo(0.1, _SizeRoad);
-		shape.lineTo(0.1, 0);
+		shape.lineTo(1.0, 0);
 		shape.lineTo(0, 0);
 
 		DataRoad.Size[0] = _SizeRoad;
@@ -341,7 +341,7 @@ class Road {
 
 		DataRoad.Mesh = new THREE.Mesh(extrudeGeometry, new THREE.MeshPhongMaterial({map: texture, wireframe: wireframe}));
 		Buffer.push(DataRoad);
-		Buffer[Buffer.length - 1].Mesh.position.y += 0.07;
+		Buffer[Buffer.length - 1].Mesh.position.y += 0.09;
 		_scene.add(Buffer[Buffer.length - 1].Mesh);
 
 		DataRoad = {Size: [], Color: '', PointsExtrude: [], Mesh: {}, StartPoint: {index: [], y: []}, isDel: false};
