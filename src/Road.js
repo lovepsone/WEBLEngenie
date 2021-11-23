@@ -6,7 +6,7 @@ import * as THREE from './../libs/three.module.js';
 import {COLORBOARDROAD, STEPSROAD, STEPSBOARDS, MINSIZEBOARD, MINSIZEROAD} from './CONST.js';
 
 let DataRoad = {
-	Size: [], // 0 - BRUSH, 1 - BOARD
+	Size: [], // 0 - ROAD, 1 - BOARD
 	Color: '',
 	PointsExtrude: [],
 	Mesh: {},
@@ -88,7 +88,7 @@ class Road {
 		_mesh = mesh;
 	}
 
-	setSize(val, type) {
+	setSize(val, type = 0) {
 
 		switch(type) {
 			case 0:
@@ -135,7 +135,13 @@ class Road {
 			if (!Buffer[i].isDel) {
 
 				countPoints +=  Buffer[i].PointsExtrude.length;
-				tmp[i] = {point: Buffer[i].PointsExtrude, color: 0, length: Buffer[i].PointsExtrude.length};
+				tmp[i] = {
+					point: Buffer[i].PointsExtrude,
+					weightR: Buffer[i].Size[0],
+					weightB: Buffer[i].Size[1],
+					colorR: 0,
+					colorB: 0,
+					length: Buffer[i].PointsExtrude.length};
 			}
 		}
 
@@ -180,7 +186,7 @@ class Road {
 			_boxes.push(new THREE.Mesh(new THREE.BoxBufferGeometry(1, 1, 1), new THREE.MeshStandardMaterial({color: 0x00ff00, roughness: 0.75, metalness: 0, transparent: true, opacity: 0.5, premultipliedAlpha: true, emissive: 0xEC407A, emissiveIntensity: 0.5})));
             _boxes[_CounterBox].position.copy(intersects[0].point);
             _scene.add(_boxes[_CounterBox]);
-			_CounterBox++;
+			_CounterBox ++;
 
 			if (_CounterBox > 1) {
 
@@ -327,8 +333,8 @@ class Road {
 		DataRoad.Size[1] = _SizeBoard;
 		DataRoad.Color = _colorBoard.getHexString();
 
-		let extrudeSettings = {steps: STEPSROAD * points.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false), UVGenerator: WorldUVGenerator};
-		let extrudeGeometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
+		const extrudeSettings = {steps: STEPSROAD * points.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false), UVGenerator: WorldUVGenerator};
+		const extrudeGeometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
 	
 		let texture = new THREE.TextureLoader().load("texture/roads/asphalt3.jpg");
 		texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;

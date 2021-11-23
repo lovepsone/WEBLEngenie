@@ -210,6 +210,7 @@ class MainEngenie {
 
 					for (let i = 0; i < CountRoads; i++) {
 
+						_terrain.getOptions().road.setSize(roads[i].weightR)
 						_terrain.getOptions().road.Generate(false, false, roads[i].point);
 						UIOptionRoad.options[UIOptionRoad.options.length] = new Option(`Road (${i})`, i);
 					}

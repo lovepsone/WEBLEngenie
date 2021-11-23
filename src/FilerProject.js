@@ -2,7 +2,7 @@
 * @author lovepsone 2019 - 2021
 */
 
-const VERSION = 2;
+const VERSION = 3;
 const TYPE = 'wgle';
 let EROOR = 0;
 let _sizeTerrain = 64, _count = _sizeTerrain * _sizeTerrain;
@@ -29,7 +29,10 @@ let PosByte = {
 
 const BytesRoad = { //structure of one road
 
-    Color: 1, // Uint8
+    ColorR: 1, // Uint8
+    ColorB: 1, // Uint8
+    WeightR: 1, // Uint8
+    WeightB: 1, // Uint8
     CountPoints: 2, // Uint16
     Points: 4, // Float32
 }
@@ -48,7 +51,7 @@ class FilerProject {
         // есть баг сохранения, если рамер терраина был изменен
         this.clearBytes();
         this.data = null;
-        const fullBR = BytesRoad.Color * CountRoads + BytesRoad.Points * CountPoints + BytesRoad.CountPoints * CountRoads;
+        const fullBR = 2 * BytesRoad.ColorR * CountRoads + 2 * BytesRoad.WeightR * CountRoads + BytesRoad.Points * CountPoints + BytesRoad.CountPoints * CountRoads;
         this.data = new DataView(new ArrayBuffer(bytes.total + fullBR));
         this.setChunk('type');
         this.setChunk('version');
@@ -57,14 +60,19 @@ class FilerProject {
 
     setDataRoadsChunk(data) {
 
-        // data[...]  = point: [...], color: value, length: value
-        // point[i] = vaector3d
         let LastPosByte = PosByte.CountRoads + bytes.CountRoads;
 
         for (let i = 0; i < data.length - 1; i++) {
 
-            this.data.setUint8(LastPosByte, data[i].color);
-            LastPosByte = LastPosByte + BytesRoad.Color;
+            this.data.setUint8(LastPosByte, data[i].colorR);
+            LastPosByte = LastPosByte + BytesRoad.ColorR;
+            this.data.setUint8(LastPosByte, data[i].colorB);
+            LastPosByte = LastPosByte + BytesRoad.ColorB;
+
+            this.data.setUint8(LastPosByte, data[i].weightR);
+            LastPosByte = LastPosByte + BytesRoad.WeightR;
+            this.data.setUint8(LastPosByte, data[i].weightB);
+            LastPosByte = LastPosByte + BytesRoad.WeightB;
 
             this.data.setUint16(LastPosByte, data[i].length);
             LastPosByte = LastPosByte + BytesRoad.CountPoints;
@@ -89,9 +97,23 @@ class FilerProject {
 
         for (let i = 0; i < _countRoads; i++) {
 
-            data[i] = {point: [], color: 0, length: 0};
-            data[i].color = this.data.getUint8(LastPosByte);
-            LastPosByte = LastPosByte + BytesRoad.Color;
+            data[i] = {
+                point: [],
+                colorR: 0,
+                colorB: 0,
+                weightR: 0,
+                weightB: 0,
+                length: 0
+            };
+            data[i].colorR = this.data.getUint8(LastPosByte);
+            LastPosByte = LastPosByte + BytesRoad.ColorR;
+            data[i].colorB = this.data.getUint8(LastPosByte);
+            LastPosByte = LastPosByte + BytesRoad.ColorB;
+
+            data[i].weightR = this.data.getUint8(LastPosByte);
+            LastPosByte = LastPosByte + BytesRoad.WeightR;
+            data[i].weightB = this.data.getUint8(LastPosByte);
+            LastPosByte = LastPosByte + BytesRoad.WeightB;
 
             data[i].length = this.data.getUint16(LastPosByte);
             LastPosByte = LastPosByte + BytesRoad.CountPoints;
