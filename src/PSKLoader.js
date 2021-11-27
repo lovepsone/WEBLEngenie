@@ -106,14 +106,12 @@ class PSKLoader extends THREE.Loader {
                 const ACTRHEAD = scope.HeaderChunk(data);
 
                 const PNTS0000 = scope.HeaderChunk(data);
-                console.log(PNTS0000);
                 const Points = scope.ReadPoints(PNTS0000.DataCount);
 
                 const VTXW0000 = scope.HeaderChunk(data);
                 const Wedges = scope.ReadWedges(VTXW0000.DataCount);
 
                 const FACE0000 = scope.HeaderChunk(data);
-                console.log(FACE0000);
                 const Faces = scope.ReadFace(FACE0000.DataCount);
 
                 const MATT0000 = scope.HeaderChunk(data);
@@ -122,9 +120,6 @@ class PSKLoader extends THREE.Loader {
                 const REFSKELT = scope.HeaderChunk(data);
 
                 const RAWWEIGHTS = scope.HeaderChunk(data);
-
-                console.log(Faces);
-                console.log(Wedges);
 
                 let posAttr = [], indices = [], uv = [];
 
@@ -144,34 +139,33 @@ class PSKLoader extends THREE.Loader {
 
                     uv.push(Wedges[Faces[i].Wedge[0]].U);
                     uv.push(Wedges[Faces[i].Wedge[0]].V);
+
                     uv.push(Wedges[Faces[i].Wedge[1]].U);
                     uv.push(Wedges[Faces[i].Wedge[1]].V);
+
                     uv.push(Wedges[Faces[i].Wedge[2]].U);
                     uv.push(Wedges[Faces[i].Wedge[2]].V);
+
+                    //indices.push(Wedges[Faces[i].Wedge[0]].Pointindex);
+                    //indices.push(Wedges[Faces[i].Wedge[1]].Pointindex);
+                    //indices.push(Wedges[Faces[i].Wedge[2]].Pointindex);
+
+                    //indices.push(Wedges[Faces[i].Wedge[0]].Pointindex);
+                    //indices.push(Wedges[Faces[i].Wedge[1]].Pointindex);
+                    //indices.push(Wedges[Faces[i].Wedge[2]].Pointindex);
                 }
 
                 const uvs =  new Float32Array(uv);
-
-                /*let indicesIncrement = 0;
-
-                for(let i = 0; i < Faces.length; i++) {
-
-                    indices[indicesIncrement++] = Faces[i].Wedge[0];
-                    indices[indicesIncrement++] = Faces[i].Wedge[1];
-                    indices[indicesIncrement++] = Faces[i].Wedge[2];
-                }*/
-
-
 
                 const texture = new THREE.TextureLoader().load('./T_Male_HazmatArmorMK1_01_BC.png');
 
                 const geometry = new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(new Float32Array(posAttr), 3));
                 geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
                 //geometry.setIndex(indices/*new THREE.BufferAttribute(indices, 1)*/);
-                geometry.computeVertexNormals();
-                geometry.normalizeNormals();
+                //geometry.setIndex(new THREE.BufferAttribute(new Uint32Array(indices), 1));
+                //geometry.computeVertexNormals();
+                //geometry.normalizeNormals();
                 const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({map: texture, wireframe: false, side: THREE.DoubleSide}));
-                //const mesh = new THREE.Mesh(geometry, new THREE.MeshNormalMaterial());
 
                 onLoad(mesh);
 
@@ -240,22 +234,18 @@ class PSKLoader extends THREE.Loader {
                 Wedges[i].Pointindex = this.DataView.getInt16(this.LastByte, true);
                 this.LastByte += WedgesBytes.Pointindex;
 
-                //Wedges[i].Padding = this.DataView.getInt16(this.LastByte, true);
                 this.LastByte += WedgesBytes.Padding;
 
                 Wedges[i].U = this.DataView.getFloat32(this.LastByte, true);
                 this.LastByte +=  WedgesBytes.U;
 
-                Wedges[i].V = this.DataView.getFloat32(this.LastByte, true);
+                Wedges[i].V = 1.0 - this.DataView.getFloat32(this.LastByte, true);
                 this.LastByte +=  WedgesBytes.V;
 
                 Wedges[i].MaterialIndex = this.DataView.getInt8(this.LastByte, true);
                 this.LastByte += WedgesBytes.MaterialIndex;
 
-                //Wedges[i].Reserved = this.DataView.getInt8(this.LastByte, true);
                 this.LastByte += WedgesBytes.Reserved;
-
-                //Wedges[i].Padding2 = this.DataView.getInt16(this.LastByte, true);
                 this.LastByte += WedgesBytes.Padding2;
             }
         } else {
@@ -270,7 +260,7 @@ class PSKLoader extends THREE.Loader {
                 Wedges[i].U = this.DataView.getFloat32(this.LastByte, true);
                 this.LastByte +=  Wedges32Bytes.U;
 
-                Wedges[i].V = this.DataView.getFloat32(this.LastByte, true);
+                Wedges[i].V = 1.0 - this.DataView.getFloat32(this.LastByte, true);
                 this.LastByte +=  Wedges32Bytes.V;
 
                 Wedges[i].MaterialIndex = this.DataView.getInt32(this.LastByte, true);
