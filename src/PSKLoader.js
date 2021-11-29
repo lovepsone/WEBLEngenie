@@ -16,6 +16,7 @@ import * as THREE from './../libs/three.module.js';
      - REFSKELT: Bone structure.
      - RAWWEIGHTS: Bone raw weights.
      - EXTRAUV#: Extra UV maps.
+     - VERTEXCOLOR: Vertex colors.
 */
 
 const HeaderBytes  = {
@@ -46,7 +47,6 @@ const Wedges32Bytes = { // Count greater than 65536d
     U: 4, // bytes float32
     V: 4, // bytes float32
     MaterialIndex: 4, // bytes Int32
-
 }; //total 16 bytes
 
 const FaceBytes = {
@@ -74,11 +74,17 @@ class PSKLoader extends THREE.Loader {
         super(manager);
 
         this.LastByte = 0;
+        this.ByteLength = 0;
+        this.Points = [];
+        this.Wedges = [];
+        this.Faces = [];
+        this.Material = [];
+        this.Materials = null;
     }
 
-    load(url, onLoad, onProgress, onError) {
+    load(url, pathMat, onLoad, onProgress, onError) {
 
-        const scope = this, loader = new THREE.FileLoader(this.manager);
+        const scope = this, loader = new THREE.FileLoader(this.manager), geometry = new THREE.BufferGeometry();
         let resourcePath;
 
         if (this.resourcePath !== '') {
@@ -101,27 +107,12 @@ class PSKLoader extends THREE.Loader {
 
             try {
 
+                scope.ByteLength = data.byteLength;
                 scope.DataView = new DataView(data);
+                scope.parse(scope.HeaderChunk(data), data);
 
-                const ACTRHEAD = scope.HeaderChunk(data);
-
-                const PNTS0000 = scope.HeaderChunk(data);
-                const Points = scope.ReadPoints(PNTS0000.DataCount);
-
-                const VTXW0000 = scope.HeaderChunk(data);
-                const Wedges = scope.ReadWedges(VTXW0000.DataCount);
-
-                const FACE0000 = scope.HeaderChunk(data);
-                const Faces = scope.ReadFace(FACE0000.DataCount);
-
-                const MATT0000 = scope.HeaderChunk(data);
-                const Material = scope.ReadMaterial(MATT0000.DataCount, data);
-
-                const REFSKELT = scope.HeaderChunk(data);
-
-                const RAWWEIGHTS = scope.HeaderChunk(data);
-
-                let posAttr = [], indices = [], uv = [];
+                let posAttr = [], indices = [], uv = [], indxMat = [{count: 0}], materials = [];
+                const Points = scope.Points, Wedges = scope.Wedges, Faces = scope.Faces, Material = scope.Material;
 
                 for (let i = 0; i < Faces.length; i++) {
 
@@ -146,27 +137,40 @@ class PSKLoader extends THREE.Loader {
                     uv.push(Wedges[Faces[i].Wedge[2]].U);
                     uv.push(Wedges[Faces[i].Wedge[2]].V);
 
-                    //indices.push(Wedges[Faces[i].Wedge[0]].Pointindex);
-                    //indices.push(Wedges[Faces[i].Wedge[1]].Pointindex);
-                    //indices.push(Wedges[Faces[i].Wedge[2]].Pointindex);
+                    if (indxMat[Wedges[Faces[i].Wedge[0]].MaterialIndex] == undefined) indxMat[Wedges[Faces[i].Wedge[0]].MaterialIndex] = {count: 0, id: 0};
+                    if (indxMat[Wedges[Faces[i].Wedge[1]].MaterialIndex] == undefined) indxMat[Wedges[Faces[i].Wedge[1]].MaterialIndex] = {count: 0, id: 0};
+                    if (indxMat[Wedges[Faces[i].Wedge[2]].MaterialIndex] == undefined) indxMat[Wedges[Faces[i].Wedge[2]].MaterialIndex] = {count: 0, id: 0};
+                    indxMat[Wedges[Faces[i].Wedge[0]].MaterialIndex].count++;
+                    indxMat[Wedges[Faces[i].Wedge[0]].MaterialIndex].id = Wedges[Faces[i].Wedge[0]].MaterialIndex;
+                    indxMat[Wedges[Faces[i].Wedge[1]].MaterialIndex].count++;
+                    indxMat[Wedges[Faces[i].Wedge[1]].MaterialIndex].id = Wedges[Faces[i].Wedge[1]].MaterialIndex;
+                    indxMat[Wedges[Faces[i].Wedge[2]].MaterialIndex].count++;
+                    indxMat[Wedges[Faces[i].Wedge[2]].MaterialIndex].id = Wedges[Faces[i].Wedge[2]].MaterialIndex;
+                }
+                let tmp = uv.length / 2;
 
-                    //indices.push(Wedges[Faces[i].Wedge[0]].Pointindex);
-                    //indices.push(Wedges[Faces[i].Wedge[1]].Pointindex);
-                    //indices.push(Wedges[Faces[i].Wedge[2]].Pointindex);
+                for (let i = indxMat.length - 1; i > -1; i--) {
+
+                    const materialIndex = indxMat[i].id;
+                    const count = indxMat[i].count;
+                    tmp = tmp - count;
+                    const start = tmp;
+                    geometry.addGroup(start, count, materialIndex);
                 }
 
-                const uvs =  new Float32Array(uv);
+                for (let i = 0; i < Material.length; i++) {
 
-                const texture = new THREE.TextureLoader().load('./T_Male_HazmatArmorMK1_01_BC.png');
+                    new THREE.FileLoader().load(`${pathMat}${Material[i].Name}.mat`, function(data) {
 
-                const geometry = new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(new Float32Array(posAttr), 3));
-                geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
-                //geometry.setIndex(indices/*new THREE.BufferAttribute(indices, 1)*/);
-                //geometry.setIndex(new THREE.BufferAttribute(new Uint32Array(indices), 1));
-                //geometry.computeVertexNormals();
-                //geometry.normalizeNormals();
-                const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({map: texture, wireframe: false, side: THREE.DoubleSide}));
+                        const texture = new THREE.TextureLoader().load('./Meshes/' + scope.parseMaterial(data).Diffuse + '.png');
+                        materials.push(new THREE.MeshBasicMaterial({map: texture, wireframe: false, side: THREE.DoubleSide}));
+                    });
+                }
 
+                geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(posAttr), 3));
+                geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uv), 2));
+
+                const mesh = new THREE.Mesh(geometry, materials);
                 onLoad(mesh);
 
             } catch(e) {
@@ -174,6 +178,53 @@ class PSKLoader extends THREE.Loader {
                 console.error(e);
             }
         }, onProgress, onError);
+    }
+
+    parseMaterial(data) {
+
+        const tmp = data.split('\r\n');
+
+        return {Diffuse: tmp[0].split('=')[1], Normal: tmp[1].split('=')[1]};
+    }
+ 
+    parse(data, dataBytes) {
+
+        switch(data.ChunkID) {
+
+            case 'ACTRHEAD':
+                break;
+
+            case 'PNTS0000':
+                this.Points = this.ReadPoints(data.DataCount);
+                break;
+
+            case 'VTXW0000':
+                this.Wedges = this.ReadWedges(data.DataCount);
+                break;
+
+            case 'FACE0000':
+                this.Faces = this.ReadFace(data.DataCount);
+                break;
+
+            case 'MATT0000':
+                this.Material = this.ReadMaterial(data.DataCount, dataBytes);
+                break;
+
+            case 'REFSKELT':
+                break;
+
+            case 'RAWWEIGHTS':
+                break;
+
+            case 'VERTEXCOLOR':
+                this.LastByte = this.LastByte + data.DataCount * data.DataSize;
+                break;
+
+            //EXTRAUV
+        }
+
+        if (this.LastByte == this.ByteLength) return;
+        this.parse(this.HeaderChunk(dataBytes), dataBytes);
     }
 
     HeaderChunk(data) {
@@ -191,15 +242,6 @@ class PSKLoader extends THREE.Loader {
         this.LastByte += HeaderBytes.DataCount;
 
         return {ChunkID: id.split('\x00')[0], TypeFlag: flag, DataSize: size, DataCount: count};
-    }
-
-    parse(header) {
-
-        switch(header) {
-
-            case 'ACTRHEAD':
-                break;
-        }
     }
 
     ReadPoints(size) {
