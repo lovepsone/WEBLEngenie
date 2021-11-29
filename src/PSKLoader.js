@@ -161,8 +161,7 @@ class PSKLoader extends THREE.Loader {
                 for (let i = 0; i < Material.length; i++) {
 
                     new THREE.FileLoader().load(`${pathMat}${Material[i].Name}.mat`, function(data) {
-
-                        const texture = new THREE.TextureLoader().load('./Meshes/' + scope.parseMaterial(data).Diffuse + '.png');
+                        const texture = new THREE.TextureLoader().load(`${pathMat}${scope.parseMaterial(data).Diffuse}.png`);
                         materials.push(new THREE.MeshBasicMaterial({map: texture, wireframe: false, side: THREE.DoubleSide}));
                     });
                 }
@@ -211,9 +210,11 @@ class PSKLoader extends THREE.Loader {
                 break;
 
             case 'REFSKELT':
+                this.LastByte = this.LastByte + data.DataCount * data.DataSize;
                 break;
 
             case 'RAWWEIGHTS':
+                this.LastByte = this.LastByte + data.DataCount * data.DataSize;
                 break;
 
             case 'VERTEXCOLOR':
