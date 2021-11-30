@@ -52,7 +52,7 @@ const Wedges32Bytes = { // Count greater than 65536d
 const FaceBytes = {
 
     Wedge/*[3]*/: 2, // bytes Int16 * 3 -- or int32 ?
-    Materialindex: 1, // bytes Int8
+    MaterialIndex: 1, // bytes Int8
     AuxMatIndex: 1, // bytes Int8
     SmoothingGroups: 4// bytes Int32
 }
@@ -114,60 +114,43 @@ class PSKLoader extends THREE.Loader {
                 let posAttr = [], indices = [], uv = [], indxMat = [{count: 0}], materials = [];
                 const Points = scope.Points, Wedges = scope.Wedges, Faces = scope.Faces, Material = scope.Material;
 
+                for (let i = 0; i < Wedges.length; i++) {
+
+                    posAttr.push(Points[Wedges[i].Pointindex].x, Points[Wedges[i].Pointindex].y, Points[Wedges[i].Pointindex].z);
+                    uv.push(Wedges[i].U, Wedges[i].V);
+                }
+
                 for (let i = 0; i < Faces.length; i++) {
 
-                    posAttr.push(Points[Wedges[Faces[i].Wedge[0]].Pointindex].x);
-                    posAttr.push(Points[Wedges[Faces[i].Wedge[0]].Pointindex].y);
-                    posAttr.push(Points[Wedges[Faces[i].Wedge[0]].Pointindex].z);
+                    indices.push(Faces[i].Wedge[1], Faces[i].Wedge[0], Faces[i].Wedge[2]);
 
-                    posAttr.push(Points[Wedges[Faces[i].Wedge[1]].Pointindex].x);
-                    posAttr.push(Points[Wedges[Faces[i].Wedge[1]].Pointindex].y);
-                    posAttr.push(Points[Wedges[Faces[i].Wedge[1]].Pointindex].z);
+                    if (indxMat[Faces[i].MaterialIndex] == undefined) indxMat[Faces[i].MaterialIndex] = {count: 0};
+                    indxMat[Faces[i].MaterialIndex].count++;
 
-                    posAttr.push(Points[Wedges[Faces[i].Wedge[2]].Pointindex].x);
-                    posAttr.push(Points[Wedges[Faces[i].Wedge[2]].Pointindex].y);
-                    posAttr.push(Points[Wedges[Faces[i].Wedge[2]].Pointindex].z);
-
-                    uv.push(Wedges[Faces[i].Wedge[0]].U);
-                    uv.push(Wedges[Faces[i].Wedge[0]].V);
-
-                    uv.push(Wedges[Faces[i].Wedge[1]].U);
-                    uv.push(Wedges[Faces[i].Wedge[1]].V);
-
-                    uv.push(Wedges[Faces[i].Wedge[2]].U);
-                    uv.push(Wedges[Faces[i].Wedge[2]].V);
-
-                    if (indxMat[Wedges[Faces[i].Wedge[0]].MaterialIndex] == undefined) indxMat[Wedges[Faces[i].Wedge[0]].MaterialIndex] = {count: 0, id: 0};
-                    if (indxMat[Wedges[Faces[i].Wedge[1]].MaterialIndex] == undefined) indxMat[Wedges[Faces[i].Wedge[1]].MaterialIndex] = {count: 0, id: 0};
-                    if (indxMat[Wedges[Faces[i].Wedge[2]].MaterialIndex] == undefined) indxMat[Wedges[Faces[i].Wedge[2]].MaterialIndex] = {count: 0, id: 0};
-                    indxMat[Wedges[Faces[i].Wedge[0]].MaterialIndex].count++;
-                    indxMat[Wedges[Faces[i].Wedge[0]].MaterialIndex].id = Wedges[Faces[i].Wedge[0]].MaterialIndex;
-                    indxMat[Wedges[Faces[i].Wedge[1]].MaterialIndex].count++;
-                    indxMat[Wedges[Faces[i].Wedge[1]].MaterialIndex].id = Wedges[Faces[i].Wedge[1]].MaterialIndex;
-                    indxMat[Wedges[Faces[i].Wedge[2]].MaterialIndex].count++;
-                    indxMat[Wedges[Faces[i].Wedge[2]].MaterialIndex].id = Wedges[Faces[i].Wedge[2]].MaterialIndex;
                 }
-                let tmp = uv.length / 2;
 
-                for (let i = indxMat.length - 1; i > -1; i--) {
+                let start = 0;
 
-                    const materialIndex = indxMat[i].id;
-                    const count = indxMat[i].count;
-                    tmp = tmp - count;
-                    const start = tmp;
-                    geometry.addGroup(start, count, materialIndex);
+                for (let i = 0; i < indxMat.length; i++) {
+
+                    geometry.addGroup(start, indxMat[i].count * 3, i);
+                    start += indxMat[i].count * 3;
                 }
 
                 for (let i = 0; i < Material.length; i++) {
 
                     new THREE.FileLoader().load(`${pathMat}${Material[i].Name}.mat`, function(data) {
                         const texture = new THREE.TextureLoader().load(`${pathMat}${scope.parseMaterial(data).Diffuse}.png`);
+                        texture.wrapS = THREE.RepeatWrapping;
+                        texture.wrapT = THREE.RepeatWrapping;
                         materials.push(new THREE.MeshBasicMaterial({map: texture, wireframe: false, side: THREE.DoubleSide}));
                     });
                 }
 
                 geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(posAttr), 3));
                 geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uv), 2));
+                geometry.setIndex(indices);
+                geometry.computeVertexNormals();
 
                 const mesh = new THREE.Mesh(geometry, materials);
                 onLoad(mesh);
@@ -214,6 +197,7 @@ class PSKLoader extends THREE.Loader {
                 break;
 
             case 'RAWWEIGHTS':
+                console.log(data)
                 this.LastByte = this.LastByte + data.DataCount * data.DataSize;
                 break;
 
@@ -321,7 +305,7 @@ class PSKLoader extends THREE.Loader {
 
         for (let i = 0; i < size; i++) {
 
-            face[i] = {Wedge: [], Materialindex: 0, AuxMatIndex: 0, SmoothingGroups: 0};
+            face[i] = {Wedge: [], MaterialIndex: 0, AuxMatIndex: 0, SmoothingGroups: 0};
 
             face[i].Wedge.push(this.DataView.getInt16(this.LastByte, true));
             this.LastByte += FaceBytes.Wedge;
@@ -331,7 +315,7 @@ class PSKLoader extends THREE.Loader {
             this.LastByte += FaceBytes.Wedge;
 
             face[i].MaterialIndex = this.DataView.getInt8(this.LastByte, true);
-            this.LastByte += FaceBytes.Materialindex;
+            this.LastByte += FaceBytes.MaterialIndex;
 
             face[i].AuxMatIndex = this.DataView.getInt8(this.LastByte, true);
             this.LastByte += FaceBytes.AuxMatIndex;
