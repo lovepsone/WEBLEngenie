@@ -79,10 +79,9 @@ class PSKLoader extends THREE.Loader {
         this.Wedges = [];
         this.Faces = [];
         this.Material = [];
-        this.Materials = null;
     }
 
-    load(url, pathMat, onLoad, onProgress, onError) {
+    load(url, urlMat, onLoad, onProgress, onError) {
 
         const scope = this, loader = new THREE.FileLoader(this.manager), geometry = new THREE.BufferGeometry();
         let resourcePath;
@@ -107,11 +106,17 @@ class PSKLoader extends THREE.Loader {
 
             try {
 
+                scope.LastByte = 0;
+                scope.ByteLength = 0;
+                scope.Points = [];
+                scope.Wedges = [];
+                scope.Faces = [];
+                scope.Material = [];
                 scope.ByteLength = data.byteLength;
                 scope.DataView = new DataView(data);
                 scope.parse(scope.HeaderChunk(data), data);
 
-                let posAttr = [], indices = [], uv = [], indxMat = [{count: 0}], materials = [];
+                let posAttr = [], indices = [], uv = [], indxMat = [{count: 0}], textures = [], PromiseLoaders = [];
                 const Points = scope.Points, Wedges = scope.Wedges, Faces = scope.Faces, Material = scope.Material;
 
                 for (let i = 0; i < Wedges.length; i++) {
@@ -137,23 +142,20 @@ class PSKLoader extends THREE.Loader {
                     start += indxMat[i].count * 3;
                 }
 
-                for (let i = 0; i < Material.length; i++) {
-
-                    new THREE.FileLoader().load(`${pathMat}${Material[i].Name}.mat`, function(data) {
-                        const texture = new THREE.TextureLoader().load(`${pathMat}${scope.parseMaterial(data).Diffuse}.png`);
-                        texture.wrapS = THREE.RepeatWrapping;
-                        texture.wrapT = THREE.RepeatWrapping;
-                        materials.push(new THREE.MeshBasicMaterial({map: texture, wireframe: false, side: THREE.DoubleSide}));
-                    });
-                }
-
                 geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(posAttr), 3));
                 geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uv), 2));
                 geometry.setIndex(indices);
-                geometry.computeVertexNormals();
 
-                const mesh = new THREE.Mesh(geometry, materials);
-                onLoad(mesh);
+                for (let i = 0; i < Material.length; i++) PromiseLoaders.push(new THREE.FileLoader().loadAsync(`${urlMat}${Material[i].Name}.mat`));
+
+                Promise.all(PromiseLoaders).then((values)=> {
+
+                    for (let i = 0; i < values.length; i++) textures.push(scope.parseMaterial(values[i]));
+                    onLoad(geometry, textures);
+                }, (error) => {
+
+                    console.error(error);
+                });
 
             } catch(e) {
 
@@ -205,7 +207,9 @@ class PSKLoader extends THREE.Loader {
                 this.LastByte = this.LastByte + data.DataCount * data.DataSize;
                 break;
 
-            //EXTRAUV
+            default:
+                this.LastByte = this.LastByte + data.DataCount * data.DataSize;
+                break;
         }
 
         if (this.LastByte == this.ByteLength) return;
