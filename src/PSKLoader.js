@@ -67,6 +67,17 @@ const MattBytes = {
     LodStyle: 4 // bytes int32
 };
 
+const BoneBytes = {
+    Name: 64, // bytes String
+    Flags: 4, // bytes uint32
+    NumChildren: 4, // bytes int32
+    Parentindex: 4, // bytes int32
+    Rotation: 4 * 4, // bytes float32
+    Position: 4 * 4, // bytes float32
+    Length: 4, // bytes float32
+    Size: 4 * 3, // bytes float32
+}; //total 120 bytes
+
 class PSKLoader extends THREE.Loader {
 
     constructor(manager) {
@@ -79,6 +90,7 @@ class PSKLoader extends THREE.Loader {
         this.Wedges = [];
         this.Faces = [];
         this.Material = [];
+        this.Bones = [];
     }
 
     load(url, urlMat, onLoad, onProgress, onError) {
@@ -112,12 +124,13 @@ class PSKLoader extends THREE.Loader {
                 scope.Wedges = [];
                 scope.Faces = [];
                 scope.Material = [];
+                this.Bones = [];
                 scope.ByteLength = data.byteLength;
                 scope.DataView = new DataView(data);
                 scope.parse(scope.HeaderChunk(data), data);
 
                 let posAttr = [], indices = [], uv = [], indxMat = [{count: 0}], textures = [], PromiseLoaders = [];
-                const Points = scope.Points, Wedges = scope.Wedges, Faces = scope.Faces, Material = scope.Material;
+                const Points = scope.Points, Wedges = scope.Wedges, Faces = scope.Faces, Material = scope.Material, Bones = scope.Bones;
 
                 for (let i = 0; i < Wedges.length; i++) {
 
@@ -140,6 +153,10 @@ class PSKLoader extends THREE.Loader {
 
                     geometry.addGroup(start, indxMat[i].count * 3, i);
                     start += indxMat[i].count * 3;
+                }
+
+                for (let i = 0; i < Bones.length; i++) {
+
                 }
 
                 geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(posAttr), 3));
@@ -195,11 +212,11 @@ class PSKLoader extends THREE.Loader {
                 break;
 
             case 'REFSKELT':
-                this.LastByte = this.LastByte + data.DataCount * data.DataSize;
+                this.Bones = this.ReadBones(data.DataCount, dataBytes);
                 break;
 
             case 'RAWWEIGHTS':
-                console.log(data)
+                console.log(data);
                 this.LastByte = this.LastByte + data.DataCount * data.DataSize;
                 break;
 
@@ -208,6 +225,7 @@ class PSKLoader extends THREE.Loader {
                 break;
 
             default:
+                console.log(data);
                 this.LastByte = this.LastByte + data.DataCount * data.DataSize;
                 break;
         }
@@ -362,6 +380,58 @@ class PSKLoader extends THREE.Loader {
         }
 
         return mat;
+    }
+
+    ReadBones(size, data) {
+
+        let bones = [];
+
+        for (let i = 0; i < size; i++) {
+
+            bones[i] = {};
+            bones[i].Name = THREE.LoaderUtils.decodeText(new Uint8Array(data, this.LastByte, BoneBytes.Name)).split('\x00')[0];
+            this.LastByte +=  BoneBytes.Name;
+
+            bones[i].Flags = this.DataView.getUint32(this.LastByte, true);
+            this.LastByte += BoneBytes.Flags;
+
+            bones[i].NumChildren = this.DataView.getInt32(this.LastByte, true);
+            this.LastByte += BoneBytes.NumChildren;
+
+            bones[i].Parentindex = this.DataView.getInt32(this.LastByte, true);
+            this.LastByte += BoneBytes.Parentindex;
+
+            const rx = this.DataView.getFloat32(this.LastByte, true);
+            this.LastByte += 4;
+            const ry = this.DataView.getFloat32(this.LastByte, true);
+            this.LastByte += 4;
+            const rz = this.DataView.getFloat32(this.LastByte, true);
+            this.LastByte += 4;
+            const rw = this.DataView.getFloat32(this.LastByte, true);
+            this.LastByte += 4;
+            bones[i].Rotation = new THREE.Quaternion(rx, ry, rz, rw);
+
+            const px = this.DataView.getFloat32(this.LastByte, true);
+            this.LastByte += 4;
+            const py = this.DataView.getFloat32(this.LastByte, true);
+            this.LastByte += 4;
+            const pz = this.DataView.getFloat32(this.LastByte, true);
+            this.LastByte += 4;
+            bones[i].Position = new THREE.Vector3(px, py, pz);
+
+            bones[i].Length = this.DataView.getFloat32(this.LastByte, true);
+            this.LastByte += 4;
+
+            const sx = this.DataView.getFloat32(this.LastByte, true);
+            this.LastByte += 4;
+            const sy = this.DataView.getFloat32(this.LastByte, true);
+            this.LastByte += 4;
+            const sz = this.DataView.getFloat32(this.LastByte, true);
+            this.LastByte += 4;
+            bones[i].Size = new THREE.Vector3(sx, sy, sz);
+        }
+console.log(bones);
+        return bones;
     }
 };
 export {PSKLoader}
