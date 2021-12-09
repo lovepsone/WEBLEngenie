@@ -33,7 +33,7 @@ const PointBytes = {
 }; // total 12 bytes
 
 const WedgesBytes = { // Count lower/equal than 65536d
-    Pointindex: 2, // bytes Int16
+    PointIndex: 2, // bytes Int16
     Padding: 2, // bytes Int16
     U: 4, // bytes float32
     V: 4, // bytes float32
@@ -43,7 +43,7 @@ const WedgesBytes = { // Count lower/equal than 65536d
 }; //total 16 bytes
 
 const Wedges32Bytes = { // Count greater than 65536d
-    Pointindex: 4, // bytes Int32
+    PointIndex: 4, // bytes Int32
     U: 4, // bytes float32
     V: 4, // bytes float32
     MaterialIndex: 4 // bytes Int32
@@ -134,18 +134,50 @@ class PSKLoader extends THREE.Loader {
                 scope.Material = [];
                 scope.Bones = [];
                 scope.RawBones = [];
-                this.Skeleton = false;
+                scope.Skeleton = false;
                 scope.ByteLength = data.byteLength;
                 scope.DataView = new DataView(data);
                 scope.parse(scope.HeaderChunk(data), data);
 
                 let posAttr = [], indices = [], uv = [], indxMat = [{count: 0}], textures = [], PromiseLoaders = [];
-                const Points = scope.Points, Wedges = scope.Wedges, Faces = scope.Faces, Material = scope.Material, Bones = scope.Bones, RawB = scope.RawBones;
+                let VertInfStart = [], VertInfNum = [], count = 0, skinIndices = [], skinWeights = []
+                const Points = scope.Points, Wedges = scope.Wedges, Faces = scope.Faces, Material = scope.Material, Bones = scope.Bones, RawBones = scope.RawBones;
+
+                for (let i = 0; i < RawBones.length; i++) {
+
+                    count += 1;
+
+                    if ((i == RawBones.length - 1) || (RawBones[i + 1].PointIndex != RawBones[i].PointIndex)) {
+
+                        VertInfStart[RawBones[i].PointIndex] = i - count + 1;
+                        VertInfNum[RawBones[i].PointIndex] = count;
+                        count = 0;
+                    }
+                }
 
                 for (let i = 0; i < Wedges.length; i++) {
 
-                    posAttr.push(Points[Wedges[i].Pointindex].x, Points[Wedges[i].Pointindex].y, Points[Wedges[i].Pointindex].z);
+                    posAttr.push(Points[Wedges[i].PointIndex].x, Points[Wedges[i].PointIndex].y, Points[Wedges[i].PointIndex].z);
                     uv.push(Wedges[i].U, Wedges[i].V);
+
+                    if (RawBones.length > 0) {
+
+                        const start   = VertInfStart[Wedges[i].PointIndex];
+                        const numInfs = VertInfNum[Wedges[i].PointIndex];
+
+                        for (let j = 0; j < 4; j++) {
+
+                            if (j < numInfs) {
+
+                                skinIndices.push(RawBones[start + j].BoneIndex);
+                                skinWeights.push(RawBones[start + j].Weight);
+                            } else {
+
+                                skinIndices.push(0);
+                                skinWeights.push(0);
+                            }
+                        }
+                    }
                 }
 
                 for (let i = 0; i < Faces.length; i++) {
@@ -177,39 +209,12 @@ class PSKLoader extends THREE.Loader {
                 }
 
                 for (let i = 1; i < Bones.length; i++) listBone[Bones[i].Parentindex].add(listBone[i]);
-
-                if (listBone.length > 0)  scope.Skeleton = new THREE.Skeleton(listBone);
-
-                let skinIndices = [], skinWeights = [], countVal = 0;
-
-                for (let i = 0; i < RawB.length; i++) {
-
-                    countVal++;
-
-                    if (i < RawB.length - 1 && RawB[i].PointIndex != RawB[i + 1].PointIndex && countVal < 4) {
-
-                        skinIndices.push(RawB[i].BoneIndex);
-                        skinWeights.push(RawB[i].Weight);
-
-                        for (let i = countVal + 1; i < 5; i++) {
-
-                            skinIndices.push(0);
-                            skinWeights.push(0);
-                        }
-
-                        countVal = 0;
-                    } else {
-
-                        skinIndices.push(RawB[i].BoneIndex);
-                        skinWeights.push(RawB[i].Weight);
-                    }
-
-                    if (countVal == 4) countVal = 0;
-                }
+                if (listBone.length > 0) scope.Skeleton = new THREE.Skeleton(listBone);
 
                 geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(posAttr), 3));
                 geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uv), 2));
                 geometry.setIndex(indices);
+                geometry.computeVertexNormals();
 
                 if (scope.Skeleton) {
 
@@ -331,10 +336,10 @@ class PSKLoader extends THREE.Loader {
 
             for (let i = 0; i < size; i++) {
 
-                Wedges[i] = {Pointindex: 0, /*Padding: 0,*/ U: 0, V: 0, MaterialIndex: 0/*, Reserved: 0, Padding2: 0*/};
+                Wedges[i] = {PointIndex: 0, /*Padding: 0,*/ U: 0, V: 0, MaterialIndex: 0/*, Reserved: 0, Padding2: 0*/};
 
-                Wedges[i].Pointindex = this.DataView.getInt16(this.LastByte, true);
-                this.LastByte += WedgesBytes.Pointindex;
+                Wedges[i].PointIndex = this.DataView.getInt16(this.LastByte, true);
+                this.LastByte += WedgesBytes.PointIndex;
 
                 this.LastByte += WedgesBytes.Padding;
 
@@ -354,10 +359,10 @@ class PSKLoader extends THREE.Loader {
 
             for (let i = 0; i < size; i++) {
 
-                Wedges[i] = {Pointindex: 0, U: 0, V: 0, MaterialIndex: 0};
+                Wedges[i] = {PointIndex: 0, U: 0, V: 0, MaterialIndex: 0};
 
-                Wedges[i].Pointindex = this.DataView.getInt32(this.LastByte, true);
-                this.LastByte += Wedges32Bytes.Pointindex;
+                Wedges[i].PointIndex = this.DataView.getInt32(this.LastByte, true);
+                this.LastByte += Wedges32Bytes.PointIndex;
 
                 Wedges[i].U = this.DataView.getFloat32(this.LastByte, true);
                 this.LastByte +=  Wedges32Bytes.U;
@@ -483,7 +488,7 @@ class PSKLoader extends THREE.Loader {
             this.LastByte += 4;
             const sz = this.DataView.getFloat32(this.LastByte, true);
             this.LastByte += 4;
-            bones[i].Size = new THREE.Vector3(sx, sy, sz);
+            bones[i].Size = new THREE.Vector3(sx, sz, sy);
         }
         return bones;
     }
