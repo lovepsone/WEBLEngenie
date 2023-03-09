@@ -183,7 +183,7 @@ class Road {
 
 		if (intersects.length > 0) {
 
-			_boxes.push(new THREE.Mesh(new THREE.BoxBufferGeometry(1, 1, 1), new THREE.MeshStandardMaterial({color: 0x00ff00, roughness: 0.75, metalness: 0, transparent: true, opacity: 0.5, premultipliedAlpha: true, emissive: 0xEC407A, emissiveIntensity: 0.5})));
+			_boxes.push(new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({color: 0x00ff00, roughness: 0.75, metalness: 0, transparent: true, opacity: 0.5, premultipliedAlpha: true, emissive: 0xEC407A, emissiveIntensity: 0.5})));
             _boxes[_CounterBox].position.copy(intersects[0].point);
             _scene.add(_boxes[_CounterBox]);
 			_CounterBox ++;
@@ -334,9 +334,9 @@ class Road {
 		DataRoad.Color = _colorBoard.getHexString();
 
 		const extrudeSettings = {steps: STEPSROAD * points.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(points, false), UVGenerator: WorldUVGenerator};
-		const extrudeGeometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
+		const extrudeGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
 	
-		let texture = new THREE.TextureLoader().load("texture/roads/asphalt3.jpg");
+		let texture = new THREE.TextureLoader().load("texture/roads/asphalt2.jpg");
 		texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
 
 		DataRoad.Mesh = new THREE.Mesh(extrudeGeometry, new THREE.MeshPhongMaterial({map: texture, wireframe: wireframe}));

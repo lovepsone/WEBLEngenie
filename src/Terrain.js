@@ -13,7 +13,8 @@ import {PressureTerrain} from './PressureTerrain.js';
 import {Biomes} from './Biomes.js';
 import {GenerateBiomeMap} from './GenerateBiomeMap.js';
 import {Road} from './Road.js';
-import {acceleratedRaycast, computeBoundsTree, disposeBoundsTree, CONTAINED, INTERSECTED, NOT_INTERSECTED, MeshBVHVisualizer,} from './../libs/BVH/index.js';
+//import {acceleratedRaycast, computeBoundsTree, disposeBoundsTree, CONTAINED, INTERSECTED, NOT_INTERSECTED, MeshBVHVisualizer,} from './../libs/BVH/index.js';
+import {acceleratedRaycast, computeBoundsTree, disposeBoundsTree, CONTAINED, INTERSECTED, NOT_INTERSECTED, MeshBVHVisualizer,} from './../libs/BVH.module.js';
 import {TextureAtlas} from './TextureAtlas.js';
 import {COLORBOARDROAD} from './CONST.js';
 import {DrawNoise} from './DrawNoise.js';
@@ -59,8 +60,8 @@ class Terrain {
 		_Optons.biomes.setSize(_size, _size);
 		_Optons.biomes.setTypePixels(0);
 
-		let geometry = new THREE.PlaneBufferGeometry(_size, _size, _size - 1, _size - 1);
-		geometry.type = 'BufferGeometry';
+		let geometry = new THREE.PlaneGeometry(_size, _size, _size - 1, _size - 1);
+		//geometry.type = 'BufferGeometry';
 		geometry.rotateX(-Math.PI / 2);
 		geometry.computeBoundingBox();
 		geometry.center();
@@ -78,9 +79,9 @@ class Terrain {
 		geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 		geometry.getAttribute('color').needsUpdate = true;
 
-		_mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({side: THREE.DoubleSide, vertexColors: THREE.VertexColors}));
+		_mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({side: THREE.DoubleSide, vertexColors: true}));
 		_mesh.name = 'Terrain';
-		_mesh.geometry.computeBoundsTree();
+		//_mesh.geometry.computeBoundsTree();
 		_scope.scene.add(_mesh);
 
 		_Optons.pressure.setTerrain(_mesh);
@@ -272,7 +273,7 @@ class Terrain {
 
 		if (_mesh instanceof THREE.Mesh) {
 
-			_mesh.material = new THREE.MeshBasicMaterial({side: THREE.DoubleSide, vertexColors: THREE.VertexColors, wireframe: wireframe});
+			_mesh.material = new THREE.MeshBasicMaterial({side: THREE.DoubleSide, vertexColors: true, wireframe: wireframe});
 			_mesh.material.needsUpdate = true;
 		}
 	}

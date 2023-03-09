@@ -26,11 +26,11 @@ export class PackingTexture {
     clearCanvas() {
 
         _MixCanvasDiffuse.width = _MixCanvasDiffuse.height = TEX_SIZE;
-        _MixCanvasDiffuse.getContext('2d').fillStyle = '#000000';
-        _MixCanvasDiffuse.getContext('2d').fillRect(0, 0, TEX_SIZE, TEX_SIZE);
+        _MixCanvasDiffuse.getContext('2d', {willReadFrequently: true}).fillStyle = '#000000';
+        _MixCanvasDiffuse.getContext('2d', {willReadFrequently: true}).fillRect(0, 0, TEX_SIZE, TEX_SIZE);
         _MixCanvasNormal.width = _MixCanvasNormal.height = TEX_SIZE;
-        _MixCanvasNormal.getContext('2d').fillStyle = '#000000';
-        _MixCanvasNormal.getContext('2d').fillRect(0, 0, TEX_SIZE, TEX_SIZE);
+        _MixCanvasNormal.getContext('2d', {willReadFrequently: true}).fillStyle = '#000000';
+        _MixCanvasNormal.getContext('2d', {willReadFrequently: true}).fillRect(0, 0, TEX_SIZE, TEX_SIZE);
     }
 
     /*
@@ -41,12 +41,12 @@ export class PackingTexture {
         _ReSizeCanvas.width = _ReSizeCanvas.height = TEX_REPEAT_SIZE;
         _RepeatCanvas.width = _RepeatCanvas.height = TEX_SIZE;
 
-        _ReSizeCanvas.getContext('2d').drawImage(img, 0, 0, TEX_REPEAT_SIZE, TEX_REPEAT_SIZE);
-        _RepeatCanvas.getContext('2d').rect(0, 0,  _RepeatCanvas.width, _RepeatCanvas.height);
-        _RepeatCanvas.getContext('2d').fillStyle = _RepeatCanvas.getContext('2d').createPattern(_ReSizeCanvas, "repeat");
-        _RepeatCanvas.getContext('2d').fill();
+        _ReSizeCanvas.getContext('2d', {willReadFrequently: true}).drawImage(img, 0, 0, TEX_REPEAT_SIZE, TEX_REPEAT_SIZE);
+        _RepeatCanvas.getContext('2d', {willReadFrequently: true}).rect(0, 0,  _RepeatCanvas.width, _RepeatCanvas.height);
+        _RepeatCanvas.getContext('2d', {willReadFrequently: true}).fillStyle = _RepeatCanvas.getContext('2d', {willReadFrequently: true}).createPattern(_ReSizeCanvas, "repeat");
+        _RepeatCanvas.getContext('2d', {willReadFrequently: true}).fill();
 
-        return _RepeatCanvas.getContext('2d').getImageData(0, 0, TEX_SIZE, TEX_SIZE);
+        return _RepeatCanvas.getContext('2d', {willReadFrequently: true}).getImageData(0, 0, TEX_SIZE, TEX_SIZE);
     }
 
     setTexture2DArray(canvasTextureArray2d, index, size) {
@@ -55,10 +55,10 @@ export class PackingTexture {
         _tmpCanvas.width = _tmpCanvas.height = size;
 
         const buf = canvasTextureArray2d.getImageData(0, index * size - size, size, index * size);
-        _tmpCanvas.getContext('2d').putImageData(buf, 0, 0);
-        _ReSizeCanvas.getContext('2d').drawImage(_tmpCanvas, 0, 0, TEX_SIZE, TEX_SIZE);
+        _tmpCanvas.getContext('2d', {willReadFrequently: true}).putImageData(buf, 0, 0);
+        _ReSizeCanvas.getContext('2d', {willReadFrequently: true}).drawImage(_tmpCanvas, 0, 0, TEX_SIZE, TEX_SIZE);
 
-        return _ReSizeCanvas.getContext('2d').getImageData(0, 0, TEX_SIZE, TEX_SIZE);
+        return _ReSizeCanvas.getContext('2d', {willReadFrequently: true}).getImageData(0, 0, TEX_SIZE, TEX_SIZE);
     }
 
     setTexturesDiffuse(arr = []) {
@@ -79,7 +79,7 @@ export class PackingTexture {
 
         _colors = [];
 
-        for (let i = 0; i < count; i++)  _colors[i] = this.setTexture2DArray(canvas.getContext('2d'), i + 1, size);
+        for (let i = 0; i < count; i++)  _colors[i] = this.setTexture2DArray(canvas.getContext('2d', {willReadFrequently: true}), i + 1, size);
     }
 
     LerpRGB(idMix1, mixСolor1 = [], mixСolor2 = [], alpha) {
@@ -120,8 +120,8 @@ export class PackingTexture {
 
     mix() {
 
-        let bufDiffuse = _MixCanvasDiffuse.getContext('2d').getImageData(0, 0, TEX_SIZE, TEX_SIZE);
-        let bufNormal = _MixCanvasNormal.getContext('2d').getImageData(0, 0, TEX_SIZE, TEX_SIZE);
+        let bufDiffuse = _MixCanvasDiffuse.getContext('2d', {willReadFrequently: true}).getImageData(0, 0, TEX_SIZE, TEX_SIZE);
+        let bufNormal = _MixCanvasNormal.getContext('2d', {willReadFrequently: true}).getImageData(0, 0, TEX_SIZE, TEX_SIZE);
 
         for (let j = 0; j < TEX_SIZE ** 2; j++) {
 
@@ -136,8 +136,8 @@ export class PackingTexture {
             bufNormal.data[j * 4 + 2] = _mixNormal[2];
         }
 
-        _MixCanvasDiffuse.getContext('2d').putImageData(bufDiffuse, 0, 0);
-        _MixCanvasNormal.getContext('2d').putImageData(bufNormal, 0, 0);
+        _MixCanvasDiffuse.getContext('2d', {willReadFrequently: true}).putImageData(bufDiffuse, 0, 0);
+        _MixCanvasNormal.getContext('2d', {willReadFrequently: true}).putImageData(bufNormal, 0, 0);
 
         return {diffuse: _MixCanvasDiffuse, normal: _MixCanvasNormal};
     }

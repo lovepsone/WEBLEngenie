@@ -22,7 +22,7 @@ class DrawNoise {
         canvas.style.width = "256px";
         canvas.style.height = "256px";
 
-        ctx = canvas.getContext('2d');
+        ctx = canvas.getContext('2d', {willReadFrequently: true});
         if (isAddElem) document.getElementById(elemId).appendChild(canvas);
         matrix = [];
 

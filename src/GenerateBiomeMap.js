@@ -3,7 +3,8 @@
 */
 
 import * as THREE from '../libs/three.module.js';
-import {CONTAINED, INTERSECTED, NOT_INTERSECTED} from './../libs/BVH/index.js';
+//import {CONTAINED, INTERSECTED, NOT_INTERSECTED} from './../libs/BVH/index.js';
+import {CONTAINED, INTERSECTED, NOT_INTERSECTED} from './../libs/BVH.module.js';
 
 let _canvas = document.createElement('canvas'), _ctx = null;
 let _width = 128, _height = 128, _matrix = [];

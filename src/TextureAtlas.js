@@ -37,7 +37,7 @@ class TextureAtlas {
                     _TextureAtlasCanvas.height = _size * BASEDATATEXTURES.length;
                 }
 
-                _TextureAtlasCanvas.getContext('2d').drawImage(img.image, 0, _size * id);
+                _TextureAtlasCanvas.getContext('2d', {willReadFrequently: true}).drawImage(img.image, 0, _size * id);
             });
 
             _textures[i].name = `t_id=${i}`;
@@ -60,7 +60,7 @@ class TextureAtlas {
                     _NormalAtlasCanvas.height = _size * BASEDATATEXTURES.length;
                 }
 
-                _NormalAtlasCanvas.getContext('2d').drawImage(img.image, 0, _size * id);
+                _NormalAtlasCanvas.getContext('2d', {willReadFrequently: true}).drawImage(img.image, 0, _size * id);
             });
 
             _normals[i].name = `n_id=${i}`;
@@ -72,7 +72,7 @@ class TextureAtlas {
 
         _textures[id] = new THREE.TextureLoader().load(url, function(img) {
 
-            _TextureAtlasCanvas.getContext('2d').drawImage(img.image, 0, _size * id)
+            _TextureAtlasCanvas.getContext('2d', {willReadFrequently: true}).drawImage(img.image, 0, _size * id)
         });
         _textures[id].wrapS =_textures[id].wrapT = THREE.RepeatWrapping;
 
@@ -89,18 +89,18 @@ class TextureAtlas {
     */
     setBiomeMap(data) {
 
-        _Colors2DArray = new THREE.DataTexture2DArray(data.colors.getContext('2d').getImageData(0, 0, data.w, data.h * 5).data, data.w, data.h, 5);
+        _Colors2DArray = new THREE.DataArrayTexture(data.colors.getContext('2d', {willReadFrequently: true}).getImageData(0, 0, data.w, data.h * 5).data, data.w, data.h, 5);
         _Colors2DArray.format = THREE.RGBAFormat;
         _Colors2DArray.type = THREE.UnsignedByteType;
         _Colors2DArray.anisotropy = 2;
 
-        _Texture2DArray = new THREE.DataTexture2DArray(_TextureAtlasCanvas.getContext('2d').getImageData(0, 0, _size, _size * BASEDATATEXTURES.length).data, _size, _size, BASEDATATEXTURES.length);
+        _Texture2DArray = new THREE.DataArrayTexture(_TextureAtlasCanvas.getContext('2d', {willReadFrequently: true}).getImageData(0, 0, _size, _size * BASEDATATEXTURES.length).data, _size, _size, BASEDATATEXTURES.length);
         _Texture2DArray.format = THREE.RGBAFormat;
         _Texture2DArray.type = THREE.UnsignedByteType;
         _Texture2DArray.wrapS = _Texture2DArray.wrapT = _Texture2DArray.wrapR = THREE.RepeatWrapping;
         _Texture2DArray.anisotropy = 2;
 
-        _Normal2DArray = new THREE.DataTexture2DArray(_NormalAtlasCanvas.getContext('2d').getImageData(0, 0, _size, _size * BASEDATATEXTURES.length).data, _size, _size, BASEDATATEXTURES.length);
+        _Normal2DArray = new THREE.DataArrayTexture(_NormalAtlasCanvas.getContext('2d', {willReadFrequently: true}).getImageData(0, 0, _size, _size * BASEDATATEXTURES.length).data, _size, _size, BASEDATATEXTURES.length);
         _Normal2DArray.format = THREE.RGBAFormat;
         _Normal2DArray.type = THREE.UnsignedByteType;
         _Normal2DArray.wrapS = _Normal2DArray.wrapT = _Normal2DArray.wrapR = THREE.RepeatWrapping;
