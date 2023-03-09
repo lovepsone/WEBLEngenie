@@ -1,5 +1,5 @@
 /*
-* @author lovepsone 2019 - 2021
+* @author lovepsone 2019 - 2023
 * https://developer.mozilla.org/ru/docs/Web/API/Canvas_API/Tutorial/Pixel_manipulation_with_canvas
 */
 

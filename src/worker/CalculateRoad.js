@@ -1,5 +1,5 @@
 /*
-* @author lovepsone 2019 - 2021
+* @author lovepsone 2019 - 2023
 */
 
 import * as THREE from './../../libs/three.module.js';
@@ -31,7 +31,7 @@ class CalculateRoad {
         const size = Math.sqrt(points.count);
 
         const mesh = new THREE.Mesh(
-            new THREE.ExtrudeBufferGeometry(
+            new THREE.ExtrudeGeometry(
                 this.ShapeTop,
                 {steps: STEPSROAD * this.ExtrudePoints.length, bevelEnabled: false, extrudePath: new THREE.CatmullRomCurve3(this.ExtrudePoints, false)}
             ),

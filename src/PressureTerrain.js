@@ -1,5 +1,5 @@
 /*
-* @author lovepsone 2019 - 2021
+* @author lovepsone 2019 - 2023
 * Part of the code from https://github.com/gkjohnson/three-mesh-bvh/blob/master/example/sculpt.js
 */
 
@@ -14,8 +14,8 @@ let _lastMouse = new THREE.Vector2(), _mouseState = false, _lastMouseState = fal
 let _lastCastPose = new THREE.Vector3();
 
 import * as THREE from './../libs/three.module.js';
-//import {CONTAINED, INTERSECTED, NOT_INTERSECTED} from './../libs/BVH/index.js';
 import {CONTAINED, INTERSECTED, NOT_INTERSECTED} from './../libs/BVH.module.js';
+
 class PressureTerrain {
 
 	constructor(_viewObject, _viewport, _scene) {

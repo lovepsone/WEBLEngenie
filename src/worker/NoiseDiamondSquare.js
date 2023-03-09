@@ -1,5 +1,6 @@
 
 /*
+* @author lovepsone 2019 - 2023
 * https://gitlab.com/isaacmason/random-terrain/-/tree/master
 */
 let _size = 64,  _roughness = 500, _map = null;
