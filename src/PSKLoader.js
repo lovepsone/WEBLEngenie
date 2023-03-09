@@ -1,10 +1,9 @@
 /*
-* @author lovepsone 2019 - 2021
+* @author lovepsone 2019 - 2022
 */
 
-// https://me3explorer.fandom.com/wiki/PSK_File_Format
-
 import * as THREE from './../libs/three.module.js';
+import {PSALoader} from './PSALoader.js';
 
 /*
     Chunks Headers :
@@ -90,6 +89,8 @@ class PSKLoader extends THREE.Loader {
 
         super(manager);
 
+        this.AnimLoader = new PSALoader();
+        //this.Animations = [];
         this.LastByte = 0;
         this.ByteLength = 0;
         this.Points = [];
@@ -101,7 +102,7 @@ class PSKLoader extends THREE.Loader {
         this.Skeleton = false;
     }
 
-    load(url, urlMat, onLoad, onProgress, onError) {
+    load(Options, onLoad, onProgress, onError) {
 
         const scope = this, loader = new THREE.FileLoader(this.manager), geometry = new THREE.BufferGeometry();
         let resourcePath;
@@ -114,7 +115,7 @@ class PSKLoader extends THREE.Loader {
 			resourcePath = this.path;
 		} else {
 
-			resourcePath = THREE.LoaderUtils.extractUrlBase(url);
+			resourcePath = THREE.LoaderUtils.extractUrlBase(Options.url);
 		}
 
         loader.setPath(this.path);
@@ -122,7 +123,7 @@ class PSKLoader extends THREE.Loader {
 		loader.setRequestHeader(this.requestHeader);
 		loader.setWithCredentials(this.withCredentials);
 
-        loader.load(url, function(data) {
+        loader.load(Options.url, function(data) {
 
             try {
 
@@ -199,16 +200,24 @@ class PSKLoader extends THREE.Loader {
 
                 let listBone = [];
 
+                if (Bones.length > 0) Bones[0].Rotation.conjugate(); // is apply conjugate()? or invert() ?
+
                 for (let i = 0; i < Bones.length; i++) {
 
                     const b = new THREE.Bone();
                     b.name = Bones[i].Name;
+                    Bones[i].Rotation.conjugate();
                     b.applyQuaternion(Bones[i].Rotation);
                     b.position.copy(Bones[i].Position);
                     listBone.push(b);
                 }
 
-                for (let i = 1; i < Bones.length; i++) listBone[Bones[i].Parentindex].add(listBone[i]);
+
+                for (let i = 1; i < Bones.length; i++) {
+
+                    //if ( i > 1 && Bones[i].Parentindex != 0)
+                    listBone[Bones[i].Parentindex].add(listBone[i]);
+                }
                 if (listBone.length > 0) scope.Skeleton = new THREE.Skeleton(listBone);
 
                 geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(posAttr), 3));
@@ -222,12 +231,12 @@ class PSKLoader extends THREE.Loader {
                     geometry.setAttribute('skinWeight', new THREE.Float32BufferAttribute(skinWeights, 4));
                 }
 
-                for (let i = 0; i < Material.length; i++) PromiseLoaders.push(new THREE.FileLoader().loadAsync(`${urlMat}${Material[i].Name}.mat`));
+                for (let i = 0; i < Material.length; i++) PromiseLoaders.push(new THREE.FileLoader().loadAsync(`${Options.PathMaterials}${Material[i].Name}.mat`));
 
                 Promise.all(PromiseLoaders).then((values)=> {
 
                     for (let i = 0; i < values.length; i++) textures.push(scope.parseMaterial(values[i]));
-                    onLoad(geometry, textures, scope.Skeleton);
+                    onLoad(geometry, textures, Options.PathMaterials, scope.Skeleton/*, scope.Animations*/);
                 }, (error) => {
 
                     console.error(error);
@@ -283,7 +292,7 @@ class PSKLoader extends THREE.Loader {
                 break;
 
             default:
-                console.log(data);
+                //console.log(data);
                 this.LastByte = this.LastByte + data.DataCount * data.DataSize;
                 break;
         }
@@ -321,8 +330,7 @@ class PSKLoader extends THREE.Loader {
             this.LastByte += 4;
             const z = this.DataView.getFloat32(this.LastByte, true);
             this.LastByte += 4;
-            //tmp.push(x, z, y);
-            tmp.push(new THREE.Vector3(x, z, y));
+            tmp.push(new THREE.Vector3(x, z, y *(-1)));
         }
 
         return tmp;
@@ -467,8 +475,7 @@ class PSKLoader extends THREE.Loader {
             this.LastByte += 4;
             const rw = this.DataView.getFloat32(this.LastByte, true);
             this.LastByte += 4;
-            //bones[i].Rotation = new THREE.Quaternion(rx, ry, rz, rw);
-            bones[i].Rotation = new THREE.Quaternion(rx, rz, ry, rw);
+            bones[i].Rotation = new THREE.Quaternion(rx, rz, ry *(-1), rw);
 
             const px = this.DataView.getFloat32(this.LastByte, true);
             this.LastByte += 4;
@@ -476,8 +483,7 @@ class PSKLoader extends THREE.Loader {
             this.LastByte += 4;
             const pz = this.DataView.getFloat32(this.LastByte, true);
             this.LastByte += 4;
-            //bones[i].Position = new THREE.Vector3(px, py, pz);
-            bones[i].Position = new THREE.Vector3(px, pz, py);
+            bones[i].Position = new THREE.Vector3(px, pz, py *(-1));
 
             bones[i].Length = this.DataView.getFloat32(this.LastByte, true);
             this.LastByte += 4;
