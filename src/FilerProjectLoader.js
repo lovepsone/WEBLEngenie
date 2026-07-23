@@ -29,59 +29,70 @@ let _PositionByte = {
     Colors: 0,
 };
 
-export class FilerWEBLE {
+export class FilerWEBLELoader {
 
-    constructor(SizeTerain = 64) {
-
-        _option.size = SizeTerain;
-        _option.countPoints = SizeTerain * SizeTerain;
-    }
-
-    newData() {
+    constructor(byteArray) {
 
         this.ClearBytes();
+
+        _BytesFile.Points = 4;
+        _BytesFile.Colors = 4 * 3;
         this.data = null;
-        this.data = new DataView(new ArrayBuffer(_BytesFile.total));
-        console.log('total:', _BytesFile.total)
-        this.setChunk('type');
-        this.setChunk('version');
-        this.setChunk('size');
+        this.data = new DataView(byteArray);
+        this.readChunk('type');
+        this.readChunk('size');
     }
 
-    setChunk(name, value = 0, offset = 0) {
+    getSize() {
 
-        let tmp = [];
+        return _option.size;
+    }
+
+    readChunk(name,  offset = 0) {
+
+        if (EROOR) return;
+        let val = 0, tmp = [];
 
         switch(name) {
 
             case 'type':
-                tmp = new TextEncoder().encode(TYPE);
-                for (let i = 0; i < tmp.length; i++) this.data.setUint8(_PositionByte.Type + i, tmp[i]);
+                for (let i = 0; i < 4; i++) tmp.push(this.data.getUint8(_PositionByte.Type + i));
+                if (new TextDecoder().decode(new Uint8Array(tmp)) != TYPE) EROOR = 1;
                 break;
 
             case 'version':
-                this.data.setUint8(_PositionByte.Version, VERSION);
+                val = this.data.getUint8(_PositionByte.Version);
                 break;
 
             case 'size':
-                if (value == 0) {
+                _option.size =  this.data.getUint16(_PositionByte.Size);
+                _option.countPoints = _option.size * _option.size;
+    
+                _BytesFile.Points = _BytesFile.Points * _option.countPoints;
+                _BytesFile.Colors = _BytesFile.Colors * _option.countPoints;
+                _BytesFile.total = _BytesFile.Type + _BytesFile.Version + _BytesFile.Size + _BytesFile.Points + _BytesFile.Colors;
 
-                    this.data.setUint16(_PositionByte.Size, _option.size);
-                } else {
-
-                    this.data.setUint16(_PositionByte.Size, value);
-                }
+                _PositionByte.Points = _PositionByte.Size + _BytesFile.Size;
                 break;
 
             case 'points':
-                this.data.setFloat32(_PositionByte.Points + offset * 4, value);
+                val = this.data.getFloat32(_PositionByte.Points + offset * 4);
                 break;
 
             case 'colors':
-                this.data.setFloat32(_PositionByte.Colors + offset * 4, value);
+                val = this.data.getFloat32(_PositionByte.Colors + offset * 4);
                 break;
-
         }
+
+        return val;
+    }
+
+    getVersionReader() {
+
+        if (this.readChunk('version') === VERSION)
+            return true;
+
+        return false;
     }
 
     ClearBytes() {
@@ -103,10 +114,5 @@ export class FilerWEBLE {
         _PositionByte.Size =  _PositionByte.Version +  _BytesFile.Version;
         _PositionByte.Points =  _PositionByte.Size +_BytesFile.Size;
         _PositionByte.Colors = _PositionByte.Points + _BytesFile.Points;
-    }
-
-    getData() {
-
-        return this.data;
     }
 }

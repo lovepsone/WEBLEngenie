@@ -7,9 +7,8 @@ import {CameraControls} from './CameraControls.js';
 import {PointerLockControls} from './ui/PointerLockControls.js';
 import * as THREE from './../libs/three.module.js';
 import {Physics} from './physics/physics.js';
-import {FilerProject} from './FilerProject.js';
-//import {GLTFExporter} from './../libs/GLTFExporter.js';
-import {GLTFLoader} from './../libs/GLTFLoader.js';
+import {FilerWEBLE} from './FilerProject.js';
+import {FilerWEBLELoader} from './FilerProjectLoader.js';
 import {SunLight} from './SunLight.js';
 import {Sky} from './Sky.js';
 
@@ -161,24 +160,21 @@ class MainEngenie {
 
 		if (_terrain.getMesh() == 0) return;
 
+		console.log(_terrain.getMesh());
 		const size = _terrain.getSize();
 		const points = _terrain.getMesh().geometry.getAttribute('position');
 		const colors = _terrain.getMesh().geometry.getAttribute('color');
-		const roads = _terrain.getOptions().road.getDataFile();
-		const CountRoads = _terrain.getOptions().road.Count();
+		//const roads = _terrain.getOptions().road.getDataFile();
+		//const CountRoads = _terrain.getOptions().road.Count();
 
-		const filer = new FilerProject(size);
-		filer.newData(CountRoads, roads[roads.length - 1].length * 3);
+		const filer = new FilerWEBLE(size);
+		filer.newData();
 
 		for (let i = 0; i < points.count; i++)
 			filer.setChunk('points', points.getY(i), i);
 
 		for (let i = 0; i <  colors.count * 3; i++)
 			filer.setChunk('colors', colors.array[i], i);
-
-		filer.setChunk('countroads', CountRoads);
-
-		if (CountRoads > 0) filer.setDataRoadsChunk(roads);
 
 		link.href = URL.createObjectURL(new Blob([filer.getData()], {type: 'application/octet-stream'}));
 		link.download = 'Project.wgle';
@@ -191,10 +187,10 @@ class MainEngenie {
 		const reader = new FileReader();
 		reader.readAsArrayBuffer(file);
 
-		reader.onload = function(event) {
+		reader.onload = (event) => {
 
-			const filer = new FilerProject();
-			const size = filer.setBytes(event.target.result);
+			const filer = new FilerWEBLELoader(event.target.result);
+			const size = filer.getSize();
 
 			if (filer.getVersionReader()) {
 
@@ -203,9 +199,9 @@ class MainEngenie {
 				const colors = _terrain.getMesh().geometry.getAttribute('color');
 
 				for (let i = 0; i < size * size; i++) points.setY(i, filer.readChunk('points',  i));
-				for (let i = 0; i < size * size * 3; i++) colors.array[i] = filer.readChunk('colors',  i);
+				//for (let i = 0; i < size * size * 3; i++) colors.array[i] = filer.readChunk('colors',  i);
 
-				const CountRoads = filer.readChunk('countroads');
+				/*const CountRoads = filer.readChunk('countroads');
 
 				if (CountRoads > 0) {
 	
@@ -217,7 +213,7 @@ class MainEngenie {
 						_terrain.getOptions().road.Generate(false, false, roads[i].point);
 						UIOptionRoad.options[UIOptionRoad.options.length] = new Option(`Road (${i})`, i);
 					}
-				}
+				}*/
 				_terrain.getMesh().geometry.getAttribute('position').needsUpdate = true;
 				_terrain.getMesh().geometry.getAttribute('color').needsUpdate = true;
 				_terrain.getMesh().geometry.computeVertexNormals();
