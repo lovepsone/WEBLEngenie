@@ -8,7 +8,7 @@ let _max = 0.0, _min = 0.0, _size = 1, _roughness = 40;
 let _Optons  = {pressure: null, biomes: null, biomeMap: null, road: null, texture: null, isHeightMap: false};
 
 import * as THREE from './../libs/three.module.js';
-import {BufferGeometryUtils} from './../libs/BufferGeometryUtils.js';
+//import {BufferGeometryUtils} from './../libs/BufferGeometryUtils.js';
 import {PressureTerrain} from './PressureTerrain.js';
 import {Biomes} from './Biomes.js';
 import {GenerateBiomeMap} from './GenerateBiomeMap.js';
@@ -99,7 +99,83 @@ class Terrain {
 		_Optons.texture.setTerrain(_mesh);
 	}
 
-	LoadHeightMap(image) {
+	ApplyNormalMapToHeight() {
+
+		if (!(_mesh instanceof THREE.Mesh)) {
+
+			console.warn('Terrain.js: create a terrain before doing this.');
+			return;
+		}
+
+		if (!_Optons.isHeightMap) {
+
+			console.warn('Terrain.js: heightmap was not loaded.');
+			return;
+		}
+
+		const dxdy = [], invSize =  1.0 / _size;
+		let result = [], current = [];
+
+		for (let i = 0; i < _pixel.data.length; i += 4) {
+
+			const x = _pixel.data[i];
+			const y = _pixel.data[i + 1];
+			const z = _pixel.data[i + 2];
+			const dx =  -x / z;
+			const dy =  -y/ z;
+
+			//dxdy.push({x: dx * invSize, y: dy * invSize});
+			dxdy.push({x: dx * 16 , y: dy * 16});
+			result.push(0);
+			current.push(0);
+		}
+
+		const numIterations = 1000;
+
+		for (let i = 0; i < numIterations; i++) {
+
+			for (let row = 0; row < _size; row++) {
+
+				const up = this.Wrap(row - 1, _size);
+				const down = this.Wrap(row + 1, _size);
+
+				for (let col = 0; col < _size; col++) {
+
+					const left = this.Wrap(col - 1, _size);
+					const right = this.Wrap(col + 1, _size);
+
+					let h = 0;
+					h += current[left  + row  * _size]  + 0.5 * dxdy[row * _size + left].x;
+					h += current[right + row  * _size]  - 0.5 * dxdy[row * _size + right].x;
+					h += current[col   + up   * _size]  + 0.5 * dxdy[up * _size +  col].y;
+					h += current[col   + down * _size]  - 0.5 * dxdy[down * _size +  col].y;
+					result[col + row * _size] = h / 4;
+				}
+			}
+
+			current = result;
+		}
+		console.log(dxdy);
+		for (let i = 0, n = _mesh.geometry.getAttribute('position').count; i < n; ++ i) {
+
+			//if (_roughness  == 0) _roughness = 1;
+			//const tmp = (_pixel.data[i * 4] + _pixel.data[i * 4 + 1] + _pixel.data[i * 4 + 2]) / 3;
+			_mesh.geometry.getAttribute('position').setY(i,  (result[i] / 255) * _roughness);
+		}
+		_mesh.geometry.getAttribute('position').needsUpdate = true;
+		_mesh.geometry.computeVertexNormals();
+		_mesh.geometry.normalizeNormals();
+		_mesh.geometry.computeBoundsTree();
+	}
+
+	Wrap(v, maxVal) {
+
+		if ( v < 0 ) return v + maxVal;
+		else if ( v >= maxVal ) return 0;
+		else return v;
+	}
+
+	LoadHeightMap(image, isNormalMap = true) {
 
 		if (!(_mesh instanceof THREE.Mesh)) {
 
@@ -116,7 +192,14 @@ class Terrain {
 		_pixel = null;
 		_pixel = _context.getImageData(0, 0, image.width, image.height);
 		_Optons.isHeightMap = true;
-		this.ApplyHeightMap();
+
+		if (isNormalMap) {
+
+			this.ApplyNormalMapToHeight();
+		} else {
+
+			this.ApplyHeightMap();
+		}
 	}
 
 	ApplyHeightMap() {

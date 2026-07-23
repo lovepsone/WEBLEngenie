@@ -320,7 +320,7 @@ UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListener("click",
 
 			if (image.width === image.height && image.width < 1024 && image.width == Engenie.getTerrain().getSize()) {
 
-				Engenie.getTerrain().LoadHeightMap(image);
+				Engenie.getTerrain().LoadHeightMap(image, UI.getElement(DataHTML.DialogLoadHeightMap.Input).checked);
 				image.load = null;
 				image = null;
 				reader.onload = null;

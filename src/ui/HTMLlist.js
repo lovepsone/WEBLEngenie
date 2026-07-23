@@ -48,6 +48,7 @@ const DataHTML = {
 		'widjet': 'DialogLoadHeightMap',
 		'Buttons': ['bDialogLoadHeightMap', 'bDialogCancelHeightMap'],
 		'File': 'MapFile',
+		'Input': 'CheckNormalMap'
 	},
 	'Pressuere': {
 		'Options': ['EditIntensity', 'TypeSmooth'],
@@ -127,6 +128,11 @@ let HTMLlist = [
 				{'tag': 'div', 'align': 'center', 'children': [
 					{'tag': 'input', 'id': DataHTML.DialogLoadHeightMap.File, 'type':'file', 'style':"font-size: 12px; border: 0px; margin: 5px;width: 200px;"},
 				]},
+			]},
+			{'tag': 'div', 'style': 'border-bottom: 1px solid white;', 'align': 'center', 'children': [
+				{'tag': 'label', 'for': DataHTML.DialogLoadHeightMap.Input, 'style':"font-size: 14px;", 'text': 'NormalMap To Height'},
+				{'tag': 'input', 'id':  DataHTML.DialogLoadHeightMap.Input, 'type': 'checkbox'},
+				///////////////////////////////////////
 			]},
 			{'tag': 'div', 'style': 'border-bottom: 1px solid white;', 'align': 'center', 'children': [
 				{'tag': 'input', 'id': DataHTML.DialogLoadHeightMap.Buttons[0], 'style': 'width: 120px;margin-right: 10px', 'type': 'button', 'value': txt.CreateTerrain[4]},
