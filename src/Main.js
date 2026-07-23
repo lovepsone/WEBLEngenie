@@ -1,5 +1,5 @@
 /*
-* @author lovepsone 2019 - 2021
+* @author lovepsone 2019 - 2026
 */
 
 import {Terrain} from './Terrain.js';
@@ -8,7 +8,7 @@ import {PointerLockControls} from './ui/PointerLockControls.js';
 import * as THREE from './../libs/three.module.js';
 import {Physics} from './physics/physics.js';
 import {FilerProject} from './FilerProject.js';
-import {GLTFExporter} from './../libs/GLTFExporter.js';
+//import {GLTFExporter} from './../libs/GLTFExporter.js';
 import {GLTFLoader} from './../libs/GLTFLoader.js';
 import {SunLight} from './SunLight.js';
 import {Sky} from './Sky.js';
@@ -17,6 +17,7 @@ let _renderer, _camera, _scene;
 let _controls = null, _pointerLockControls = null, _terrain = null, _sky = null, _sunLight = null;
 let _worker = null;
 let _physics = null;
+
 
 class MainEngenie {
 
@@ -33,7 +34,7 @@ class MainEngenie {
 		_renderer.shadowMap.enabled = true;
 
 		_camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 9000);
-		_camera.position.set(0, 160, 100);
+		_camera.position.set(0, 50, 5);
 		_scene = new THREE.Scene();
 		//DEBUG
 		window.scene = _scene;
@@ -42,6 +43,7 @@ class MainEngenie {
 		let axesHelper = new THREE.AxesHelper(15);
 		_scene.add(axesHelper);
 		_camera.lookAt(axesHelper.position);
+		//_camera.lookAt(new THREE.Vector3(0,0,0))
 
 		_controls = new CameraControls(_camera, 'Window');
 		_pointerLockControls = new PointerLockControls(_camera, 'Window');
@@ -55,6 +57,7 @@ class MainEngenie {
 		_sunLight = new SunLight(_scene, true);
 	
 		window.addEventListener('resize', this.onRenderResize);
+
 	}
 
 	Render(frame) {
