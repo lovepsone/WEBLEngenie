@@ -1,9 +1,9 @@
 /*
-* @author lovepsone 2019 - 2023
+* @author lovepsone 2019 - 2026
 * generator height map https://tangrams.github.io/heightmapper
 */
 let _mesh = null, _scope = null, _pixel = null, _context = null, _hNoise = null;
-let _max = 0.0, _min = 0.0, _size = 1, _roughness = 40;
+let _max = 0.0, _min = 0.0, _size = 1, _roughness = 40, _isCreated = false, _isNormalMap = false;
 
 let _Optons  = {pressure: null, biomes: null, biomeMap: null, road: null, texture: null, isHeightMap: false};
 
@@ -51,6 +51,7 @@ class Terrain {
 			_Optons.road.RemoveAll();
 			_Optons.texture.clear();
 			_size = 1;
+			_isCreated = false;
 		}
 
 		_Optons.isHeightMap = false;
@@ -82,6 +83,7 @@ class Terrain {
 		_mesh.name = 'Terrain';
 		//_mesh.geometry.computeBoundsTree();
 		_scope.scene.add(_mesh);
+		_isCreated = true;
 
 		_Optons.pressure.setTerrain(_mesh);
 		_Optons.pressure.AddEvents();
@@ -100,18 +102,6 @@ class Terrain {
 	}
 
 	ApplyNormalMapToHeight() {
-
-		if (!(_mesh instanceof THREE.Mesh)) {
-
-			console.warn('Terrain.js: create a terrain before doing this.');
-			return;
-		}
-
-		if (!_Optons.isHeightMap) {
-
-			console.warn('Terrain.js: heightmap was not loaded.');
-			return;
-		}
 
 		const dxdy = [], invSize =  1.0 / _size;
 		let result = [], current = [];
@@ -158,8 +148,7 @@ class Terrain {
 		console.log(dxdy);
 		for (let i = 0, n = _mesh.geometry.getAttribute('position').count; i < n; ++ i) {
 
-			//if (_roughness  == 0) _roughness = 1;
-			//const tmp = (_pixel.data[i * 4] + _pixel.data[i * 4 + 1] + _pixel.data[i * 4 + 2]) / 3;
+			if (_roughness  == 0) _roughness = 1;
 			_mesh.geometry.getAttribute('position').setY(i,  (result[i] / 255) * _roughness);
 		}
 		_mesh.geometry.getAttribute('position').needsUpdate = true;
@@ -193,17 +182,6 @@ class Terrain {
 		_pixel = _context.getImageData(0, 0, image.width, image.height);
 		_Optons.isHeightMap = true;
 
-		if (isNormalMap) {
-
-			this.ApplyNormalMapToHeight();
-		} else {
-
-			this.ApplyHeightMap();
-		}
-	}
-
-	ApplyHeightMap() {
-
 		if (!(_mesh instanceof THREE.Mesh)) {
 
 			console.warn('Terrain.js: create a terrain before doing this.');
@@ -215,6 +193,18 @@ class Terrain {
 			console.warn('Terrain.js: heightmap was not loaded.');
 			return;
 		}
+
+		if (isNormalMap) {
+
+			_isNormalMap = true;
+			this.ApplyNormalMapToHeight();
+		} else {
+
+			this.ApplyHeightMap();
+		}
+	}
+
+	ApplyHeightMap() {
 
 		for (let i = 0, n = _mesh.geometry.getAttribute('position').count; i < n; ++ i) {
 
@@ -234,7 +224,13 @@ class Terrain {
 	setRoughness(val, isApplyMap = true) {
 
 		_roughness = val;
-		if (isApplyMap) this.ApplyHeightMap();
+		if (isApplyMap && !_isNormalMap) {
+
+			this.ApplyHeightMap();
+		} else if (isApplyMap && _isNormalMap) {
+
+			this.ApplyNormalMapToHeight();
+		}
 	}
 
 	UpdateDataColors() {
@@ -369,6 +365,11 @@ class Terrain {
 
 		console.warn('Terrain.js: mesh was not created !!!');
 		return 0;
+	}
+
+	isCreated() {
+
+		return _isCreated;
 	}
 }
 

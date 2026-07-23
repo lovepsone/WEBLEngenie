@@ -318,9 +318,17 @@ UI.getElement(DataHTML.DialogLoadHeightMap.Buttons[0]).addEventListener("click",
 		image.src = res.target.result;
 		image.addEventListener("load", function() {
 
-			if (image.width === image.height && image.width < 1024 && image.width == Engenie.getTerrain().getSize()) {
+			if (image.width === image.height && image.width < 1024) {
 
-				Engenie.getTerrain().LoadHeightMap(image, UI.getElement(DataHTML.DialogLoadHeightMap.Input).checked);
+				if (Engenie.getTerrain().isCreated() && image.width == Engenie.getTerrain().getSize()) {
+
+					Engenie.getTerrain().LoadHeightMap(image, UI.getElement(DataHTML.DialogLoadHeightMap.Input).checked);
+				} else {
+
+					Engenie.getTerrain().Create(image.width);
+					Engenie.getTerrain().LoadHeightMap(image, UI.getElement(DataHTML.DialogLoadHeightMap.Input).checked);
+				}
+
 				image.load = null;
 				image = null;
 				reader.onload = null;
